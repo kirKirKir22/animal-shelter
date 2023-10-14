@@ -9,5 +9,5 @@ public class TelegramBotAnimalShelterApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(TelegramBotAnimalShelterApplication.class, args);
 	}
-// nlskdjgosdigjspdogjspdogks;odgjk
+
 }
