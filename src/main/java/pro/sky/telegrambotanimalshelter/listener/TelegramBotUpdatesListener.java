@@ -3,6 +3,8 @@ package pro.sky.telegrambotanimalshelter.listener;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
+import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.request.SendMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,22 +30,38 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     @Override
     public int process(List<Update> updates) {
         updates.forEach(update -> {
-            logger.info("Processing update: {}", update); // лог
+            logger.info("Processing update: {}", update);
 
-            // Получаем текст сообщения, если оно есть
-            String messageText = update.message() != null ? update.message().text() : "";
-
-            // Проверяем, является ли сообщение командой "/start"
-            if ("/start".equals(messageText)) {
-                // Получаем идентификатор чата, чтобы отправить сообщение
+            if (update.message() != null) {
                 long chatId = update.message().chat().id();
+                String messageText = update.message().text();
 
-                // Отправляем приветственное сообщение
-                String welcomeMessage = "Добро пожаловать! Это телеграм-бот " + "Кошечки-собачки " + "от команды Red Apple";
-                SendMessage response = new SendMessage(chatId, welcomeMessage); // Создаем сообщение для отправки
-                telegramBot.execute(response); // Отправляем сообщение с помощью Telegram Bot API
+                if ("/start".equals(messageText)) {
+                    // Создаем инлайн-клавиатуру
+                    InlineKeyboardMarkup markup = new InlineKeyboardMarkup(
+                            new InlineKeyboardButton("Приют для кошек").callbackData("cat_shelter"),
+                            new InlineKeyboardButton("Приют для собак").callbackData("dog_shelter"));
+
+                    // Отправляем сообщение с клавиатурой
+                    String welcomeMessage = "Добро пожаловать в приют для животных! Я помогу вам найти нового друга. Выберите, кого вы ищете:";
+                    SendMessage response = new SendMessage(chatId, welcomeMessage).replyMarkup(markup);
+                    telegramBot.execute(response);
+                }
+            }
+
+            if (update.callbackQuery() != null) {
+                long chatId = update.callbackQuery().message().chat().id();
+                String data = update.callbackQuery().data();
+
+                if ("cat_shelter".equals(data) || "dog_shelter".equals(data)) {
+                    // Пользователь выбрал приют
+                    String selectedShelter = "приют для " + (data.equals("cat_shelter") ? "кошек" : "собак");
+                    String confirmationMessage = "Вы выбрали " + selectedShelter + ". Спасибо за ваш выбор!";
+                    SendMessage response = new SendMessage(chatId, confirmationMessage);
+                    telegramBot.execute(response);
+                }
             }
         });
-        return UpdatesListener.CONFIRMED_UPDATES_ALL; // Возвращаем статус подтверждения, что все обновления успешно обработаны
+        return UpdatesListener.CONFIRMED_UPDATES_ALL;
     }
 }
