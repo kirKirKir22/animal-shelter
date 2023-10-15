@@ -1,10 +1,8 @@
 package pro.sky.telegrambotanimalshelter.models;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Objects;
+
 
 @Entity
 public class CatModel {
@@ -21,8 +19,12 @@ public class CatModel {
     @Column
     private int age;
 
-    public CatModel() {
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    private UserForCatsShelter owner;
 
+    public CatModel() {
+        // Конструктор по умолчанию
     }
 
     public CatModel(String name, String breed, int age) {
@@ -31,6 +33,7 @@ public class CatModel {
         this.age = age;
     }
 
+    // Геттеры и сеттеры для всех полей, например:
     public Long getId() {
         return id;
     }
@@ -59,27 +62,35 @@ public class CatModel {
         this.age = age;
     }
 
+    public UserForCatsShelter getOwner() {
+        return owner;
+    }
+
+    public void setOwner(UserForCatsShelter owner) {
+        this.owner = owner;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CatModel cat = (CatModel) o;
-        return age == cat.age &&
-                Objects.equals(name, cat.name) &&
-                Objects.equals(breed, cat.breed);
+        CatModel catModel = (CatModel) o;
+        return age == catModel.age && Objects.equals(id, catModel.id) && Objects.equals(name, catModel.name) && Objects.equals(breed, catModel.breed) && Objects.equals(owner, catModel.owner);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, breed, age);
+        return Objects.hash(id, name, breed, age, owner);
     }
 
     @Override
     public String toString() {
         return "CatModel{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", breed='" + breed + '\'' +
                 ", age=" + age +
+                ", owner=" + owner +
                 '}';
     }
 }
