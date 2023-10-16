@@ -11,6 +11,9 @@ public class Report {
     private Long id;
 
     @Column
+    private String animalName; // Имя животного
+
+    @Column
     private String diet; // Рацион животного
 
     @Column
@@ -37,9 +40,10 @@ public class Report {
     @Column
     private Long fileSize; // Размер файла фотографии животного
 
-    public Report(Long id, String diet, String wellBeing, String behaviorChanges,
+    public Report(String animalName, Long id, String diet, String wellBeing, String behaviorChanges,
                   Date reportDate, UserForCatsShelter userForCats, UserForDogsShelter userForDogs,
                   String animalType, String filePath, Long fileSize) {
+        this.animalName = animalName;
         this.id = id;
         this.diet = diet;
         this.wellBeing = wellBeing;
@@ -53,6 +57,14 @@ public class Report {
     }
 
     public Report() {
+    }
+
+    public String getAnimalName() {
+        return animalName;
+    }
+
+    public void setAnimalName(String animalName) {
+        this.animalName = animalName;
     }
 
     public Long getId() {
@@ -140,23 +152,19 @@ public class Report {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Report report = (Report) o;
-        return Objects.equals(id, report.id) && Objects.equals(diet, report.diet)
-                && Objects.equals(wellBeing, report.wellBeing) && Objects.equals(behaviorChanges, report.behaviorChanges)
-                && Objects.equals(reportDate, report.reportDate) && Objects.equals(userForCats, report.userForCats)
-                && Objects.equals(userForDogs, report.userForDogs) && Objects.equals(animalType, report.animalType)
-                && Objects.equals(filePath, report.filePath) && Objects.equals(fileSize, report.fileSize);
+        return Objects.equals(id, report.id) && Objects.equals(animalName, report.animalName) && Objects.equals(diet, report.diet) && Objects.equals(wellBeing, report.wellBeing) && Objects.equals(behaviorChanges, report.behaviorChanges) && Objects.equals(reportDate, report.reportDate) && Objects.equals(userForCats, report.userForCats) && Objects.equals(userForDogs, report.userForDogs) && Objects.equals(animalType, report.animalType) && Objects.equals(filePath, report.filePath) && Objects.equals(fileSize, report.fileSize);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, diet, wellBeing, behaviorChanges, reportDate,
-                userForCats, userForDogs, animalType, filePath, fileSize);
+        return Objects.hash(id, animalName, diet, wellBeing, behaviorChanges, reportDate, userForCats, userForDogs, animalType, filePath, fileSize);
     }
 
     @Override
     public String toString() {
         return "Report{" +
                 "id=" + id +
+                ", animalName='" + animalName + '\'' +
                 ", diet='" + diet + '\'' +
                 ", wellBeing='" + wellBeing + '\'' +
                 ", behaviorChanges='" + behaviorChanges + '\'' +
