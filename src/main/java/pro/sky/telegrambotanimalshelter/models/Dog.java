@@ -5,9 +5,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import java.util.Objects;
 
 @Entity
-public class DogModel {
+public class Dog {
     @Id
     @GeneratedValue
     private Long id;
@@ -24,10 +25,10 @@ public class DogModel {
     @ManyToOne
     private UserForDogsShelter owner;
 
-    public DogModel() {
+    public Dog() {
     }
 
-    public DogModel(String name, String breed, int age, UserForDogsShelter owner) {
+    public Dog(String name, String breed, int age, UserForDogsShelter owner) {
         this.name = name;
         this.breed = breed;
         this.age = age;
@@ -68,5 +69,29 @@ public class DogModel {
 
     public void setOwner(UserForDogsShelter owner) {
         this.owner = owner;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Dog dog = (Dog) o;
+        return age == dog.age && Objects.equals(id, dog.id) && Objects.equals(name, dog.name) && Objects.equals(breed, dog.breed) && Objects.equals(owner, dog.owner);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, breed, age, owner);
+    }
+
+    @Override
+    public String toString() {
+        return "Dog{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", breed='" + breed + '\'' +
+                ", age=" + age +
+                ", owner=" + owner +
+                '}';
     }
 }

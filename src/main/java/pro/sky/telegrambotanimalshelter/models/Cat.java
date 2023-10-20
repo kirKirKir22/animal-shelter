@@ -5,7 +5,7 @@ import java.util.Objects;
 
 
 @Entity
-public class CatModel {
+public class Cat {
     @Id
     @GeneratedValue
     private Long id;
@@ -23,11 +23,11 @@ public class CatModel {
     @JoinColumn(name = "owner_id")
     private UserForCatsShelter owner;
 
-    public CatModel() {
+    public Cat() {
         // Конструктор по умолчанию
     }
 
-    public CatModel(String name, String breed, int age) {
+    public Cat(String name, String breed, int age) {
         this.name = name;
         this.breed = breed;
         this.age = age;
@@ -74,7 +74,7 @@ public class CatModel {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CatModel catModel = (CatModel) o;
+        Cat catModel = (Cat) o;
         return age == catModel.age && Objects.equals(id, catModel.id) && Objects.equals(name, catModel.name) && Objects.equals(breed, catModel.breed) && Objects.equals(owner, catModel.owner);
     }
 

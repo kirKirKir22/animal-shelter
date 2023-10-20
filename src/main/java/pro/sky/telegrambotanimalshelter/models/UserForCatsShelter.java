@@ -24,7 +24,7 @@ public class UserForCatsShelter {
     private String chatId;  // Идентификатор чата пользователя в Telegram
 
     @OneToMany(mappedBy = "owner")
-    private List<CatModel> cats;  // Список котов, принадлежащих пользователю
+    private List<Cat> cats;  // Список котов, принадлежащих пользователю
 
     public UserForCatsShelter() {
         // Пустой конструктор
@@ -66,11 +66,11 @@ public class UserForCatsShelter {
         this.chatId = chatId;
     }
 
-    public List<CatModel> getCats() {
+    public List<Cat> getCats() {
         return cats;
     }
 
-    public void setCats(List<CatModel> cats) {
+    public void setCats(List<Cat> cats) {
         this.cats = cats;
     }
 
