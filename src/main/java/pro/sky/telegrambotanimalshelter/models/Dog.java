@@ -13,13 +13,13 @@ public class Dog {
     @GeneratedValue
     private Long id;
 
-    @Column(nullable = false)
+
     private String name;
 
-    @Column
+
     private String breed;
 
-    @Column
+
     private int age;
 
     @ManyToOne

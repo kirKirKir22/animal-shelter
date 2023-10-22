@@ -1,4 +1,4 @@
-package pro.sky.telegrambotanimalshelter.telegram;
+package pro.sky.telegrambotanimalshelter;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Message;
@@ -8,11 +8,11 @@ import com.pengrad.telegrambot.request.SendMessage;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserInterface {
+public class UserMessageHandler {
 
     private final TelegramBot telegramBot;
 
-    public UserInterface(TelegramBot telegramBot) {
+    public UserMessageHandler(TelegramBot telegramBot) {
         this.telegramBot = telegramBot;
     }
 

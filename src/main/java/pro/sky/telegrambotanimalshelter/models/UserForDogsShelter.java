@@ -14,13 +14,13 @@ public class UserForDogsShelter {
     @GeneratedValue
     private Long id;
 
-    @Column(nullable = false)
+
     private String name;
 
-    @Column(nullable = false)
+
     private String phone;
 
-    @Column(nullable = false)
+
     private String chatId;
 
     @OneToMany(mappedBy = "owner")

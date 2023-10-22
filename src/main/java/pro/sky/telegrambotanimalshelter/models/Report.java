@@ -10,16 +10,16 @@ public class Report {
     @GeneratedValue
     private Long id;
 
-    @Column
+
     private String animalName; // Имя животного
 
-    @Column
+
     private String diet; // Рацион животного
 
-    @Column
+
     private String wellBeing; // Общее самочувствие и привыкание к новому месту
 
-    @Column
+
     private String behaviorChanges; // Изменение в поведении: отказ от старых привычек, приобретение новых
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -31,13 +31,13 @@ public class Report {
     @ManyToOne
     private UserForDogsShelter userForDogs; // Ссылка на пользователя, выбравшего собак
 
-    @Column
+
     private String animalType; // Тип животного: "Cat" или "Dog"
 
-    @Column
+
     private String filePath; // Путь к файлу фотографии животного
 
-    @Column
+
     private Long fileSize; // Размер файла фотографии животного
 
     public Report(String animalName, Long id, String diet, String wellBeing, String behaviorChanges,

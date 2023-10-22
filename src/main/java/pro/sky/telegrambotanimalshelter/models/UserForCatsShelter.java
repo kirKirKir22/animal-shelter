@@ -14,13 +14,13 @@ public class UserForCatsShelter {
     @GeneratedValue
     private Long id;
 
-    @Column(nullable = false)
+
     private String name;  // Имя пользователя
 
-    @Column(nullable = false)
+
     private String phone;  // Номер телефона пользователя
 
-    @Column(nullable = false)
+
     private String chatId;  // Идентификатор чата пользователя в Telegram
 
     @OneToMany(mappedBy = "owner")

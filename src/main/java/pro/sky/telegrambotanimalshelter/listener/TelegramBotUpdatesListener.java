@@ -1,4 +1,4 @@
-package pro.sky.telegrambotanimalshelter.telegram.listener;
+package pro.sky.telegrambotanimalshelter.listener;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
@@ -8,7 +8,6 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.request.SendMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -19,8 +18,12 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
     private Logger logger = LoggerFactory.getLogger(TelegramBotUpdatesListener.class); // лог
 
-    @Autowired
+
     private TelegramBot telegramBot; // Инъекция зависимости TelegramBot
+
+    public TelegramBotUpdatesListener(TelegramBot telegramBot) {
+        this.telegramBot = telegramBot;
+    }
 
     @PostConstruct
     public void init() {
