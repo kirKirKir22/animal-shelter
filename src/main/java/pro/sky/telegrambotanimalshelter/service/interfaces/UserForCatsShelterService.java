@@ -1,7 +1,9 @@
 package pro.sky.telegrambotanimalshelter.service.interfaces;
 
-import pro.sky.telegrambotanimalshelter.models.Cat;
+
 import pro.sky.telegrambotanimalshelter.models.UserForCatsShelter;
+
+import java.util.List;
 
 public interface UserForCatsShelterService {
 
@@ -12,6 +14,8 @@ public interface UserForCatsShelterService {
     UserForCatsShelter update(UserForCatsShelter userForCatsShelter);
 
     UserForCatsShelter delete(long id);
+
+    List<UserForCatsShelter> findAll();
 
 
 }

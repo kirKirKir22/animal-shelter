@@ -1,9 +1,8 @@
 package pro.sky.telegrambotanimalshelter;
 
 import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.model.Message;
-import com.pengrad.telegrambot.model.request.ReplyKeyboardMarkup;
-import com.pengrad.telegrambot.model.request.KeyboardButton;
+import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
+import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.request.SendMessage;
 import org.springframework.stereotype.Component;
 
@@ -16,51 +15,99 @@ public class UserMessageHandler {
         this.telegramBot = telegramBot;
     }
 
-    public void sendStageOneMessage(Message message) {
-        long chatId = message.chat().id();
-        String stageOneMessage = "Вы на этапе 1. Выберите, что вы хотите узнать о приюте:";
-        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup(
-                new KeyboardButton("Информация о приюте"),
-                new KeyboardButton("Как взять животное из приюта"),
-                new KeyboardButton("Прислать отчет о питомце"),
-                new KeyboardButton("Позвать волонтера"));
-        SendMessage response = new SendMessage(chatId, stageOneMessage).replyMarkup(keyboardMarkup);
+    public void sendStartMessage(long chatId) {
+        InlineKeyboardMarkup markup = new InlineKeyboardMarkup(
+                new InlineKeyboardButton("Приют для кошек").callbackData("cat_shelter"),
+                new InlineKeyboardButton("Приют для собак").callbackData("dog_shelter"));
+
+        String welcomeMessage = "Добро пожаловать в приют для животных! Я помогу вам найти нового друга. Выберите, кого вы ищете:";
+        SendMessage response = new SendMessage(chatId, welcomeMessage).replyMarkup(markup);
         telegramBot.execute(response);
     }
 
-    public void sendShelterInfo(Message message) {
-        long chatId = message.chat().id();
-        String shelterInfo = "Добро пожаловать в наш приют! Мы заботимся о бездомных животных. " +
-                "Расписание работы: Пн-Пт: 9:00-18:00, Сб-Вс: 10:00-16:00.\n" +
-                "Адрес: 123 Улица, Город, Страна.\n" +
-                "Схема проезда: [ссылка на схему].\n" +
-                "Контакты охраны: 123-456-789 (для оформления пропуска).\n" +
-                "Общие рекомендации о технике безопасности на территории приюта: " +
-                "пожалуйста, соблюдайте чистоту, не кормите животных, и т.д.";
-        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup(
-                new KeyboardButton("Принять и записать контактные данные"),
-                new KeyboardButton("Вызвать волонтера"));
-        SendMessage response = new SendMessage(chatId, shelterInfo).replyMarkup(keyboardMarkup);
+    public void sendStageOneButtonsCat(long chatId) {
+        // Приветственное сообщение от приюта для кошек
+        String welcomeMessage = "Добро пожаловать в приют для кошек! Как мы можем вам помочь? Выберите действие:";
+        SendMessage welcomeResponse = new SendMessage(chatId, welcomeMessage);
+        telegramBot.execute(welcomeResponse);
+
+        // Создаем инлайн-клавиатуру с кнопками
+        InlineKeyboardMarkup markup = new InlineKeyboardMarkup(
+                new InlineKeyboardButton("Узнать информацию о приюте (этап 1)").callbackData("stage_1_info"),
+                new InlineKeyboardButton("Как взять животное из приюта (этап 2)").callbackData("stage_2_adopt"),
+                new InlineKeyboardButton("Прислать отчет о питомце (этап 3)").callbackData("stage_3_report"),
+                new InlineKeyboardButton("Позвать волонтера").callbackData("call_volunteer"),
+                new InlineKeyboardButton("Назад").callbackData("back"));
+
+        SendMessage response = new SendMessage(chatId, "Выберите, что вы хотите узнать о приюте:").replyMarkup(markup);
         telegramBot.execute(response);
     }
 
-    public void sendStageTwoMessage(Message message) {
-        long chatId = message.chat().id();
-        String stageTwoMessage = "Вы на этапе 2. Выберите, что вы хотите узнать о взятии животного из приюта:";
-        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup(
-                new KeyboardButton("Шаги по взятию питомца"),
-                new KeyboardButton("Документы для взятия питомца"));
-        SendMessage response = new SendMessage(chatId, stageTwoMessage).replyMarkup(keyboardMarkup);
+    public void sendStageOneButtonsDog(long chatId) {
+        // Приветственное сообщение от приюта для собак
+        String welcomeMessage = "Добро пожаловать в приют для собак! Как мы можем вам помочь? Выберите действие:";
+        SendMessage welcomeResponse = new SendMessage(chatId, welcomeMessage);
+        telegramBot.execute(welcomeResponse);
+
+        InlineKeyboardMarkup markup = new InlineKeyboardMarkup(
+                new InlineKeyboardButton("Узнать информацию о приюте (этап 1)").callbackData("stage_1_info"),
+                new InlineKeyboardButton("Как взять животное из приюта (этап 2)").callbackData("stage_2_adopt"),
+                new InlineKeyboardButton("Прислать отчет о питомце (этап 3)").callbackData("stage_3_report"),
+                new InlineKeyboardButton("Позвать волонтера").callbackData("call_volunteer"),
+                new InlineKeyboardButton("Назад").callbackData("back"));
+
+        SendMessage response = new SendMessage(chatId, "Выберите, что вы хотите узнать о приюте:").replyMarkup(markup);
         telegramBot.execute(response);
     }
 
-    public void sendStageThreeMessage(Message message) {
-        long chatId = message.chat().id();
-        String stageThreeMessage = "Вы на этапе 3. Выберите, что вы хотите сделать с отчетом о питомце:";
-        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup(
-                new KeyboardButton("Создать отчет"),
-                new KeyboardButton("Редактировать отчет"));
-        SendMessage response = new SendMessage(chatId, stageThreeMessage).replyMarkup(keyboardMarkup);
-        telegramBot.execute(response);
+    public void sendCatShelterInformation(long chatId, String shelterType) {
+        String shelterInfoMessage = "Бот приветствует пользователя.\n"
+                + "Бот может рассказать о приюте.\n"
+                + "Бот может выдать расписание работы приюта и адрес, схему проезда.\n"
+                + "Бот может выдать контактные данные охраны для оформления пропуска на машину.\n"
+                + "Бот может выдать общие рекомендации о технике безопасности на территории приюта.";
+
+        InlineKeyboardMarkup markup = new InlineKeyboardMarkup(
+                new InlineKeyboardButton("Назад").callbackData("back"),
+                new InlineKeyboardButton("Позвать волонтера").callbackData("call_volunteer")
+        );
+
+        SendMessage infoMessage = new SendMessage(chatId, shelterInfoMessage).replyMarkup(markup);
+        telegramBot.execute(infoMessage);
     }
+
+    public void sendDogShelterInformation(long chatId, String shelterType) {
+        String shelterInfoMessage = "Бот приветствует пользователя.\n"
+                + "Бот может рассказать о приюте.\n"
+                + "Бот может выдать расписание работы приюта и адрес, схему проезда.\n"
+                + "Бот может выдать контактные данные охраны для оформления пропуска на машину.\n"
+                + "Бот может выдать общие рекомендации о технике безопасности на территории приюта.";
+
+        InlineKeyboardMarkup markup = new InlineKeyboardMarkup(
+                new InlineKeyboardButton("Назад").callbackData("back"),
+                new InlineKeyboardButton("Позвать волонтера").callbackData("call_volunteer")
+        );
+
+        SendMessage infoMessage = new SendMessage(chatId, shelterInfoMessage).replyMarkup(markup);
+        telegramBot.execute(infoMessage);
+    }
+
+    public void handleInlineAction(long chatId, String action) {
+        if ("stage_1_info".equals(action)) {
+            sendCatShelterInformation(chatId, "приют для кошек");
+        } else if ("stage_2_adopt".equals(action)) {
+            // Обработка действия "Как взять животное из приюта (этап 2)"
+            // Реализуйте соответствующую логику.
+        } else if ("stage_3_report".equals(action)) {
+            // Обработка действия "Прислать отчет о питомце (этап 3)"
+            // Реализуйте соответствующую логику.
+        } else if ("call_volunteer".equals(action)) {
+            // Обработка действия "Позвать волонтера"
+            // Реализуйте соответствующую логику.
+        } else if ("back".equals(action)) {
+            // Обработка действия "Назад"
+            sendStartMessage(chatId);
+        }
+    }
+
 }

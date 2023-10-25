@@ -1,6 +1,6 @@
 package pro.sky.telegrambotanimalshelter.models;
 
-import javax.persistence.Column;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -28,7 +28,8 @@ public class Dog {
     public Dog() {
     }
 
-    public Dog(String name, String breed, int age, UserForDogsShelter owner) {
+    public Dog(Long id, String name, String breed, int age, UserForDogsShelter owner) {
+        this.id = id;
         this.name = name;
         this.breed = breed;
         this.age = age;
@@ -37,6 +38,10 @@ public class Dog {
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
