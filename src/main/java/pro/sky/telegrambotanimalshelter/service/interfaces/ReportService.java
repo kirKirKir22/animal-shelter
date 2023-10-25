@@ -1,7 +1,8 @@
 package pro.sky.telegrambotanimalshelter.service.interfaces;
 
-
 import pro.sky.telegrambotanimalshelter.models.Report;
+
+import java.util.List;
 
 public interface ReportService {
 
@@ -12,6 +13,8 @@ public interface ReportService {
     Report update(Report report);
 
     Report delete(long id);
+
+    List<Report> findAll();
 
 
 }
