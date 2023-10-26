@@ -1,6 +1,5 @@
 package pro.sky.telegrambotanimalshelter.models;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -26,7 +25,7 @@ public class UserForCatsShelter {
     @OneToMany(mappedBy = "owner")
     private List<Cat> cats;  // Список котов, принадлежащих пользователю
 
-    public UserForCatsShelter() {
+    public UserForCatsShelter(String name, String phoneNumber, Long chatId) {
         // Пустой конструктор
     }
 
@@ -36,7 +35,10 @@ public class UserForCatsShelter {
         this.chatId = chatId;
     }
 
-
+    public UserForCatsShelter(String name, String phone) {
+        this.name = name;
+        this.phone = phone;
+    }
 
     public Long getId() {
         return id;

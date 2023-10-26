@@ -6,4 +6,5 @@ import pro.sky.telegrambotanimalshelter.models.UserForCatsShelter;
 
 @Repository
 public interface UserForCatsShelterRepository extends JpaRepository<UserForCatsShelter, Long> {
+
 }
