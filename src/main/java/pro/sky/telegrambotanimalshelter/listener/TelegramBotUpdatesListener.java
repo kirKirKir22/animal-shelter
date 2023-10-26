@@ -47,6 +47,8 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                     userMessageHandler.sendStageOneButtonsDog(chatId);
                 } else if ("back".equals(data)) {
                     userMessageHandler.sendStartMessage(chatId);
+                } else if ("call_volunteer".equals(data)) {
+                    userMessageHandler.sendCallVolunteerMessage(chatId);
                 } else {
                     userMessageHandler.handleInlineAction(chatId, data);
                 }

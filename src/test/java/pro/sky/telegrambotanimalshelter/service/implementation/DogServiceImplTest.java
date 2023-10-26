@@ -5,7 +5,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
-import pro.sky.telegrambotanimalshelter.exceptions.DogException;
+import pro.sky.telegrambotanimalshelter.exceptions.DogNotFoundException;
 import pro.sky.telegrambotanimalshelter.models.Dog;
 import pro.sky.telegrambotanimalshelter.repository.DogRepository;
 
@@ -45,7 +45,7 @@ public class DogServiceImplTest {
 
         Mockito.when(dogRepository.findByName(dog.getName())).thenReturn(Optional.of(dog));
 
-        assertThrows(DogException.class, () -> dogService.add(dog));
+        assertThrows(DogNotFoundException.class, () -> dogService.add(dog));
     }
 
     @Test
@@ -67,7 +67,7 @@ public class DogServiceImplTest {
 
         Mockito.when(dogRepository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(DogException.class, () -> dogService.read(id));
+        assertThrows(DogNotFoundException.class, () -> dogService.read(id));
     }
 
     @Test
@@ -90,7 +90,7 @@ public class DogServiceImplTest {
 
         Mockito.when(dogRepository.existsById(dog.getId())).thenReturn(false);
 
-        assertThrows(DogException.class, () -> dogService.update(dog));
+        assertThrows(DogNotFoundException.class, () -> dogService.update(dog));
     }
 
     @Test
@@ -113,7 +113,7 @@ public class DogServiceImplTest {
 
         Mockito.when(dogRepository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(DogException.class, () -> dogService.delete(id));
+        assertThrows(DogNotFoundException.class, () -> dogService.delete(id));
     }
 
     @Test

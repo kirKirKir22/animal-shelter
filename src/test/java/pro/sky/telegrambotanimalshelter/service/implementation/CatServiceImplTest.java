@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+
 
 @SpringBootTest
 public class CatServiceImplTest {
@@ -45,7 +45,7 @@ public class CatServiceImplTest {
 
         Mockito.when(catRepository.findByName(cat.getName())).thenReturn(Optional.of(cat));
 
-        assertThrows(CatException.class, () -> catService.add(cat));
+        assertThrows(CatException.CatConflictException.class, () -> catService.add(cat));
     }
 
     @Test
@@ -67,7 +67,7 @@ public class CatServiceImplTest {
 
         Mockito.when(catRepository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(CatException.class, () -> catService.read(id));
+        assertThrows(CatException.CatNotFoundException.class, () -> catService.read(id));
     }
 
     @Test
@@ -90,7 +90,7 @@ public class CatServiceImplTest {
 
         Mockito.when(catRepository.existsById(cat.getId())).thenReturn(false);
 
-        assertThrows(CatException.class, () -> catService.update(cat));
+        assertThrows(CatException.CatNotFoundException.class, () -> catService.update(cat));
     }
 
     @Test
@@ -113,7 +113,7 @@ public class CatServiceImplTest {
 
         Mockito.when(catRepository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(CatException.class, () -> catService.delete(id));
+        assertThrows(CatException.CatNotFoundException.class, () -> catService.delete(id));
     }
 
     @Test

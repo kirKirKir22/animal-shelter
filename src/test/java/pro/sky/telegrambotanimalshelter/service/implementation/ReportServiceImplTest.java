@@ -5,7 +5,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
-import pro.sky.telegrambotanimalshelter.exceptions.ReportException;
+import pro.sky.telegrambotanimalshelter.exceptions.ReportNotFoundException;
 import pro.sky.telegrambotanimalshelter.models.Report;
 import pro.sky.telegrambotanimalshelter.repository.ReportRepository;
 
@@ -45,7 +45,7 @@ public class ReportServiceImplTest {
 
         Mockito.when(reportRepository.findById(report.getId())).thenReturn(Optional.of(report));
 
-        assertThrows(ReportException.class, () -> reportService.add(report));
+        assertThrows(ReportNotFoundException.class, () -> reportService.add(report));
     }
 
     @Test
@@ -67,7 +67,7 @@ public class ReportServiceImplTest {
 
         Mockito.when(reportRepository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ReportException.class, () -> reportService.read(id));
+        assertThrows(ReportNotFoundException.class, () -> reportService.read(id));
     }
 
     @Test
@@ -90,7 +90,7 @@ public class ReportServiceImplTest {
 
         Mockito.when(reportRepository.existsById(report.getId())).thenReturn(false);
 
-        assertThrows(ReportException.class, () -> reportService.update(report));
+        assertThrows(ReportNotFoundException.class, () -> reportService.update(report));
     }
 
     @Test
@@ -113,7 +113,7 @@ public class ReportServiceImplTest {
 
         Mockito.when(reportRepository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ReportException.class, () -> reportService.delete(id));
+        assertThrows(ReportNotFoundException.class, () -> reportService.delete(id));
     }
 
     @Test

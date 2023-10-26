@@ -3,7 +3,7 @@ package pro.sky.telegrambotanimalshelter.service.implementation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import pro.sky.telegrambotanimalshelter.exceptions.ReportException;
+import pro.sky.telegrambotanimalshelter.exceptions.ReportNotFoundException;
 import pro.sky.telegrambotanimalshelter.models.Report;
 import pro.sky.telegrambotanimalshelter.repository.ReportRepository;
 import pro.sky.telegrambotanimalshelter.service.interfaces.ReportService;
@@ -27,7 +27,7 @@ public class ReportServiceImpl implements ReportService {
 
         Optional<Report> existingReport = reportRepository.findById(report.getId());
         if (existingReport.isPresent()) {
-            throw new ReportException("Такой отчет уже есть в базе данных");
+            throw new ReportNotFoundException("Такой отчет уже есть в базе данных");
         }
 
         Report savedReport = reportRepository.save(report);
@@ -42,7 +42,7 @@ public class ReportServiceImpl implements ReportService {
 
         Optional<Report> report = reportRepository.findById(id);
         if (report.isEmpty()) {
-            throw new ReportException("Отчет в базе не найден");
+            throw new ReportNotFoundException("Отчет в базе не найден");
         }
 
         Report readReport = report.get();
@@ -55,7 +55,7 @@ public class ReportServiceImpl implements ReportService {
         logger.info("был вызван метод update с данными: " + report);
 
         if (!reportRepository.existsById(report.getId())) {
-            throw new ReportException("Отчет в базе не найден");
+            throw new ReportNotFoundException("Отчет в базе не найден");
         }
 
         Report updatedReport = reportRepository.save(report);
@@ -70,7 +70,7 @@ public class ReportServiceImpl implements ReportService {
 
         Optional<Report> report = reportRepository.findById(id);
         if (report.isEmpty()) {
-            throw new ReportException("Отчет в базе не найден");
+            throw new ReportNotFoundException("Отчет в базе не найден");
         }
 
         Report deleteReport = report.get();

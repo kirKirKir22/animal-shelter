@@ -26,7 +26,7 @@ public class CatServiceImpl implements CatService {
 
         Optional<Cat> existingCat = catRepository.findByName(cat.getName());
         if (existingCat.isPresent()) {
-            throw new CatException("Такой кот уже есть в базе данных");
+            throw new CatException.CatConflictException("Такой кот уже есть в базе данных");
         }
 
         Cat savedCat = catRepository.save(cat);
@@ -41,7 +41,7 @@ public class CatServiceImpl implements CatService {
 
         Optional<Cat> cat = catRepository.findById(id);
         if (cat.isEmpty()) {
-            throw new CatException("Кот в базе не найден");
+            throw new CatException.CatNotFoundException("Кот в базе не найден");
         }
 
         Cat readCat = cat.get();
@@ -54,7 +54,7 @@ public class CatServiceImpl implements CatService {
         logger.info("был вызван метод update с данными: " + cat);
 
         if (!catRepository.existsById(cat.getId())) {
-            throw new CatException("Кот в базе не найден");
+            throw new CatException.CatNotFoundException("Кот в базе не найден");
         }
 
         Cat updatedCat = catRepository.save(cat);
@@ -69,7 +69,7 @@ public class CatServiceImpl implements CatService {
 
         Optional<Cat> cat = catRepository.findById(id);
         if (cat.isEmpty()) {
-            throw new CatException("Кот в базе не найден");
+            throw new CatException.CatNotFoundException("Кот в базе не найден");
         }
 
         Cat deleteCat = cat.get();

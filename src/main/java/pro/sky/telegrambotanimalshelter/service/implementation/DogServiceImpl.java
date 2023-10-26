@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import pro.sky.telegrambotanimalshelter.models.Dog;
 import pro.sky.telegrambotanimalshelter.repository.DogRepository;
-import pro.sky.telegrambotanimalshelter.exceptions.DogException;
+import pro.sky.telegrambotanimalshelter.exceptions.DogNotFoundException;
 import pro.sky.telegrambotanimalshelter.service.interfaces.DogService;
 
 import java.util.List;
@@ -27,7 +27,7 @@ public class DogServiceImpl implements DogService {
 
         Optional<Dog> existingDog = dogRepository.findByName(dog.getName());
         if (existingDog.isPresent()) {
-            throw new DogException("Такая собака уже есть в базе данных");
+            throw new DogNotFoundException("Такая собака уже есть в базе данных");
         }
 
         Dog savedDog = dogRepository.save(dog);
@@ -42,7 +42,7 @@ public class DogServiceImpl implements DogService {
 
         Optional<Dog> dog = dogRepository.findById(id);
         if (dog.isEmpty()) {
-            throw new DogException("Собака в базе не найдена");
+            throw new DogNotFoundException("Собака в базе не найдена");
         }
 
         Dog readDog = dog.get();
@@ -55,7 +55,7 @@ public class DogServiceImpl implements DogService {
         logger.info("был вызван метод update с данными: " + dog);
 
         if (!dogRepository.existsById(dog.getId())) {
-            throw new DogException("Собака в базе не найдена");
+            throw new DogNotFoundException("Собака в базе не найдена");
         }
 
         Dog updatedDog = dogRepository.save(dog);
@@ -70,7 +70,7 @@ public class DogServiceImpl implements DogService {
 
         Optional<Dog> dog = dogRepository.findById(id);
         if (dog.isEmpty()) {
-            throw new DogException("Собака в базе не найдена");
+            throw new DogNotFoundException("Собака в базе не найдена");
         }
 
         Dog deleteDog = dog.get();

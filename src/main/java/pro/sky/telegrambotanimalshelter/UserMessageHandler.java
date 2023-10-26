@@ -92,22 +92,24 @@ public class UserMessageHandler {
         telegramBot.execute(infoMessage);
     }
 
+    public void sendCallVolunteerMessage(long chatId) {
+        String callVolunteerMessage = "Волонтёр скоро с вами свяжется";
+        SendMessage response = new SendMessage(chatId, callVolunteerMessage);
+        telegramBot.execute(response);
+    }
+
+
     public void handleInlineAction(long chatId, String action) {
         if ("stage_1_info".equals(action)) {
             sendCatShelterInformation(chatId, "приют для кошек");
         } else if ("stage_2_adopt".equals(action)) {
-            // Обработка действия "Как взять животное из приюта (этап 2)"
-            // Реализуйте соответствующую логику.
         } else if ("stage_3_report".equals(action)) {
-            // Обработка действия "Прислать отчет о питомце (этап 3)"
-            // Реализуйте соответствующую логику.
         } else if ("call_volunteer".equals(action)) {
-            // Обработка действия "Позвать волонтера"
-            // Реализуйте соответствующую логику.
+            sendCallVolunteerMessage(chatId);
         } else if ("back".equals(action)) {
-            // Обработка действия "Назад"
             sendStartMessage(chatId);
         }
     }
+
 
 }
