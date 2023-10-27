@@ -19,7 +19,7 @@ public class MessageParser {
                 String name = matcher.group(1);
                 String phoneNumber = matcher.group(2);
 
-                return new UserForCatsShelter(name, phoneNumber, chatId);
+                return new UserForCatsShelter(name, phoneNumber, chatId.toString()); // Преобразовываем chatId в строку
             }
         }
 
