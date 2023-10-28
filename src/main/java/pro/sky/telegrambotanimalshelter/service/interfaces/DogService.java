@@ -1,21 +1,20 @@
 package pro.sky.telegrambotanimalshelter.service.interfaces;
 
-import pro.sky.telegrambotanimalshelter.models.Cat;
+
 import pro.sky.telegrambotanimalshelter.models.Dog;
 
-import java.util.List;
+import java.util.Collection;
+
 
 public interface DogService {
 
-    Dog add(Dog dog);
+    Dog getByIdDog(Long id);
 
-    Dog read(long id);
+    Dog addDog(Dog dog);
 
-    Dog update(Dog dog);
+    Dog updateDog(Dog dog);
 
-    Dog delete(long id);
+    Collection<Dog> getAllDog();
 
-    List<Dog> findAll();
-
-
+    void removeByIdDog(Long id);
 }

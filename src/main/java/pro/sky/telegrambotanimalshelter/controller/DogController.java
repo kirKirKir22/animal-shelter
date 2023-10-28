@@ -1,44 +1,110 @@
 package pro.sky.telegrambotanimalshelter.controller;
 
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import pro.sky.telegrambotanimalshelter.models.Dog;
-import pro.sky.telegrambotanimalshelter.service.interfaces.DogService;
+import pro.sky.telegrambotanimalshelter.service.implementation.DogServiceImpl;
 
-import java.util.List;
+import java.util.Collection;
+
 
 @RestController
-@RequestMapping("/dog")
+@RequestMapping("dog")
 public class DogController {
 
-    private final DogService dogService;
+    private final DogServiceImpl dogService;
 
-    public DogController(DogService dogService) {
+    public DogController(DogServiceImpl dogService) {
         this.dogService = dogService;
     }
 
-    @PostMapping
-    public Dog create(@RequestBody Dog dog) {
-        return dogService.add(dog);
-    }
-
+    @Operation(summary = "Получение собаки по id",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Собака по id найдена",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = Dog.class)
+                            )
+                    )
+            },
+            tags = "Dog"
+    )
     @GetMapping("/{id}")
-    public Dog read(@PathVariable long id) {
-        return dogService.read(id);
+    public Dog getById(@Parameter(description = "dog id") @PathVariable Long id) {
+        return this.dogService.getByIdDog(id);
     }
 
-    @PutMapping("/{id}")
-    public Dog update(@PathVariable long id, @RequestBody Dog dog) {
-        dog.setId(id);
-        return dogService.update(dog);
+    @Operation(summary = "Создание новой собаки",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody (
+                    description = "Собака создана",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = Dog.class)
+                    )
+            ),
+            tags = "Dog"
+    )
+    @PostMapping()
+    public Dog save(@RequestBody Dog dog) {
+        return this.dogService.addDog(dog);
     }
 
+    @Operation(summary = "Редактирование данных собаки",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody (
+                    description = "Данные собаки отредактированы",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = Dog.class)
+                    )
+            ),
+            tags = "Dog"
+    )
+    @PutMapping()
+    public Dog update(@RequestBody Dog dog) {
+        return this.dogService.updateDog(dog);
+    }
+
+    @Operation(summary = "Удаление собаки по id",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Собака удалена по id",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = Dog.class)
+                            )
+                    )
+            },
+            tags = "Dog"
+    )
     @DeleteMapping("/{id}")
-    public Dog delete(@PathVariable long id) {
-        return dogService.delete(id);
+    public void remove(@Parameter (description = "dog id")@PathVariable Long id) {
+        this.dogService.removeByIdDog(id);
     }
 
+    @Operation(summary = "Просмотр всех собак",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Получен список всех собак",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = Dog.class)
+                            )
+                    )
+            },
+            tags = "Dog"
+    )
     @GetMapping("/all")
-    public List<Dog> findAll() {
-        return dogService.findAll();
+    public Collection<Dog> getAll() {
+        return this.dogService.getAllDog();
     }
 }

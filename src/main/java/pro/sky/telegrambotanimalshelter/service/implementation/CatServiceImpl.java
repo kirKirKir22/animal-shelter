@@ -1,90 +1,68 @@
 package pro.sky.telegrambotanimalshelter.service.implementation;
 
+
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import pro.sky.telegrambotanimalshelter.exceptions.CatNotFoundException;
 import pro.sky.telegrambotanimalshelter.models.Cat;
 import pro.sky.telegrambotanimalshelter.repository.CatRepository;
-import pro.sky.telegrambotanimalshelter.exceptions.CatException;
 import pro.sky.telegrambotanimalshelter.service.interfaces.CatService;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.Collection;
+
 
 @Service
 public class CatServiceImpl implements CatService {
 
-    private final CatRepository catRepository;
-    private final Logger logger = LoggerFactory.getLogger(CatServiceImpl.class);
+    private final CatRepository repository;
 
-    public CatServiceImpl(CatRepository catRepository) {
-        this.catRepository = catRepository;
+    private static final Logger logger = LoggerFactory.getLogger(CatServiceImpl.class);
+
+    public CatServiceImpl(CatRepository repository) {
+        this.repository = repository;
     }
 
-    public Cat add(Cat cat) {
-        logger.info("вызван метод add с данными: " + cat);
 
-        Optional<Cat> existingCat = catRepository.findByName(cat.getName());
-        if (existingCat.isPresent()) {
-            throw new CatException("Такой кот уже есть в базе данных");
-        }
-
-        Cat savedCat = catRepository.save(cat);
-        logger.info("метод add вернул: " + savedCat);
-
-        return savedCat;
-    }
 
     @Override
-    public Cat read(long id) {
-        logger.info("был вызван метод read с данными " + id);
-
-        Optional<Cat> cat = catRepository.findById(id);
-        if (cat.isEmpty()) {
-            throw new CatException("Кот в базе не найден");
-        }
-
-        Cat readCat = cat.get();
-        logger.info("метод read вернул: " + readCat);
-        return readCat;
+    public Cat getByIdCat(Long id) {
+        logger.info("Was invoked method to get a cat by id={}", id);
+        return this.repository.findById(id)
+                .orElseThrow(CatNotFoundException::new);
     }
 
+
     @Override
-    public Cat update(Cat cat) {
-        logger.info("был вызван метод update с данными: " + cat);
-
-        if (!catRepository.existsById(cat.getId())) {
-            throw new CatException("Кот в базе не найден");
-        }
-
-        Cat updatedCat = catRepository.save(cat);
-        logger.info("метод update вернул: " + updatedCat);
-
-        return updatedCat;
+    public Cat addCat(Cat cat) {
+        logger.info("Was invoked method to add a cat");
+        return this.repository.save(cat);
     }
 
+
     @Override
-    public Cat delete(long id) {
-        logger.info("был вызван метод delete с данными: " + id);
-
-        Optional<Cat> cat = catRepository.findById(id);
-        if (cat.isEmpty()) {
-            throw new CatException("Кот в базе не найден");
+    public Cat updateCat(Cat cat) {
+        logger.info("Was invoked method to update a cat");
+        if (cat.getId() != null) {
+            if (getByIdCat(cat.getId()) != null) {
+                return this.repository.save(cat);
+            }
         }
-
-        Cat deleteCat = cat.get();
-        catRepository.deleteById(id);
-        logger.info("метод delete вернул: " + deleteCat);
-        return deleteCat;
+        throw new CatNotFoundException();
     }
 
+
     @Override
-    public List<Cat> findAll() {
-        logger.info("был вызван метод findAll");
+    public Collection<Cat> getAllCat() {
+        logger.info("Was invoked method to get all cats");
+        return this.repository.findAll();
+    }
 
-        List<Cat> catList = catRepository.findAll();
 
-        logger.info("метод findAll вернул: " + catList);
-        return catList;
+    @Override
+    public void removeByIdCat(Long id) {
+        logger.info("Was invoked method to remove a cat by id={}", id);
+        this.repository.deleteById(id);
     }
 }
