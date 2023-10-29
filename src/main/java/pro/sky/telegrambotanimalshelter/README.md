@@ -10,12 +10,6 @@ Telegram_Bot_Animal_Shelter (Приют для животных Астана)
 
 Братусь Игорь
 
-Волков Дмитрий
-
-Житарь Владислав
-
-Акопян Юлия
-
 Планируемый функционал
 
 Приветствие
@@ -27,7 +21,7 @@ Telegram_Bot_Animal_Shelter (Приют для животных Астана)
 Стек технологий
 
 Среда разработки IDE: Intelij IDEA 2022.2.2 (Community Edition)
-Java 11
+Java 17
 Spring Framework
 PostgreSQL
 Сборщик Maven v.2.7.7
