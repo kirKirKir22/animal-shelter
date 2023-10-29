@@ -8,9 +8,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import pro.sky.telegrambotanimalshelter.models.PersonDog;
+import pro.sky.telegrambotanimalshelter.models.HumanDog;
 import pro.sky.telegrambotanimalshelter.models.Status;
-import pro.sky.telegrambotanimalshelter.repository.PersonDogRepository;
+import pro.sky.telegrambotanimalshelter.repository.HumanDogRepository;
 
 import java.util.*;
 
@@ -26,23 +26,23 @@ public class PersonDogServiceImplTest {
     private static final Long CHAT_ID = 1L;
     private static final Status STATUS = Status.SEARCH;
 
-    private static final List<PersonDog> personDogs = new ArrayList<>(Arrays.asList(
-            new PersonDog(PERSON_NAME, YEAR_OF_BIRTH, PHONE, ADDRESS, CHAT_ID, STATUS),
-            new PersonDog(PERSON_NAME, YEAR_OF_BIRTH, PHONE, ADDRESS, CHAT_ID, STATUS),
-            new PersonDog(PERSON_NAME, YEAR_OF_BIRTH, PHONE, ADDRESS, CHAT_ID, STATUS)));
+    private static final List<HumanDog> personDogs = new ArrayList<>(Arrays.asList(
+            new HumanDog(PERSON_NAME, YEAR_OF_BIRTH, PHONE, ADDRESS, CHAT_ID, STATUS),
+            new HumanDog(PERSON_NAME, YEAR_OF_BIRTH, PHONE, ADDRESS, CHAT_ID, STATUS),
+            new HumanDog(PERSON_NAME, YEAR_OF_BIRTH, PHONE, ADDRESS, CHAT_ID, STATUS)));
     @Mock
-    private PersonDogRepository personDogRepositoryMock;
+    private HumanDogRepository personDogRepositoryMock;
 
     @InjectMocks
-    private PersonDogServiceImpl personDogService;
+    private HumanDogServiceImpl personDogService;
 
-    private final PersonDog personDog = new PersonDog(PERSON_NAME, YEAR_OF_BIRTH, PHONE, ADDRESS, CHAT_ID, STATUS);
+    private final HumanDog personDog = new HumanDog(PERSON_NAME, YEAR_OF_BIRTH, PHONE, ADDRESS, CHAT_ID, STATUS);
 
 
     @Test
     public void getByIdPersonDog() {
         Mockito.when(personDogRepositoryMock.findById(any(Long.class))).thenReturn(Optional.of(personDog));
-        PersonDog dog = personDogService.getByIdPersonDog(1L);
+        HumanDog dog = personDogService.getByIdHumanDog(1L);
         Assertions.assertThat(dog.getId()).isEqualTo(personDog.getId());
         Assertions.assertThat(dog.getName()).isEqualTo(personDog.getName());
         Assertions.assertThat(dog.getYearOfBirth()).isEqualTo(personDog.getYearOfBirth());
@@ -54,8 +54,8 @@ public class PersonDogServiceImplTest {
 
     @Test
     public void addPersonDog() {
-        Mockito.when(personDogRepositoryMock.save(any(PersonDog.class))).thenReturn(personDog);
-        PersonDog personDog1 = personDogService.addPersonDog(personDog);
+        Mockito.when(personDogRepositoryMock.save(any(HumanDog.class))).thenReturn(personDog);
+        HumanDog personDog1 = personDogService.addHumanDog(personDog);
         Assertions.assertThat(personDog1.getId()).isEqualTo(personDog.getId());
         Assertions.assertThat(personDog1.getName()).isEqualTo(personDog.getName());
         Assertions.assertThat(personDog1.getYearOfBirth()).isEqualTo(personDog.getYearOfBirth());
@@ -67,7 +67,7 @@ public class PersonDogServiceImplTest {
 
     @Test
     public void updatePersonDog() {
-        PersonDog personDog1 = new PersonDog();
+        HumanDog personDog1 = new HumanDog();
         personDog1.setName(PERSON_NAME);
         personDog1.setYearOfBirth(YEAR_OF_BIRTH);
         personDog1.setPhone(PHONE);
@@ -76,8 +76,8 @@ public class PersonDogServiceImplTest {
         personDog1.setStatus(STATUS);
         personDog1.setId(1L);
         Mockito.when(personDogRepositoryMock.findById(any(Long.class))).thenReturn(Optional.of(personDog1));
-        Mockito.when(personDogRepositoryMock.save(any(PersonDog.class))).thenReturn(personDog1);
-        PersonDog personDog2 = personDogService.updatePersonDog(personDog1);
+        Mockito.when(personDogRepositoryMock.save(any(HumanDog.class))).thenReturn(personDog1);
+        HumanDog personDog2 = personDogService.updateHumanDog(personDog1);
         Assertions.assertThat(personDog2.getName()).isEqualTo(personDog1.getName());
         Assertions.assertThat(personDog2.getYearOfBirth()).isEqualTo(personDog1.getYearOfBirth());
         Assertions.assertThat(personDog2.getPhone()).isEqualTo(personDog1.getPhone());
@@ -89,7 +89,7 @@ public class PersonDogServiceImplTest {
     @Test
     public void getAllPersonDog() {
         Mockito.when(personDogRepositoryMock.findAll()).thenReturn(personDogs);
-        Collection<PersonDog> personDog1 = personDogService.getAllPersonDog();
+        Collection<HumanDog> personDog1 = personDogService.getAllHumanDog();
         Assertions.assertThat(personDog1.size()).isEqualTo(personDogs.size());
         Assertions.assertThat(personDog1).isEqualTo(personDogs);
     }

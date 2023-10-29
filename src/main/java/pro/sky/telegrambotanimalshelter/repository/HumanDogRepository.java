@@ -6,19 +6,19 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import pro.sky.telegrambotanimalshelter.models.PersonDog;
+import pro.sky.telegrambotanimalshelter.models.HumanDog;
 
 import javax.transaction.Transactional;
 
 
 @Repository
-public interface PersonDogRepository extends JpaRepository<PersonDog, Long> {
+public interface HumanDogRepository extends JpaRepository<HumanDog, Long> {
 
-    PersonDog findByChatId(Long chatId);
+    HumanDog findByChatId(Long chatId);
 
     @Transactional
     @Modifying
-    @Query("UPDATE PersonDog p set p.name = :name, p.phone = :phone where p.chatId = :chatId")
+    @Query("UPDATE HumanDog p set p.name = :name, p.phone = :phone where p.chatId = :chatId")
     public void updatePersonDog(@Param("name") String name,
                                 @Param("phone") String phone,
                                 @Param("chatId") Long chatId);

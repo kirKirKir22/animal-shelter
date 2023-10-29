@@ -34,10 +34,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import pro.sky.telegrambotanimalshelter.exceptions.MenuDoesntWorkException;
-import pro.sky.telegrambotanimalshelter.keyboard.KeyBoardShelter;
+import pro.sky.telegrambotanimalshelter.keyboard.HotkeysShelter;
 import pro.sky.telegrambotanimalshelter.models.*;
-import pro.sky.telegrambotanimalshelter.repository.PersonCatRepository;
-import pro.sky.telegrambotanimalshelter.repository.PersonDogRepository;
+import pro.sky.telegrambotanimalshelter.repository.HumanCatRepository;
+import pro.sky.telegrambotanimalshelter.repository.HumanDogRepository;
 import pro.sky.telegrambotanimalshelter.repository.ReportRepository;
 import pro.sky.telegrambotanimalshelter.service.interfaces.ReportService;
 
@@ -45,13 +45,13 @@ import pro.sky.telegrambotanimalshelter.service.interfaces.ReportService;
 @ExtendWith(SpringExtension.class)
 class TelegramBotUpdateListenerTest {
     @MockBean
-    private KeyBoardShelter keyBoardShelter;
+    private HotkeysShelter keyBoardShelter;
 
     @MockBean
-    private PersonCatRepository personCatRepository;
+    private HumanCatRepository personCatRepository;
 
     @MockBean
-    private PersonDogRepository personDogRepository;
+    private HumanDogRepository personDogRepository;
 
     @MockBean
     private ReportRepository reportRepository;
@@ -67,12 +67,12 @@ class TelegramBotUpdateListenerTest {
 
     private Dog dog;
     private Dog dog2;
-    private PersonDog personDog;
-    private PersonDog personDog2;
+    private HumanDog personDog;
+    private HumanDog personDog2;
     private Cat cat;
     private Cat cat2;
-    private PersonCat personCat;
-    private PersonCat personCat2;
+    private HumanCat personCat;
+    private HumanCat personCat2;
 
 
 
@@ -85,7 +85,7 @@ class TelegramBotUpdateListenerTest {
         dog.setId(1L);
         dog.setName("Name");
 
-        personDog = new PersonDog();
+        personDog = new HumanDog();
         personDog.setAddress("Moscow");
         personDog.setChatId(1L);
         personDog.setDog(dog);
@@ -104,7 +104,7 @@ class TelegramBotUpdateListenerTest {
         dog2.setId(2L);
         dog2.setName("Name");
 
-        personDog2 = new PersonDog();
+        personDog2 = new HumanDog();
         personDog2.setAddress("Moscow");
         personDog2.setChatId(2L);
         personDog2.setDog(dog2);
@@ -122,7 +122,7 @@ class TelegramBotUpdateListenerTest {
         cat.setId(1L);
         cat.setName("Name");
 
-        personCat = new PersonCat();
+        personCat = new HumanCat();
         personCat.setAddress("Moscow");
         personCat.setCat(cat);
         personCat.setChatId(1L);
@@ -140,7 +140,7 @@ class TelegramBotUpdateListenerTest {
         cat2.setId(2L);
         cat2.setName("Name");
 
-        personCat2 = new PersonCat();
+        personCat2 = new HumanCat();
         personCat2.setAddress("Moscow");
         personCat2.setCat(cat2);
         personCat2.setChatId(2L);

@@ -12,7 +12,7 @@ import javax.persistence.MappedSuperclass;
 @NoArgsConstructor
 @AllArgsConstructor
 @MappedSuperclass
-public abstract class Animal {
+public abstract class Animals {
 
 
     @Column(name = "name")

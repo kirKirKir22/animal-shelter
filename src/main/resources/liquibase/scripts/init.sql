@@ -1,6 +1,6 @@
 -- Liquibase formatted SQL
 
--- Changeset Bratus:1
+-- Changeset Nemahov:2
 
 CREATE TABLE CAT
 (

@@ -8,19 +8,19 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import pro.sky.telegrambotanimalshelter.models.PersonDog;
-import pro.sky.telegrambotanimalshelter.service.implementation.PersonDogServiceImpl;
+import pro.sky.telegrambotanimalshelter.models.HumanDog;
+import pro.sky.telegrambotanimalshelter.service.implementation.HumanDogServiceImpl;
 
 import java.util.Collection;
 
 
 @RestController
 @RequestMapping("person-dog")
-public class PersonDogController {
+public class HumanDogController {
 
-    private final PersonDogServiceImpl personDogService;
+    private final HumanDogServiceImpl personDogService;
 
-    public PersonDogController(PersonDogServiceImpl personDogService) {
+    public HumanDogController(HumanDogServiceImpl personDogService) {
         this.personDogService = personDogService;
     }
 
@@ -31,15 +31,15 @@ public class PersonDogController {
                             description = "Пользователь, усыновитель собаки, найден по id",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = PersonDog.class)
+                                    schema = @Schema(implementation = HumanDog.class)
                             )
                     )
             },
             tags = "PersonDog"
     )
     @GetMapping("/{id}")
-    public PersonDog getById(@Parameter(description = "PersonDog id")@PathVariable Long id) {
-        return this.personDogService.getByIdPersonDog(id);
+    public HumanDog getById(@Parameter(description = "PersonDog id")@PathVariable Long id) {
+        return this.personDogService.getByIdHumanDog(id);
     }
 
     @Operation(summary = "Создание пользователя, усыновителя собаки",
@@ -47,14 +47,14 @@ public class PersonDogController {
                     description = "Пользователь, усыновитель собаки, найден",
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = PersonDog.class)
+                            schema = @Schema(implementation = HumanDog.class)
                     )
             ),
             tags = "PersonDog"
     )
     @PostMapping
-    public PersonDog save(@RequestBody PersonDog personDog) {
-        return this.personDogService.addPersonDog(personDog);
+    public HumanDog save(@RequestBody HumanDog personDog) {
+        return this.personDogService.addHumanDog(personDog);
     }
 
     @Operation(summary = "Изменение данных пользователя, усыновителя кота",
@@ -62,14 +62,14 @@ public class PersonDogController {
                     description = "Данные пользователя, усыновителя собаки, изменены",
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = PersonDog.class)
+                            schema = @Schema(implementation = HumanDog.class)
                     )
             ),
             tags = "PersonDog"
     )
     @PutMapping
-    public PersonDog update(@RequestBody PersonDog personDog) {
-        return this.personDogService.updatePersonDog(personDog);
+    public HumanDog update(@RequestBody HumanDog personDog) {
+        return this.personDogService.updateHumanDog(personDog);
     }
 
     @Operation(summary = "Удаление пользователей по id",
@@ -79,7 +79,7 @@ public class PersonDogController {
                             description = "Пользователь, удаленный по id",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = PersonDog.class)
+                                    schema = @Schema(implementation = HumanDog.class)
                             )
                     )
             },
@@ -87,7 +87,7 @@ public class PersonDogController {
     )
     @DeleteMapping("/{id}")
     public void remove(@Parameter(description = "PersonDog id") @PathVariable Long id) {
-        this.personDogService.removeByIdPersonDog(id);
+        this.personDogService.removeByIdHumanDog(id);
     }
 
     @Operation(summary = "Просмотр всех пользователей",
@@ -97,14 +97,14 @@ public class PersonDogController {
                             description = "Все пользователи, либо определенные пользователи по chat_id",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = PersonDog.class)
+                                    schema = @Schema(implementation = HumanDog.class)
                             )
                     )
             },
             tags = "PersonDog"
     )
     @GetMapping("/all")
-    public Collection<PersonDog> getAll() {
-        return this.personDogService.getAllPersonDog();
+    public Collection<HumanDog> getAll() {
+        return this.personDogService.getAllHumanDog();
     }
 }

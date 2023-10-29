@@ -13,11 +13,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import pro.sky.telegrambotanimalshelter.exceptions.MenuDoesntWorkException;
 import pro.sky.telegrambotanimalshelter.handlers.ReportHandler;
-import pro.sky.telegrambotanimalshelter.keyboard.KeyBoardShelter;
-import pro.sky.telegrambotanimalshelter.models.PersonCat;
-import pro.sky.telegrambotanimalshelter.models.PersonDog;
-import pro.sky.telegrambotanimalshelter.repository.PersonCatRepository;
-import pro.sky.telegrambotanimalshelter.repository.PersonDogRepository;
+import pro.sky.telegrambotanimalshelter.keyboard.HotkeysShelter;
+import pro.sky.telegrambotanimalshelter.models.HumanCat;
+import pro.sky.telegrambotanimalshelter.models.HumanDog;
+import pro.sky.telegrambotanimalshelter.repository.HumanCatRepository;
+import pro.sky.telegrambotanimalshelter.repository.HumanDogRepository;
 import pro.sky.telegrambotanimalshelter.repository.ReportRepository;
 import pro.sky.telegrambotanimalshelter.service.interfaces.ReportService;
 
@@ -34,16 +34,16 @@ public class TelegramBotUpdateListener implements UpdatesListener {
 
     private static final Logger logger = LoggerFactory.getLogger(TelegramBotUpdateListener.class);
     private final ReportRepository reportRepository;
-    private final PersonDogRepository personDogRepository;
-    private final PersonCatRepository personCatRepository;
-    private final KeyBoardShelter keyBoardShelter;
+    private final HumanDogRepository personDogRepository;
+    private final HumanCatRepository personCatRepository;
+    private final HotkeysShelter keyBoardShelter;
     private final ReportService reportService;
     private final com.pengrad.telegrambot.TelegramBot telegramBot;
     private ReportHandler reportHandler;
 
 
-    public TelegramBotUpdateListener(ReportRepository reportRepository, PersonDogRepository personDogRepository,
-                                     PersonCatRepository personCatRepository, KeyBoardShelter keyBoardShelter,
+    public TelegramBotUpdateListener(ReportRepository reportRepository, HumanDogRepository personDogRepository,
+                                     HumanCatRepository personCatRepository, HotkeysShelter keyBoardShelter,
                                      ReportService reportService, TelegramBot telegramBot) {
         this.reportRepository = reportRepository;
         this.personDogRepository = personDogRepository;
@@ -96,7 +96,7 @@ public class TelegramBotUpdateListener implements UpdatesListener {
                                         keyBoardShelter.sendMenu(chatId);
                                         sendMessage(chatId, SET_CAT_ANIMAL);
                                         if (personCatRepository.findByChatId(chatId) == null) {
-                                            personCatRepository.save(new PersonCat(chatId));
+                                            personCatRepository.save(new HumanCat(chatId));
                                         }
                                         break;
 
@@ -104,7 +104,7 @@ public class TelegramBotUpdateListener implements UpdatesListener {
                                         keyBoardShelter.sendMenu(chatId);
                                         sendMessage(chatId, SET_DOG_ANIMAL);
                                         if (personDogRepository.findByChatId(chatId) == null) {
-                                            personDogRepository.save(new PersonDog(chatId));
+                                            personDogRepository.save(new HumanDog(chatId));
                                         }
                                         break;
 
@@ -232,12 +232,12 @@ public class TelegramBotUpdateListener implements UpdatesListener {
             if (lastName != null) {
                 String name = firstName + " " + lastName + " " + username;
                 if (personCatRepository.findByChatId(finalChatId) == null) {
-                    personCatRepository.save(new PersonCat(name, phone, finalChatId));
+                    personCatRepository.save(new HumanCat(name, phone, finalChatId));
                 } else {
                     personCatRepository.updatePersonCat(name, phone, finalChatId);
                 }
                 if (personDogRepository.findByChatId(finalChatId) == null) {
-                    personDogRepository.save(new PersonDog(name, phone, finalChatId));
+                    personDogRepository.save(new HumanDog(name, phone, finalChatId));
                 } else {
                     personDogRepository.updatePersonDog(name, phone, finalChatId);
                 }

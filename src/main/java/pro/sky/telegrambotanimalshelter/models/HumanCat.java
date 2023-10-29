@@ -13,7 +13,7 @@ import java.util.List;
 @EqualsAndHashCode
 @NoArgsConstructor
 @ToString
-public class PersonCat extends Person {
+public class HumanCat extends Human {
 
 
     @Id
@@ -21,20 +21,20 @@ public class PersonCat extends Person {
     @Column(name = "id")
     private Long id;
 
-    public PersonCat(String name, int yearOfBirth, String phone, String address, Long chatId, Status status, Cat cat) {
+    public HumanCat(String name, int yearOfBirth, String phone, String address, Long chatId, Status status, Cat cat) {
         super(name, yearOfBirth, phone, address, chatId, status);
         this.cat = cat;
     }
 
-    public PersonCat(String name, int yearOfBirth, String phone, String address, Long chatId, Status status) {
+    public HumanCat(String name, int yearOfBirth, String phone, String address, Long chatId, Status status) {
         super(name, yearOfBirth, phone, address, chatId, status);
     }
 
-    public PersonCat(String name, String phone, Long chatId) {
+    public HumanCat(String name, String phone, Long chatId) {
         super(name, phone, chatId);
     }
 
-    public  PersonCat(Long chatId){
+    public HumanCat(Long chatId){
         super(chatId);
     }
 

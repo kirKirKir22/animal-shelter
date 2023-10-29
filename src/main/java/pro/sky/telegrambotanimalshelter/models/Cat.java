@@ -14,7 +14,7 @@ import javax.persistence.*;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class Cat extends Animal {
+public class Cat extends Animals {
 
 
     @Id

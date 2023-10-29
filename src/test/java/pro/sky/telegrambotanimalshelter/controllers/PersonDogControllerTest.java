@@ -7,9 +7,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import pro.sky.telegrambotanimalshelter.controller.PersonDogController;
-import pro.sky.telegrambotanimalshelter.models.PersonDog;
-import pro.sky.telegrambotanimalshelter.service.implementation.PersonDogServiceImpl;
+import pro.sky.telegrambotanimalshelter.controller.HumanDogController;
+import pro.sky.telegrambotanimalshelter.models.HumanDog;
+import pro.sky.telegrambotanimalshelter.service.implementation.HumanDogServiceImpl;
 
 import java.util.List;
 
@@ -20,40 +20,40 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-@WebMvcTest(PersonDogController.class)
+@WebMvcTest(HumanDogController.class)
 public class PersonDogControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private PersonDogServiceImpl personDogService;
+    private HumanDogServiceImpl personDogService;
 
     @Test
     void getByIdPersonDog() throws Exception {
-        PersonDog personDog = new PersonDog();
+        HumanDog personDog = new HumanDog();
         personDog.setId(1L);
 
-        when(personDogService.getByIdPersonDog(anyLong())).thenReturn(personDog);
+        when(personDogService.getByIdHumanDog(anyLong())).thenReturn(personDog);
 
         mockMvc.perform(
                         get("/person-dog/{id}", 1L))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        verify(personDogService).getByIdPersonDog(1L);
+        verify(personDogService).getByIdHumanDog(1L);
     }
 
     @Test
     void addPersonDog() throws Exception {
-        PersonDog personDog = new PersonDog();
+        HumanDog personDog = new HumanDog();
         personDog.setId(1L);
         personDog.setName("Человек");
         JSONObject userObject = new JSONObject();
         userObject.put("id", 1L);
         userObject.put("name", "Человек");
 
-        when(personDogService.addPersonDog(personDog)).thenReturn(personDog);
+        when(personDogService.addHumanDog(personDog)).thenReturn(personDog);
 
         mockMvc.perform(
                         post("/person-dog")
@@ -62,19 +62,19 @@ public class PersonDogControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        verify(personDogService).addPersonDog(personDog);
+        verify(personDogService).addHumanDog(personDog);
     }
 
     @Test
     void updatePersonDog() throws Exception {
-        PersonDog personDog = new PersonDog();
+        HumanDog personDog = new HumanDog();
         personDog.setId(1L);
         personDog.setName("Человек");
         JSONObject userObject = new JSONObject();
         userObject.put("id", 1L);
         userObject.put("name", "Человек");
 
-        when(personDogService.updatePersonDog(personDog)).thenReturn(personDog);
+        when(personDogService.updateHumanDog(personDog)).thenReturn(personDog);
 
         mockMvc.perform(
                         put("/person-dog")
@@ -83,7 +83,7 @@ public class PersonDogControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        verify(personDogService).updatePersonDog(personDog);
+        verify(personDogService).updateHumanDog(personDog);
     }
 
     @Test
@@ -91,12 +91,12 @@ public class PersonDogControllerTest {
         mockMvc.perform(
                         delete("/person-dog/{id}", 1))
                 .andExpect(status().isOk());
-        verify(personDogService).removeByIdPersonDog(1L);
+        verify(personDogService).removeByIdHumanDog(1L);
     }
 
     @Test
     void getAll() throws Exception {
-        when(personDogService.getAllPersonDog()).thenReturn(List.of(new PersonDog()));
+        when(personDogService.getAllHumanDog()).thenReturn(List.of(new HumanDog()));
 
         mockMvc.perform(
                         get("/person-dog/all"))

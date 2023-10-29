@@ -5,9 +5,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
-public class PersonDogNotFoundException extends RuntimeException {
+public class HumanCatNotFoundException extends RuntimeException {
 
-    public PersonDogNotFoundException() {
-        super("Усыновитель собаки не найден!");
+    public HumanCatNotFoundException() {
+        super("Усыновитель кота не найден!");
     }
 }

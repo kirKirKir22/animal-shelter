@@ -57,16 +57,16 @@ public class Report {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(referencedColumnName = "id")
-    private PersonCat personCat;
+    private HumanCat personCat;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(referencedColumnName = "id")
-    private PersonDog personDog;
+    private HumanDog personDog;
 
 
 
     public Report(Long chatId, String ration, String health, String habits, Long days, String filePath, Long fileSize,
-                  byte[] data, String caption, Date lastMessage, Long lastMessageMs, PersonCat personCat, PersonDog personDog) {
+                  byte[] data, String caption, Date lastMessage, Long lastMessageMs, HumanCat personCat, HumanDog personDog) {
         this.chatId = chatId;
         this.ration = ration;
         this.health = health;

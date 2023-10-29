@@ -7,19 +7,19 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import pro.sky.telegrambotanimalshelter.models.PersonCat;
-import pro.sky.telegrambotanimalshelter.service.implementation.PersonCatServiceImpl;
+import pro.sky.telegrambotanimalshelter.models.HumanCat;
+import pro.sky.telegrambotanimalshelter.service.implementation.HumanCatServiceImpl;
 
 import java.util.Collection;
 
 
 @RestController
 @RequestMapping("person-cat")
-public class PersonCatController {
+public class HumanCatController {
 
-    private final PersonCatServiceImpl personCatService;
+    private final HumanCatServiceImpl personCatService;
 
-    public PersonCatController(PersonCatServiceImpl personCatService) {
+    public HumanCatController(HumanCatServiceImpl personCatService) {
         this.personCatService = personCatService;
     }
 
@@ -30,15 +30,15 @@ public class PersonCatController {
                             description = "Пользователь, усыновитель кота, найден по id",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = PersonCat.class)
+                                    schema = @Schema(implementation = HumanCat.class)
                             )
                     )
             },
             tags = "PersonCat"
     )
     @GetMapping("/{id}")
-    public PersonCat getById(@Parameter(description = "PersonCat id") @PathVariable Long id) {
-        return this.personCatService.getByIdPersonCat(id);
+    public HumanCat getById(@Parameter(description = "PersonCat id") @PathVariable Long id) {
+        return this.personCatService.getByIdHumanCat(id);
     }
 
     @Operation(summary = "Создание пользователя, усыновителя кота",
@@ -46,14 +46,14 @@ public class PersonCatController {
                     description = "Пользователь, усыновитель кота, создан",
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = PersonCat.class)
+                            schema = @Schema(implementation = HumanCat.class)
                     )
             ),
             tags = "PersonCat"
     )
     @PostMapping()
-    public PersonCat save(@RequestBody PersonCat personCat) {
-        return this.personCatService.addPersonCat(personCat);
+    public HumanCat save(@RequestBody HumanCat personCat) {
+        return this.personCatService.addHumanCat(personCat);
     }
 
     @Operation(summary = "Изменение данных пользователя, усыновителя кота",
@@ -61,14 +61,14 @@ public class PersonCatController {
                     description = "Данные пользователя, усыновителя кота, изменены",
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = PersonCat.class)
+                            schema = @Schema(implementation = HumanCat.class)
                     )
             ),
             tags = "PersonCat"
     )
     @PutMapping
-    public PersonCat update(@RequestBody PersonCat personCat) {
-        return this.personCatService.addPersonCat(personCat);
+    public HumanCat update(@RequestBody HumanCat personCat) {
+        return this.personCatService.addHumanCat(personCat);
     }
 
     @Operation(summary = "Удаление пользователя, усыновителя кота, по id",
@@ -78,7 +78,7 @@ public class PersonCatController {
                             description = "Пользователь, усыновитель кота, удален по id",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = PersonCat.class)
+                                    schema = @Schema(implementation = HumanCat.class)
                             )
                     )
             },
@@ -86,7 +86,7 @@ public class PersonCatController {
     )
     @DeleteMapping("/{id}")
     public void remove(@Parameter(description = "PersonCat id")@PathVariable Long id) {
-        this.personCatService.removeByIdPersonCat(id);
+        this.personCatService.removeByIdHumanCat(id);
     }
 
     @Operation(summary = "Просмотр всех пользователей, усыновителей кота",
@@ -96,14 +96,14 @@ public class PersonCatController {
                             description = "Получены все пользователи, усыновители кота",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = PersonCat.class)
+                                    schema = @Schema(implementation = HumanCat.class)
                             )
                     )
             },
             tags = "PersonCat"
     )
     @GetMapping("/all")
-    public Collection<PersonCat> getAll() {
-        return this.personCatService.getAllPersonCat();
+    public Collection<HumanCat> getAll() {
+        return this.personCatService.getAllHumanCat();
     }
 }

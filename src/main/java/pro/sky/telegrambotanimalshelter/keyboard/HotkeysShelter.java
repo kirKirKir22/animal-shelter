@@ -7,20 +7,19 @@ import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.SendResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import static pro.sky.telegrambotanimalshelter.constants.StringConstants.*;
 
 
 @Service
-public class KeyBoardShelter {
+public class HotkeysShelter {
 
     private final com.pengrad.telegrambot.TelegramBot telegramBot;
 
-    private static final Logger logger = LoggerFactory.getLogger(KeyBoardShelter.class);
+    private static final Logger logger = LoggerFactory.getLogger(HotkeysShelter.class);
 
-    public KeyBoardShelter(com.pengrad.telegrambot.TelegramBot telegramBot) {
+    public HotkeysShelter(com.pengrad.telegrambot.TelegramBot telegramBot) {
         this.telegramBot = telegramBot;
     }
 
