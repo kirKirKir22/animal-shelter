@@ -9,8 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import static pro.sky.telegrambotanimalshelter.constants.StringConstants.*;
-
+import static pro.sky.telegrambotanimalshelter.constants.Constants.*;
 
 @Service
 public class HotkeysShelter {
@@ -23,7 +22,7 @@ public class HotkeysShelter {
         this.telegramBot = telegramBot;
     }
 
-
+    // Метод для отправки главного меню
     public void sendMenu(long chatId) {
         logger.info("Starting main menu: {}, {}", chatId, "Вызвано основное меню");
 
@@ -50,7 +49,7 @@ public class HotkeysShelter {
         }
     }
 
-
+    // Метод для отправки меню с информацией о приюте
     public void sendMenuInfoShelter(long chatId) {
         logger.info("Starting menu information about animal shelter: {}, {}", chatId, "Вызвано меню: Информация о приюте");
 
@@ -60,11 +59,10 @@ public class HotkeysShelter {
         repeatableMenu(chatId, replyKeyboardMarkup2);
     }
 
-
+    // Вспомогательный метод для создания меню
     private void repeatableMenu(long chatId, ReplyKeyboardMarkup replyKeyboardMarkup2) {
         replyKeyboardMarkup2.addRow(new KeyboardButton(SEND_MESSAGE_VOLUNTEER),
                 new KeyboardButton(RETURN_MENU));
-//                .addRow(new KeyboardButton(RETURN_TO_SHELTER_CHOOSE_MENU));
 
         keyboardUpdate(replyKeyboardMarkup2);
 
@@ -82,9 +80,9 @@ public class HotkeysShelter {
         }
     }
 
-
+    // Метод для отправки меню о том, как взять животное из приюта
     public void sendMenuTakeAnimal(long chatId) {
-        logger.info("Starting menu about take animal from shelter: {}, {}", chatId, "меню: Как взять питомца из приюта");
+        logger.info("Starting menu about taking animal from shelter: {}, {}", chatId, "меню: Как взять питомца из приюта");
 
         ReplyKeyboardMarkup replyKeyboardMarkup3 = new ReplyKeyboardMarkup(new KeyboardButton(TIPS_AND_RECOMMENDATIONS),
                 new KeyboardButton(GET_USER_CONTACT))
@@ -92,6 +90,7 @@ public class HotkeysShelter {
         repeatableMenu(chatId, replyKeyboardMarkup3);
     }
 
+    // Метод для выбора типа животного (кот или собака)
     public void chooseMenu(long chatId) {
         logger.info("Method sendMessage has been run: {}, {}", chatId, "Вызвано меню выбора ");
 
@@ -103,6 +102,7 @@ public class HotkeysShelter {
         returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, CHOOSE_PET);
     }
 
+    // Вспомогательный метод для отправки сообщений с клавиатурой
     public void returnResponseReplyKeyboardMarkup(ReplyKeyboardMarkup replyKeyboardMarkup, Long chatId, String text) {
         keyboardUpdate(replyKeyboardMarkup);
 
@@ -120,6 +120,7 @@ public class HotkeysShelter {
         }
     }
 
+    // Метод для настройки клавиатуры
     private static void keyboardUpdate(ReplyKeyboardMarkup replyKeyboardMarkup) {
         replyKeyboardMarkup.resizeKeyboard(true);
         replyKeyboardMarkup.oneTimeKeyboard(false);

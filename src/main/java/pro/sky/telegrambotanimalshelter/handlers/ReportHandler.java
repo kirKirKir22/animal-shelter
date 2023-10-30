@@ -21,7 +21,7 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static pro.sky.telegrambotanimalshelter.constants.StringConstants.*;
+import static pro.sky.telegrambotanimalshelter.constants.Constants.*;
 
 public class ReportHandler {
 
@@ -41,6 +41,7 @@ public class ReportHandler {
     public ReportHandler() {
     }
 
+    // Метод для проверки количества дней между отправкой отчетов
     public void checkReportDays(Update update, long chatId, Calendar calendar) {
         long compareTime = calendar.get(Calendar.DAY_OF_MONTH);
         if (reportRepository.findByChatId(chatId) == null) {
@@ -78,10 +79,9 @@ public class ReportHandler {
         if (update.message() != null && update.message().photo() != null && update.message().caption() == null) {
             sendMessage(chatId, INCORRECT_REPORT);
         }
-
     }
 
-
+    // Метод для обработки и сохранения отчета
     public void getReport(Update update) {
         Matcher matcher = pattern.matcher(update.message().caption());
         Long reportDays = reportRepository.findByChatId(update.message().chat().id()).getDays();
@@ -129,7 +129,7 @@ public class ReportHandler {
         }
     }
 
-
+    // Метод для проверки и отправки уведомлений
     private void checkResults() {
         var twoDay = 172800000;
         var nowTime = new Date().getTime() - twoDay;
@@ -143,6 +143,7 @@ public class ReportHandler {
                 .forEach(s -> sendMessage(s.getChatId(), REPORT_NOTIFICATION));
     }
 
+    // Метод для отправки сообщений через Telegram бот
     public void sendMessage(long chatId, String text) {
         SendMessage message = new SendMessage(chatId, text);
         telegramBot.execute(message);

@@ -12,22 +12,23 @@ import pro.sky.telegrambotanimalshelter.service.implementation.HumanCatServiceIm
 
 import java.util.Collection;
 
-
 @RestController
 @RequestMapping("human-cat")
 public class HumanCatController {
 
     private final HumanCatServiceImpl personCatService;
 
+    // Конструктор контроллера, который принимает сервис в качестве зависимости.
     public HumanCatController(HumanCatServiceImpl personCatService) {
         this.personCatService = personCatService;
     }
 
-    @Operation(summary = "Получение пользователя, усыновителя кота,  по id",
+    // Получение пользователя, усыновителя кота, по ID
+    @Operation(summary = "Получение пользователя, усыновителя кота, по ID",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "Пользователь, усыновитель кота, найден по id",
+                            description = "Пользователь, усыновитель кота, найден по ID",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema(implementation = HumanCat.class)
@@ -37,10 +38,11 @@ public class HumanCatController {
             tags = "PersonCat"
     )
     @GetMapping("/{id}")
-    public HumanCat getById(@Parameter(description = "PersonCat id") @PathVariable Long id) {
+    public HumanCat getById(@Parameter(description = "PersonCat ID") @PathVariable Long id) {
         return this.personCatService.getByIdHumanCat(id);
     }
 
+    // Создание пользователя, усыновителя кота
     @Operation(summary = "Создание пользователя, усыновителя кота",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody (
                     description = "Пользователь, усыновитель кота, создан",
@@ -56,6 +58,7 @@ public class HumanCatController {
         return this.personCatService.addHumanCat(personCat);
     }
 
+    // Изменение данных пользователя, усыновителя кота
     @Operation(summary = "Изменение данных пользователя, усыновителя кота",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody (
                     description = "Данные пользователя, усыновителя кота, изменены",
@@ -71,11 +74,12 @@ public class HumanCatController {
         return this.personCatService.addHumanCat(personCat);
     }
 
-    @Operation(summary = "Удаление пользователя, усыновителя кота, по id",
+    // Удаление пользователя, усыновителя кота, по ID
+    @Operation(summary = "Удаление пользователя, усыновителя кота, по ID",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "Пользователь, усыновитель кота, удален по id",
+                            description = "Пользователь, усыновитель кота, удален по ID",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema(implementation = HumanCat.class)
@@ -85,10 +89,11 @@ public class HumanCatController {
             tags = "PersonCat"
     )
     @DeleteMapping("/{id}")
-    public void remove(@Parameter(description = "PersonCat id")@PathVariable Long id) {
+    public void remove(@Parameter(description = "PersonCat ID")@PathVariable Long id) {
         this.personCatService.removeByIdHumanCat(id);
     }
 
+    // Просмотр всех пользователей, усыновителей кота
     @Operation(summary = "Просмотр всех пользователей, усыновителей кота",
             responses = {
                     @ApiResponse(

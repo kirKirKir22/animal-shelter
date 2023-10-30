@@ -1,11 +1,7 @@
 package pro.sky.telegrambotanimalshelter.controller;
 
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -23,84 +19,52 @@ import java.util.Collection;
 @RequestMapping("photoReports")
 public class ReportController {
 
+    // Сервис для работы с отчетами
     private final ReportServiceImpl reportService;
 
+    // Сервис для взаимодействия с Telegram Bot
     private TelegramBotUpdateListener telegramBot;
 
+    // Тип файла, используется для установки заголовков HTTP-ответа при отправке фотографий
     private final String fileType = "image/jpeg";
 
+    // Конструктор контроллера для инъекции сервиса работы с отчетами
     public ReportController(ReportServiceImpl reportService) {
         this.reportService = reportService;
     }
 
+    // Конструктор контроллера для инъекции сервисов работы с отчетами и Telegram Bot
     @Autowired
     public ReportController(ReportServiceImpl reportService, TelegramBotUpdateListener telegramBot) {
         this.reportService = reportService;
         this.telegramBot = telegramBot;
     }
 
-    @Operation(summary = "Просмотр отчетов по id",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Все отчеты",
-                            content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = Report.class)
-                            )
-                    )
-            },
-            tags = "Reports"
-    )
+    // Просмотр отчета по его id
+    @Operation(summary = "Просмотр отчетов по id")
     @GetMapping("/{id}/report")
     public Report downloadReport(@Parameter(description = "report id") @PathVariable Long id) {
         return this.reportService.getByIdReport(id);
     }
 
-    @Operation(summary = "Удаление отчетов по id",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Удаленный отчет",
-                            content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = Report.class)
-                            )
-                    )
-            },
-            tags = "Reports"
-    )
+    // Удаление отчета по его id
+    @Operation(summary = "Удаление отчетов по id")
     @DeleteMapping("/{id}")
-    public void remove(@Parameter (description = "report id") @PathVariable Long id) {
+    public void remove(@Parameter(description = "report id") @PathVariable Long id) {
         this.reportService.removeByIdReport(id);
     }
 
-    @Operation(summary = "Просмотр всех отчетов",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Все отчеты, либо отчеты определенного пользователя по chat_id",
-                            content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = Report.class)
-                            )
-                    )
-            },
-            tags = "Reports"
-    )
+    // Просмотр всех отчетов
+    @Operation(summary = "Просмотр всех отчетов")
     @GetMapping("/getAll")
     public ResponseEntity<Collection<Report>> getAll() {
         return ResponseEntity.ok(this.reportService.getAllReport());
     }
 
-    @Operation(summary = "Просмотр фото по id отчета",
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody (
-                    description = "Фото, найденное по id отчета"
-            ),
-            tags = "Report"
-    )
+    // Просмотр фотографии из отчета по его id
+    @Operation(summary = "Просмотр фото по id отчета")
     @GetMapping("/{id}/photo-from-db")
-    public ResponseEntity<byte[]> downloadPhotoFromDB(@Parameter (description = "report id") @PathVariable Long id) {
+    public ResponseEntity<byte[]> downloadPhotoFromDB(@Parameter(description = "report id") @PathVariable Long id) {
         Report reportData = this.reportService.getByIdReport(id);
 
         HttpHeaders headers = new HttpHeaders();
@@ -110,25 +74,14 @@ public class ReportController {
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(reportData.getData());
     }
 
-    @Operation(summary = "Отправить сообщение пользователю",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Сообщение определенному пользователю." +
-                                    "Например сообщение о том, что необходимо правильно заполнять форму отчета. Либо связаться с волонтерами по номеру",
-                            content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = Report.class)
-                            )
-                    )
-            },
-            tags = "Reports"
-    )
+    // Отправка сообщения пользователю
+    @Operation(summary = "Отправить сообщение пользователю")
     @GetMapping("/message-to-person")
-    public void sendMessageToPerson(@Parameter(description = "id чата с пользователем", example = "3984892310")
-                                    @RequestParam Long chat_Id,
-                                    @Parameter(description = "Ваше сообщение")
-                                    @RequestParam String message) {
+    public void sendMessageToPerson(
+            @Parameter(description = "id чата с пользователем", example = "3984892310")
+            @RequestParam Long chat_Id,
+            @Parameter(description = "Ваше сообщение")
+            @RequestParam String message) {
         telegramBot.sendMessage(chat_Id, message);
     }
 }

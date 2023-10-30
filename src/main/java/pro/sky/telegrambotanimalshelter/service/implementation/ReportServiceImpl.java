@@ -11,7 +11,6 @@ import pro.sky.telegrambotanimalshelter.repository.ReportRepository;
 import pro.sky.telegrambotanimalshelter.service.interfaces.ReportService;
 
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
 
@@ -52,7 +51,7 @@ public class ReportServiceImpl implements ReportService {
                              String caption, String filePath, Date dateSendMessage, Long timeDate, long daysOfReports)  {
         logger.info("Was invoked method to uploadReportData");
 
-        Report report = new Report();//findById(personId);
+        Report report = new Report();
         report.setLastMessage(dateSendMessage);
         report.setDays(daysOfReports);
         report.setFilePath(filePath);

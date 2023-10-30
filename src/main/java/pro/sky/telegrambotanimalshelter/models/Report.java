@@ -1,5 +1,6 @@
 package pro.sky.telegrambotanimalshelter.models;
 
+
 import lombok.*;
 
 import javax.persistence.*;
@@ -7,7 +8,7 @@ import java.util.Date;
 
 
 @Entity
-@Table(name = "reports")
+@Table(name = "report")
 @Getter
 @Setter
 @EqualsAndHashCode
@@ -57,16 +58,16 @@ public class Report {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(referencedColumnName = "id")
-    private HumanCat personCat;
+    private HumanCat humanCat;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(referencedColumnName = "id")
-    private HumanDog personDog;
+    private HumanDog humanDog;
 
 
 
     public Report(Long chatId, String ration, String health, String habits, Long days, String filePath, Long fileSize,
-                  byte[] data, String caption, Date lastMessage, Long lastMessageMs, HumanCat personCat, HumanDog personDog) {
+                  byte[] data, String caption, Date lastMessage, Long lastMessageMs, HumanCat humanCat, HumanDog humanDog) {
         this.chatId = chatId;
         this.ration = ration;
         this.health = health;
@@ -78,8 +79,8 @@ public class Report {
         this.caption = caption;
         this.lastMessage = lastMessage;
         this.lastMessageMs = lastMessageMs;
-        this.personCat = personCat;
-        this.personDog = personDog;
+        this.humanCat = humanCat;
+        this.humanDog = humanDog;
     }
 
 
