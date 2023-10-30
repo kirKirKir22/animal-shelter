@@ -1,4 +1,4 @@
-Telegram_Bot_Animal_Shelter (Приют для животных Астана)
+Telegram_Bot_Animal_Shelter (Приют для животных Воронеж)
 
 Техническое задание
 

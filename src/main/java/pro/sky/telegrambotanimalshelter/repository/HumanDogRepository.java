@@ -19,7 +19,7 @@ public interface HumanDogRepository extends JpaRepository<HumanDog, Long> {
     @Transactional
     @Modifying
     @Query("UPDATE HumanDog p set p.name = :name, p.phone = :phone where p.chatId = :chatId")
-    public void updatePersonDog(@Param("name") String name,
+    public void updateHumanDog(@Param("name") String name,
                                 @Param("phone") String phone,
                                 @Param("chatId") Long chatId);
 }

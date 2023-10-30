@@ -24,7 +24,7 @@ CREATE TABLE DOG
 ALTER TABLE DOG
     OWNER TO postgres;
 
-CREATE TABLE personCat
+CREATE TABLE humanCat
 (
     id          BIGSERIAL PRIMARY KEY,
     name        VARCHAR(255) NOT NULL,
@@ -36,10 +36,10 @@ CREATE TABLE personCat
     cat_id      BIGINT NOT NULL,
     CONSTRAINT CAT_ID_FK FOREIGN KEY (cat_id) REFERENCES CAT (id)
 );
-ALTER TABLE personCat
+ALTER TABLE humanCat
     OWNER TO postgres;
 
-CREATE TABLE personDog
+CREATE TABLE humanDog
 (
     id          BIGSERIAL PRIMARY KEY,
     name        VARCHAR(255) NOT NULL,
@@ -51,7 +51,7 @@ CREATE TABLE personDog
     dog_id      BIGINT NOT NULL,
     CONSTRAINT DOG_ID_FK FOREIGN KEY (dog_id) REFERENCES DOG (id)
 );
-ALTER TABLE personDog
+ALTER TABLE humanDog
     OWNER TO postgres;
 
 CREATE TABLE report
@@ -67,8 +67,8 @@ CREATE TABLE report
     caption       VARCHAR(255) NOT NULL,
     lastMessage   DATE NOT NULL,
     lastMessageMs BIGINT NOT NULL,
-    personCat_id  BIGINT,
-    personDog_id  BIGINT,
-    CONSTRAINT personCat_id_FK FOREIGN KEY (personCat_id) REFERENCES personCat (id),
-    CONSTRAINT personDog_id_FK FOREIGN KEY (personDog_id) REFERENCES personDog (id)
+    humanCat_id  BIGINT,
+    humanDog_id  BIGINT,
+    CONSTRAINT humanCat_id_FK FOREIGN KEY (humanCat_id) REFERENCES humanCat (id),
+    CONSTRAINT humanDog_id_FK FOREIGN KEY (humanDog_id) REFERENCES humanDog (id)
 );

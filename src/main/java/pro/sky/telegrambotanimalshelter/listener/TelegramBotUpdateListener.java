@@ -34,20 +34,20 @@ public class TelegramBotUpdateListener implements UpdatesListener {
 
     private static final Logger logger = LoggerFactory.getLogger(TelegramBotUpdateListener.class);
     private final ReportRepository reportRepository;
-    private final HumanDogRepository personDogRepository;
-    private final HumanCatRepository personCatRepository;
+    private final HumanDogRepository humanDogRepository;
+    private final HumanCatRepository humanCatRepository;
     private final HotkeysShelter keyBoardShelter;
     private final ReportService reportService;
     private final com.pengrad.telegrambot.TelegramBot telegramBot;
     private ReportHandler reportHandler;
 
 
-    public TelegramBotUpdateListener(ReportRepository reportRepository, HumanDogRepository personDogRepository,
-                                     HumanCatRepository personCatRepository, HotkeysShelter keyBoardShelter,
+    public TelegramBotUpdateListener(ReportRepository reportRepository, HumanDogRepository humanDogRepository,
+                                     HumanCatRepository humanCatRepository, HotkeysShelter keyBoardShelter,
                                      ReportService reportService, TelegramBot telegramBot) {
         this.reportRepository = reportRepository;
-        this.personDogRepository = personDogRepository;
-        this.personCatRepository = personCatRepository;
+        this.humanDogRepository = humanDogRepository;
+        this.humanCatRepository = humanCatRepository;
         this.keyBoardShelter = keyBoardShelter;
         this.reportService = reportService;
         this.telegramBot = telegramBot;
@@ -95,16 +95,16 @@ public class TelegramBotUpdateListener implements UpdatesListener {
                                     case CAT:
                                         keyBoardShelter.sendMenu(chatId);
                                         sendMessage(chatId, SET_CAT_ANIMAL);
-                                        if (personCatRepository.findByChatId(chatId) == null) {
-                                            personCatRepository.save(new HumanCat(chatId));
+                                        if (humanCatRepository.findByChatId(chatId) == null) {
+                                            humanCatRepository.save(new HumanCat(chatId));
                                         }
                                         break;
 
                                     case DOG:
                                         keyBoardShelter.sendMenu(chatId);
                                         sendMessage(chatId, SET_DOG_ANIMAL);
-                                        if (personDogRepository.findByChatId(chatId) == null) {
-                                            personDogRepository.save(new HumanDog(chatId));
+                                        if (humanDogRepository.findByChatId(chatId) == null) {
+                                            humanDogRepository.save(new HumanDog(chatId));
                                         }
                                         break;
 
@@ -127,9 +127,9 @@ public class TelegramBotUpdateListener implements UpdatesListener {
                                         break;
 
                                     case ABOUT_ANIMAL_SHELTER, TIPS_AND_RECOMMENDATIONS:
-                                        if (personCatRepository.findByChatId(chatId) != null) {
+                                        if (humanCatRepository.findByChatId(chatId) != null) {
                                             sendMessage(chatId, INFO_ABOUT_SHELTER_CAT);
-                                        } else if (personDogRepository.findByChatId(chatId) != null) {
+                                        } else if (humanDogRepository.findByChatId(chatId) != null) {
                                             sendMessage(chatId, INFO_ABOUT_SHELTER_DOG);
                                         }
                                         break;
@@ -220,9 +220,9 @@ public class TelegramBotUpdateListener implements UpdatesListener {
             String phone = update.message().contact().phoneNumber();
             String username = update.message().chat().username();
             Long finalChatId = update.message().chat().id();
-            var sortChatIdDog = personDogRepository.findAll().stream()
+            var sortChatIdDog = humanDogRepository.findAll().stream()
                     .filter(i -> Objects.equals(i.getChatId(), finalChatId)).toList();
-            var sortChatIdCat = personCatRepository.findAll().stream()
+            var sortChatIdCat = humanCatRepository.findAll().stream()
                     .filter(i -> Objects.equals(i.getChatId(), finalChatId)).toList();
 
             if (!sortChatIdDog.isEmpty() || !sortChatIdCat.isEmpty()) {
@@ -231,15 +231,15 @@ public class TelegramBotUpdateListener implements UpdatesListener {
             }
             if (lastName != null) {
                 String name = firstName + " " + lastName + " " + username;
-                if (personCatRepository.findByChatId(finalChatId) == null) {
-                    personCatRepository.save(new HumanCat(name, phone, finalChatId));
+                if (humanCatRepository.findByChatId(finalChatId) == null) {
+                    humanCatRepository.save(new HumanCat(name, phone, finalChatId));
                 } else {
-                    personCatRepository.updatePersonCat(name, phone, finalChatId);
+                    humanCatRepository.updateHumanCat(name, phone, finalChatId);
                 }
-                if (personDogRepository.findByChatId(finalChatId) == null) {
-                    personDogRepository.save(new HumanDog(name, phone, finalChatId));
+                if (humanDogRepository.findByChatId(finalChatId) == null) {
+                    humanDogRepository.save(new HumanDog(name, phone, finalChatId));
                 } else {
-                    personDogRepository.updatePersonDog(name, phone, finalChatId);
+                    humanDogRepository.updateHumanDog(name, phone, finalChatId);
                 }
                 sendMessage(finalChatId, ADD_TO_DB);
                 return;

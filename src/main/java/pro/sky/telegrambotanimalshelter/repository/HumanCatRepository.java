@@ -19,7 +19,7 @@ public interface HumanCatRepository extends JpaRepository<HumanCat, Long> {
     @Transactional
     @Modifying
     @Query("UPDATE HumanCat p set p.name = :name, p.phone = :phone where p.chatId = :chatId")
-    public void updatePersonCat(@Param("name") String name,
+    public void updateHumanCat(@Param("name") String name,
                                 @Param("phone") String phone,
                                 @Param("chatId") Long chatId);
 }

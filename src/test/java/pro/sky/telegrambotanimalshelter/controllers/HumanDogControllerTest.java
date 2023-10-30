@@ -1,6 +1,5 @@
 package pro.sky.telegrambotanimalshelter.controllers;
 
-
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,9 +7,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import pro.sky.telegrambotanimalshelter.controller.HumanCatController;
-import pro.sky.telegrambotanimalshelter.models.HumanCat;
-import pro.sky.telegrambotanimalshelter.service.implementation.HumanCatServiceImpl;
+import pro.sky.telegrambotanimalshelter.controller.HumanDogController;
+import pro.sky.telegrambotanimalshelter.models.HumanDog;
+import pro.sky.telegrambotanimalshelter.service.implementation.HumanDogServiceImpl;
 
 import java.util.List;
 
@@ -21,91 +20,86 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-@WebMvcTest(HumanCatController.class)
-class PersonCatControllerTest {
+@WebMvcTest(HumanDogController.class)
+public class HumanDogControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private HumanCatServiceImpl personCatService;
-
+    private HumanDogServiceImpl humanDogService;
 
     @Test
-    void getByIdPersonCat() throws Exception {
-        HumanCat personCat = new HumanCat();
-        personCat.setId(1L);
+    void getByIdHumanDog() throws Exception {
+        HumanDog humanDog = new HumanDog();
+        humanDog.setId(1L);
 
-        when(personCatService.getByIdHumanCat(anyLong())).thenReturn(personCat);
+        when(humanDogService.getByIdHumanDog(anyLong())).thenReturn(humanDog);
 
         mockMvc.perform(
-                        get("/person-cat/{id}", 1L))
+                        get("/human-dog/{id}", 1L))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        verify(personCatService).getByIdHumanCat(1L);
+        verify(humanDogService).getByIdHumanDog(1L);
     }
 
-
     @Test
-    void addPersonCat() throws Exception {
-        HumanCat personCat = new HumanCat();
-        personCat.setId(1L);
-        personCat.setName("Человек");
+    void addHumanDog() throws Exception {
+        HumanDog humanDog = new HumanDog();
+        humanDog.setId(1L);
+        humanDog.setName("Человек");
         JSONObject userObject = new JSONObject();
         userObject.put("id", 1L);
         userObject.put("name", "Человек");
 
-        when(personCatService.addHumanCat(personCat)).thenReturn(personCat);
+        when(humanDogService.addHumanDog(humanDog)).thenReturn(humanDog);
 
         mockMvc.perform(
-                        post("/person-cat")
+                        post("/human-dog")
                                 .content(userObject.toString())
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        verify(personCatService).addHumanCat(personCat);
+        verify(humanDogService).addHumanDog(humanDog);
     }
 
-
     @Test
-    void updatePersonCat() throws Exception {
-        HumanCat personCat = new HumanCat();
-        personCat.setId(1L);
-        personCat.setName("Человек");
+    void updateHumanDog() throws Exception {
+        HumanDog humanDog = new HumanDog();
+        humanDog.setId(1L);
+        humanDog.setName("Человек");
         JSONObject userObject = new JSONObject();
         userObject.put("id", 1L);
         userObject.put("name", "Человек");
 
-        when(personCatService.addHumanCat(personCat)).thenReturn(personCat);
+        when(humanDogService.updateHumanDog(humanDog)).thenReturn(humanDog);
 
         mockMvc.perform(
-                        put("/person-cat")
+                        put("/human-dog")
                                 .content(userObject.toString())
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        verify(personCatService).addHumanCat(personCat);
+        verify(humanDogService).updateHumanDog(humanDog);
     }
 
-
     @Test
-    void deletePersonCat() throws Exception {
+    void deleteHumanDog() throws Exception {
         mockMvc.perform(
-                        delete("/person-cat/{id}", 1))
+                        delete("/human-dog/{id}", 1))
                 .andExpect(status().isOk());
-        verify(personCatService).removeByIdHumanCat(1L);
+        verify(humanDogService).removeByIdHumanDog(1L);
     }
 
-
     @Test
-    void getAllPersonCat() throws Exception {
-        when(personCatService.getAllHumanCat()).thenReturn(List.of(new HumanCat()));
+    void getAll() throws Exception {
+        when(humanDogService.getAllHumanDog()).thenReturn(List.of(new HumanDog()));
 
         mockMvc.perform(
-                        get("/person-cat/all"))
+                        get("/human-dog/all"))
                 .andExpect(status().isOk());
     }
 }

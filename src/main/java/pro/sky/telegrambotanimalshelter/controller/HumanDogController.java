@@ -15,7 +15,7 @@ import java.util.Collection;
 
 
 @RestController
-@RequestMapping("person-dog")
+@RequestMapping("human-dog")
 public class HumanDogController {
 
     private final HumanDogServiceImpl personDogService;
