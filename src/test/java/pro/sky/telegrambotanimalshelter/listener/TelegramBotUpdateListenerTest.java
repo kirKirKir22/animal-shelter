@@ -1,31 +1,13 @@
 package pro.sky.telegrambotanimalshelter.listener;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.atLeast;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
-import com.pengrad.telegrambot.model.Chat;
-import com.pengrad.telegrambot.model.Contact;
-import com.pengrad.telegrambot.model.DeleteMyCommands;
-import com.pengrad.telegrambot.model.Message;
-import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.model.*;
 import com.pengrad.telegrambot.request.BaseRequest;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.BaseResponse;
 import com.pengrad.telegrambot.response.SendResponse;
-
-
-import java.util.ArrayList;
-
 import org.junit.jupiter.api.BeforeEach;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -33,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import pro.sky.telegrambotanimalshelter.exceptions.MenuDoesntWorkException;
+import pro.sky.telegrambotanimalshelter.exceptions.MenuDoesNotWorkException;
 import pro.sky.telegrambotanimalshelter.keyboard.HotkeysShelter;
 import pro.sky.telegrambotanimalshelter.models.*;
 import pro.sky.telegrambotanimalshelter.repository.HumanCatRepository;
@@ -41,17 +23,23 @@ import pro.sky.telegrambotanimalshelter.repository.HumanDogRepository;
 import pro.sky.telegrambotanimalshelter.repository.ReportRepository;
 import pro.sky.telegrambotanimalshelter.service.interfaces.ReportService;
 
+import java.util.ArrayList;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
+
 @ContextConfiguration(classes = {TelegramBotUpdateListener.class})
 @ExtendWith(SpringExtension.class)
 class TelegramBotUpdateListenerTest {
     @MockBean
-    private HotkeysShelter keyBoardShelter;
+    private HotkeysShelter hotkeysShelter;
 
     @MockBean
-    private HumanCatRepository personCatRepository;
+    private HumanCatRepository humanCatRepository;
 
     @MockBean
-    private HumanDogRepository personDogRepository;
+    private HumanDogRepository humanDogRepository;
 
     @MockBean
     private ReportRepository reportRepository;
@@ -67,12 +55,12 @@ class TelegramBotUpdateListenerTest {
 
     private Dog dog;
     private Dog dog2;
-    private HumanDog personDog;
-    private HumanDog personDog2;
+    private HumanDog humanDog1;
+    private HumanDog humanDog2;
     private Cat cat;
     private Cat cat2;
-    private HumanCat personCat;
-    private HumanCat personCat2;
+    private HumanCat humanCat1;
+    private HumanCat humanCat2;
 
 
 
@@ -85,16 +73,16 @@ class TelegramBotUpdateListenerTest {
         dog.setId(1L);
         dog.setName("Name");
 
-        personDog = new HumanDog();
-        personDog.setAddress("Moscow");
-        personDog.setChatId(1L);
-        personDog.setDog(dog);
-        personDog.setId(1L);
-        personDog.setName("Name");
-        personDog.setPhone("+79990001122");
-        personDog.setReports(new ArrayList<>());
-        personDog.setStatus(Status.APPROVED);
-        personDog.setYearOfBirth(1);
+        humanDog1 = new HumanDog();
+        humanDog1.setAddress("Moscow");
+        humanDog1.setChatId(1L);
+        humanDog1.setDog(dog);
+        humanDog1.setId(1L);
+        humanDog1.setName("Name");
+        humanDog1.setPhone("+79990001122");
+        humanDog1.setReports(new ArrayList<>());
+        humanDog1.setStatus(Status.APPROVED);
+        humanDog1.setYearOfBirth(1);
 
 
         dog2 = new Dog();
@@ -104,16 +92,16 @@ class TelegramBotUpdateListenerTest {
         dog2.setId(2L);
         dog2.setName("Name");
 
-        personDog2 = new HumanDog();
-        personDog2.setAddress("Moscow");
-        personDog2.setChatId(2L);
-        personDog2.setDog(dog2);
-        personDog2.setId(2L);
-        personDog2.setName("Name");
-        personDog2.setPhone("+79990001122");
-        personDog2.setReports(new ArrayList<>());
-        personDog2.setStatus(Status.REFUSED);
-        personDog2.setYearOfBirth(2000);
+        humanDog2 = new HumanDog();
+        humanDog2.setAddress("Moscow");
+        humanDog2.setChatId(2L);
+        humanDog2.setDog(dog2);
+        humanDog2.setId(2L);
+        humanDog2.setName("Name");
+        humanDog2.setPhone("+79990001122");
+        humanDog2.setReports(new ArrayList<>());
+        humanDog2.setStatus(Status.REFUSED);
+        humanDog2.setYearOfBirth(2000);
 
         cat = new Cat();
         cat.setAge(1);
@@ -122,16 +110,16 @@ class TelegramBotUpdateListenerTest {
         cat.setId(1L);
         cat.setName("Name");
 
-        personCat = new HumanCat();
-        personCat.setAddress("Moscow");
-        personCat.setCat(cat);
-        personCat.setChatId(1L);
-        personCat.setId(1L);
-        personCat.setName("Name");
-        personCat.setPhone("+79990001122");
-        personCat.setReports(new ArrayList<>());
-        personCat.setStatus(Status.APPROVED);
-        personCat.setYearOfBirth(1);
+        humanCat1 = new HumanCat();
+        humanCat1.setAddress("Moscow");
+        humanCat1.setCat(cat);
+        humanCat1.setChatId(1L);
+        humanCat1.setId(1L);
+        humanCat1.setName("Name");
+        humanCat1.setPhone("+79990001122");
+        humanCat1.setReports(new ArrayList<>());
+        humanCat1.setStatus(Status.APPROVED);
+        humanCat1.setYearOfBirth(1);
 
         cat2 = new Cat();
         cat2.setAge(1);
@@ -140,16 +128,16 @@ class TelegramBotUpdateListenerTest {
         cat2.setId(2L);
         cat2.setName("Name");
 
-        personCat2 = new HumanCat();
-        personCat2.setAddress("Moscow");
-        personCat2.setCat(cat2);
-        personCat2.setChatId(2L);
-        personCat2.setId(2L);
-        personCat2.setName("Name");
-        personCat2.setPhone("+79990001122");
-        personCat2.setReports(new ArrayList<>());
-        personCat2.setStatus(Status.REFUSED);
-        personCat2.setYearOfBirth(2000);
+        humanCat2 = new HumanCat();
+        humanCat2.setAddress("Moscow");
+        humanCat2.setCat(cat2);
+        humanCat2.setChatId(2L);
+        humanCat2.setId(2L);
+        humanCat2.setName("Name");
+        humanCat2.setPhone("+79990001122");
+        humanCat2.setReports(new ArrayList<>());
+        humanCat2.setStatus(Status.REFUSED);
+        humanCat2.setYearOfBirth(2000);
     }
 
     @Test
@@ -177,14 +165,14 @@ class TelegramBotUpdateListenerTest {
     @Test
     void shouldExceptionWhenAddUpdate() {
         Message message = mock(Message.class);
-        when(message.text()).thenThrow(new MenuDoesntWorkException("Don't send menu"));
+        when(message.text()).thenThrow(new MenuDoesNotWorkException("Don't send menu"));
         when(message.chat()).thenReturn(new Chat());
         Update update = mock(Update.class);
         when(update.message()).thenReturn(message);
 
         ArrayList<Update> updates = new ArrayList<>();
         updates.add(update);
-        assertThrows(MenuDoesntWorkException.class, () -> telegramBotUpdateListener.process(updates));
+        assertThrows(MenuDoesNotWorkException.class, () -> telegramBotUpdateListener.process(updates));
         verify(update, atLeast(1)).message();
         verify(message).chat();
         verify(message).text();
@@ -231,8 +219,8 @@ class TelegramBotUpdateListenerTest {
 
     @Test
     void shouldShareContactAndFindAllPerson() {
-        when(personDogRepository.findAll()).thenReturn(new ArrayList<>());
-        when(personCatRepository.findAll()).thenReturn(new ArrayList<>());
+        when(humanDogRepository.findAll()).thenReturn(new ArrayList<>());
+        when(humanCatRepository.findAll()).thenReturn(new ArrayList<>());
         when(telegramBot.execute(Mockito.<BaseRequest<DeleteMyCommands, BaseResponse>>any())).thenReturn(null);
         Message message = mock(Message.class);
         when(message.messageId()).thenReturn(1);
@@ -241,8 +229,8 @@ class TelegramBotUpdateListenerTest {
         Update update = mock(Update.class);
         when(update.message()).thenReturn(message);
         telegramBotUpdateListener.shareContact(update);
-        verify(personDogRepository).findAll();
-        verify(personCatRepository).findAll();
+        verify(humanDogRepository).findAll();
+        verify(humanCatRepository).findAll();
         verify(telegramBot, atLeast(1)).execute(Mockito.<BaseRequest<DeleteMyCommands, BaseResponse>>any());
         verify(update, atLeast(1)).message();
         verify(message, atLeast(1)).chat();

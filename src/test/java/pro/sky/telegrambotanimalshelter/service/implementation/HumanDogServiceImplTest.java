@@ -19,7 +19,7 @@ import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
 public class HumanDogServiceImplTest {
-    private static final String PERSON_NAME = "Дима";
+    private static final String HUMAN_NAME = "Дима";
     private static final int YEAR_OF_BIRTH = 2001;
     private static final String PHONE = "+77777777777";
     private static final String ADDRESS = "Швеция";
@@ -27,20 +27,20 @@ public class HumanDogServiceImplTest {
     private static final Status STATUS = Status.SEARCH;
 
     private static final List<HumanDog> humanDogs = new ArrayList<>(Arrays.asList(
-            new HumanDog(PERSON_NAME, YEAR_OF_BIRTH, PHONE, ADDRESS, CHAT_ID, STATUS),
-            new HumanDog(PERSON_NAME, YEAR_OF_BIRTH, PHONE, ADDRESS, CHAT_ID, STATUS),
-            new HumanDog(PERSON_NAME, YEAR_OF_BIRTH, PHONE, ADDRESS, CHAT_ID, STATUS)));
+            new HumanDog(HUMAN_NAME, YEAR_OF_BIRTH, PHONE, ADDRESS, CHAT_ID, STATUS),
+            new HumanDog(HUMAN_NAME, YEAR_OF_BIRTH, PHONE, ADDRESS, CHAT_ID, STATUS),
+            new HumanDog(HUMAN_NAME, YEAR_OF_BIRTH, PHONE, ADDRESS, CHAT_ID, STATUS)));
     @Mock
     private HumanDogRepository humanDogRepositoryMock;
 
     @InjectMocks
     private HumanDogServiceImpl humanDogService;
 
-    private final HumanDog humanDog = new HumanDog(PERSON_NAME, YEAR_OF_BIRTH, PHONE, ADDRESS, CHAT_ID, STATUS);
+    private final HumanDog humanDog = new HumanDog(HUMAN_NAME, YEAR_OF_BIRTH, PHONE, ADDRESS, CHAT_ID, STATUS);
 
 
     @Test
-    public void getByIdPersonDog() {
+    public void getByIdHumanDog() {
         Mockito.when(humanDogRepositoryMock.findById(any(Long.class))).thenReturn(Optional.of(humanDog));
         HumanDog dog = humanDogService.getByIdHumanDog(1L);
         Assertions.assertThat(dog.getId()).isEqualTo(humanDog.getId());
@@ -53,7 +53,7 @@ public class HumanDogServiceImplTest {
 
 
     @Test
-    public void addPersonDog() {
+    public void addHumanDog() {
         Mockito.when(humanDogRepositoryMock.save(any(HumanDog.class))).thenReturn(humanDog);
         HumanDog humanDog1 = humanDogService.addHumanDog(humanDog);
         Assertions.assertThat(humanDog1.getId()).isEqualTo(humanDog.getId());
@@ -68,7 +68,7 @@ public class HumanDogServiceImplTest {
     @Test
     public void updateHumanDog() {
         HumanDog humanDog1Dog1 = new HumanDog();
-        humanDog1Dog1.setName(PERSON_NAME);
+        humanDog1Dog1.setName(HUMAN_NAME);
         humanDog1Dog1.setYearOfBirth(YEAR_OF_BIRTH);
         humanDog1Dog1.setPhone(PHONE);
         humanDog1Dog1.setAddress(ADDRESS);

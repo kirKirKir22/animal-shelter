@@ -7,11 +7,10 @@ import com.pengrad.telegrambot.model.request.KeyboardButton;
 import com.pengrad.telegrambot.model.request.ReplyKeyboardMarkup;
 import com.pengrad.telegrambot.request.ForwardMessage;
 import com.pengrad.telegrambot.request.SendMessage;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import pro.sky.telegrambotanimalshelter.exceptions.MenuDoesntWorkException;
+import pro.sky.telegrambotanimalshelter.exceptions.MenuDoesNotWorkException;
 import pro.sky.telegrambotanimalshelter.handlers.ReportHandler;
 import pro.sky.telegrambotanimalshelter.keyboard.HotkeysShelter;
 import pro.sky.telegrambotanimalshelter.models.HumanCat;
@@ -24,10 +23,12 @@ import pro.sky.telegrambotanimalshelter.service.interfaces.ReportService;
 import javax.annotation.PostConstruct;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Objects;
 
-import static pro.sky.telegrambotanimalshelter.constants.StringConstants.*;
-
+import static pro.sky.telegrambotanimalshelter.constants.Constants.*;
 
 @Component
 public class TelegramBotUpdateListener implements UpdatesListener {
@@ -40,7 +41,6 @@ public class TelegramBotUpdateListener implements UpdatesListener {
     private final ReportService reportService;
     private final com.pengrad.telegrambot.TelegramBot telegramBot;
     private ReportHandler reportHandler;
-
 
     public TelegramBotUpdateListener(ReportRepository reportRepository, HumanDogRepository humanDogRepository,
                                      HumanCatRepository humanCatRepository, HotkeysShelter keyBoardShelter,
@@ -58,11 +58,8 @@ public class TelegramBotUpdateListener implements UpdatesListener {
         telegramBot.setUpdatesListener(this);
     }
 
-
-
     @Override
     public int process(List<Update> updates) {
-
         updates.stream()
                 .filter(Objects::nonNull)
                 .toList()
@@ -79,20 +76,20 @@ public class TelegramBotUpdateListener implements UpdatesListener {
                         reportHandler.checkReportDays(update, chatId, calendar);
 
                         try {
-
                             if (update.message() != null && update.message().contact() != null) {
                                 shareContact(update);
                             }
 
                             if (textUpdate != null) {
                                 switch (textUpdate) {
-
                                     case START:
+                                        // Действия при получении команды START
                                         sendMessage(chatId, nameUser + HI);
                                         keyBoardShelter.chooseMenu(chatId);
                                         break;
 
                                     case CAT:
+                                        // Действия при выборе кота
                                         keyBoardShelter.sendMenu(chatId);
                                         sendMessage(chatId, SET_CAT_ANIMAL);
                                         if (humanCatRepository.findByChatId(chatId) == null) {
@@ -101,6 +98,7 @@ public class TelegramBotUpdateListener implements UpdatesListener {
                                         break;
 
                                     case DOG:
+                                        // Действия при выборе собаки
                                         keyBoardShelter.sendMenu(chatId);
                                         sendMessage(chatId, SET_DOG_ANIMAL);
                                         if (humanDogRepository.findByChatId(chatId) == null) {
@@ -110,23 +108,28 @@ public class TelegramBotUpdateListener implements UpdatesListener {
 
                                     case MAIN_MENU:
                                     case RETURN_MENU:
+                                        // Действия при возврате в главное меню
                                         keyBoardShelter.sendMenu(chatId);
                                         break;
 
                                     case DRIVER_SCHEME:
+                                        // Действия при получении схемы проезда
                                         sendMessage(chatId, SCHEMA_2GIS);
                                         break;
 
                                     case FOR_SAFETY:
+                                        // Действия при получении информации о безопасности
                                         sendMessage(chatId, SAFETY);
                                         break;
 
-
                                     case SHELTER_INFO_MENU:
+                                        // Действия при выборе меню информации о приюте
                                         keyBoardShelter.sendMenuInfoShelter(chatId);
                                         break;
 
-                                    case ABOUT_ANIMAL_SHELTER, TIPS_AND_RECOMMENDATIONS:
+                                    case ABOUT_ANIMAL_SHELTER:
+                                    case TIPS_AND_RECOMMENDATIONS:
+                                        // Действия при запросе информации о приюте
                                         if (humanCatRepository.findByChatId(chatId) != null) {
                                             sendMessage(chatId, INFO_ABOUT_SHELTER_CAT);
                                         } else if (humanDogRepository.findByChatId(chatId) != null) {
@@ -135,35 +138,42 @@ public class TelegramBotUpdateListener implements UpdatesListener {
                                         break;
 
                                     case DOCUMENTS:
+                                        // Действия при запросе информации о документах
                                         sendMessage(chatId, INFO_ABOUT_DOCUMENTS);
                                         break;
 
                                     case GET_ANIMAL_WITH_DEFECTS:
+                                        // Действия при запросе информации о животных с дефектами
                                         sendMessage(chatId, INFO_ABOUT_ANIMAL_WITH_DEFECTS);
                                         break;
 
                                     case SEND_REPORT:
+                                        // Действия при запросе отправки отчета
                                         sendMessage(chatId, INFO_ABOUT_REPORT);
                                         sendMessage(chatId, REPORT_EXAMPLE);
                                         break;
 
                                     case HOW_GET_ANIMAL:
+                                        // Действия при запросе информации о том, как взять питомца из приюта
                                         keyBoardShelter.sendMenuTakeAnimal(chatId);
                                         break;
 
                                     case INFO_ABOUT_BOT_BUTTON:
+                                        // Действия при запросе информации о боте
                                         sendMessage(chatId, INFO_ABOUT_BOT);
                                         break;
 
                                     case GET_USER_CONTACT:
                                         new ReplyKeyboardMarkup(new KeyboardButton(" ")
                                                 .requestContact(true));
+                                        // Действия при запросе контакта пользователя
                                         shareContact(update);
                                         break;
 
                                     case SEND_MESSAGE_VOLUNTEER:
                                         try {
                                             URL url = new URL(VOLUNTEER_URL);
+                                            // Действия при запросе отправки сообщения волонтеру
                                             sendMessage(chatId, VOLUNTEER_QUESTION + url);
                                         } catch (MalformedURLException e) {
                                             throw new RuntimeException(e);
@@ -171,28 +181,28 @@ public class TelegramBotUpdateListener implements UpdatesListener {
                                         break;
 
                                     case EMPTY:
+                                        // Действия при получении пустого сообщения
                                         sendMessage(chatId, EMPTY_MESSAGE);
                                         break;
 
                                     case SAY_HI:
                                     case SAY_HI2:
                                         sendMessage(chatId, "И тебе привет, " + nameUser + ". Возьми питомца из приюта.");
+                                        break;
 
                                     default:
+                                        // Действия при получении неизвестной команды
                                         sendReplyMessage(chatId, UNKNOWN_MESSAGE, messageId);
                                         break;
                                 }
                             }
-                        } catch (MenuDoesntWorkException e) {
+                        } catch (MenuDoesNotWorkException e) {
                             e.printStackTrace();
                         }
-
                     }
                 });
-
         return UpdatesListener.CONFIRMED_UPDATES_ALL;
     }
-
 
     public void sendReplyMessage(Long chatId, String messageText, Integer messageId) {
         SendMessage sendMessage = new SendMessage(chatId, messageText);
@@ -200,18 +210,15 @@ public class TelegramBotUpdateListener implements UpdatesListener {
         telegramBot.execute(sendMessage);
     }
 
-
     public void sendForwardMessage(Long chatId, Integer messageId) {
         ForwardMessage forwardMessage = new ForwardMessage(telegramChatVolunteers, chatId, messageId);
         telegramBot.execute(forwardMessage);
     }
 
-
     public void sendMessage(long chatId, String text) {
         SendMessage message = new SendMessage(chatId, text);
         telegramBot.execute(message);
     }
-
 
     public void shareContact(Update update) {
         if (update.message().contact() != null) {
@@ -224,7 +231,6 @@ public class TelegramBotUpdateListener implements UpdatesListener {
                     .filter(i -> Objects.equals(i.getChatId(), finalChatId)).toList();
             var sortChatIdCat = humanCatRepository.findAll().stream()
                     .filter(i -> Objects.equals(i.getChatId(), finalChatId)).toList();
-
             if (!sortChatIdDog.isEmpty() || !sortChatIdCat.isEmpty()) {
                 sendMessage(finalChatId, ALREADY_IN_DB);
                 return;
@@ -244,7 +250,6 @@ public class TelegramBotUpdateListener implements UpdatesListener {
                 sendMessage(finalChatId, ADD_TO_DB);
                 return;
             }
-
             sendMessage(telegramChatVolunteers, phone + " " + firstName + USER_ADDED_PHONE_NUMBER_TO_DB);
             sendForwardMessage(finalChatId, update.message().messageId());
         }

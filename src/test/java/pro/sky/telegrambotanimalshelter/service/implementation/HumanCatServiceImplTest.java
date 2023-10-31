@@ -19,7 +19,7 @@ import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
 public class HumanCatServiceImplTest {
-    private static final String PERSON_NAME = "Артём";
+    private static final String HUMAN_NAME = "Артём";
     private static final int YEAR_OF_BIRTH = 2000;
     private static final String PHONE = "+77777777777";
     private static final String ADDRESS = "Британия";
@@ -27,16 +27,16 @@ public class HumanCatServiceImplTest {
     private static final Status STATUS = Status.APPROVED;
 
     private static final List<HumanCat> humanCats = new ArrayList<>(Arrays.asList(
-            new HumanCat(PERSON_NAME, YEAR_OF_BIRTH, PHONE, ADDRESS, CHAT_ID, STATUS),
-            new HumanCat(PERSON_NAME, YEAR_OF_BIRTH, PHONE, ADDRESS, CHAT_ID, STATUS),
-            new HumanCat(PERSON_NAME, YEAR_OF_BIRTH, PHONE, ADDRESS, CHAT_ID, STATUS)));
+            new HumanCat(HUMAN_NAME, YEAR_OF_BIRTH, PHONE, ADDRESS, CHAT_ID, STATUS),
+            new HumanCat(HUMAN_NAME, YEAR_OF_BIRTH, PHONE, ADDRESS, CHAT_ID, STATUS),
+            new HumanCat(HUMAN_NAME, YEAR_OF_BIRTH, PHONE, ADDRESS, CHAT_ID, STATUS)));
     @Mock
     private HumanCatRepository humanCatRepositoryMock;
 
     @InjectMocks
     private HumanCatServiceImpl humanCatService;
 
-    private final HumanCat humanCat = new HumanCat(PERSON_NAME, YEAR_OF_BIRTH, PHONE, ADDRESS, CHAT_ID, STATUS);
+    private final HumanCat humanCat = new HumanCat(HUMAN_NAME, YEAR_OF_BIRTH, PHONE, ADDRESS, CHAT_ID, STATUS);
 
 
     @Test
@@ -53,7 +53,7 @@ public class HumanCatServiceImplTest {
 
 
     @Test
-    public void addPersonCat() {
+    public void addHumanCat() {
         Mockito.when(humanCatRepositoryMock.save(any(HumanCat.class))).thenReturn(humanCat);
         HumanCat cat = humanCatService.addHumanCat(humanCat);
         Assertions.assertThat(cat.getId()).isEqualTo(humanCat.getId());
@@ -68,7 +68,7 @@ public class HumanCatServiceImplTest {
     @Test
     public void updateHumanCat() {
         HumanCat humanCat = new HumanCat();
-        humanCat.setName(PERSON_NAME);
+        humanCat.setName(HUMAN_NAME);
         humanCat.setYearOfBirth(YEAR_OF_BIRTH);
         humanCat.setPhone(PHONE);
         humanCat.setAddress(ADDRESS);

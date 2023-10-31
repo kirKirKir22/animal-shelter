@@ -24,6 +24,7 @@ public class HumanDogController {
         this.personDogService = personDogService;
     }
 
+    // Получение пользователя, усыновителя собаки, по id
     @Operation(summary = "Получение пользователя, усыновителя собаки,  по id",
             responses = {
                     @ApiResponse(
@@ -38,10 +39,11 @@ public class HumanDogController {
             tags = "PersonDog"
     )
     @GetMapping("/{id}")
-    public HumanDog getById(@Parameter(description = "PersonDog id")@PathVariable Long id) {
+    public HumanDog getById(@Parameter(description = "PersonDog id") @PathVariable Long id) {
         return this.personDogService.getByIdHumanDog(id);
     }
 
+    // Создание пользователя, усыновителя собаки
     @Operation(summary = "Создание пользователя, усыновителя собаки",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody (
                     description = "Пользователь, усыновитель собаки, найден",
@@ -57,7 +59,8 @@ public class HumanDogController {
         return this.personDogService.addHumanDog(personDog);
     }
 
-    @Operation(summary = "Изменение данных пользователя, усыновителя кота",
+    // Изменение данных пользователя, усыновителя кота
+    @Operation(summary = "Изменение данных пользователя, усыновителя собаки",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody (
                     description = "Данные пользователя, усыновителя собаки, изменены",
                     content = @Content(
@@ -72,6 +75,7 @@ public class HumanDogController {
         return this.personDogService.updateHumanDog(personDog);
     }
 
+    // Удаление пользователей по id
     @Operation(summary = "Удаление пользователей по id",
             responses = {
                     @ApiResponse(
@@ -90,6 +94,7 @@ public class HumanDogController {
         this.personDogService.removeByIdHumanDog(id);
     }
 
+    // Просмотр всех пользователей
     @Operation(summary = "Просмотр всех пользователей",
             responses = {
                     @ApiResponse(

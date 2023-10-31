@@ -53,22 +53,22 @@ CREATE TABLE humanDog
 );
 ALTER TABLE humanDog
     OWNER TO postgres;
-
-CREATE TABLE report
-(
-    id            BIGSERIAL PRIMARY KEY,
-    chatId        BIGINT,
-    ration        VARCHAR(255) NOT NULL,
-    health        VARCHAR(255) NOT NULL,
-    habits        VARCHAR(255) NOT NULL,
-    days          BIGINT NOT NULL,
-    filePath      VARCHAR(255) NOT NULL,
-    fileSize      BIGINT NOT NULL,
-    caption       VARCHAR(255) NOT NULL,
-    lastMessage   DATE NOT NULL,
-    lastMessageMs BIGINT NOT NULL,
-    humanCat_id  BIGINT,
-    humanDog_id  BIGINT,
-    CONSTRAINT humanCat_id_FK FOREIGN KEY (humanCat_id) REFERENCES humanCat (id),
-    CONSTRAINT humanDog_id_FK FOREIGN KEY (humanDog_id) REFERENCES humanDog (id)
+CREATE TABLE reports (
+                         id SERIAL PRIMARY KEY,
+                         chatId BIGINT,
+                         ration VARCHAR(255),
+                         health VARCHAR(255),
+                         habits VARCHAR(255),
+                         days BIGINT,
+                         filePath VARCHAR(255),
+                         fileSize BIGINT,
+                         data BYTEA,
+                         caption VARCHAR(255),
+                         lastMessage TIMESTAMP,
+                         lastMessageMs BIGINT,
+                         humanCat_id BIGINT,
+                         humanDog_id BIGINT,
+                         FOREIGN KEY (humanCat_id) REFERENCES humanCat (id),
+                         FOREIGN KEY (humanDog_id) REFERENCES humanDog (id)
 );
+

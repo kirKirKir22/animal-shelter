@@ -1,9 +1,10 @@
 package pro.sky.telegrambotanimalshelter.constants;
 
-public abstract class StringConstants {
+public abstract class Constants {
+
     public static final String START = "/start";
 
-    public static final String WELCOME = "Добро пожаловать, в приют Кошечки-собачки";
+    public static final String WELCOME = "Добро пожаловать, в наш приют";
 
     public static final String FIND_INFORMATION = "Здесь вы сможете найти всю необходимую информацию.";
 
@@ -13,7 +14,7 @@ public abstract class StringConstants {
 
     public static final String EMPTY = "";
 
-    public static final String VOLUNTEER_URL = "https://t.me/bratusigor";// проверить
+    public static final String VOLUNTEER_URL = "https://t.me/mr_Talks";
 
     public static final String MAIN_MENU = "Главное меню";
 
@@ -23,8 +24,7 @@ public abstract class StringConstants {
 
     public static final String ABOUT_ANIMAL_SHELTER = "О приюте";
 
-    public static final String HI = " привет, меня зовут бот Олег," +
-            " я помогу тебе с усыновлением собаки или кошки, для этого выбери нужную кнопку!";
+    public static final String HI = " привет, меня зовут бот Макс, я помогу тебе с усыновлением собаки или кошки, для этого выбери нужную кнопку!";
 
     public static final String SAY_HI = "Привет";
 
@@ -35,6 +35,8 @@ public abstract class StringConstants {
     public static final String SET_CAT_ANIMAL = "Вы выбрали кошачий приют.";
 
     public static final String SET_DOG_ANIMAL = "Вы выбрали собачий приют.";
+
+//    public static final String RETURN_TO_SHELTER_CHOOSE_MENU = "Вернуться к выбору приюта";
 
     public static final String HOW_GET_ANIMAL = "Как взять питомца из приюта";
 
@@ -81,6 +83,7 @@ public abstract class StringConstants {
     public static final String REPORT_NOTIFICATION = "Вы забыли прислать отчет, скорее поторопитесь сделать это!";
 
     public static final String UPLOAD_PHOTO_ERROR = "Ошибка загрузки фото!";
+
     public static final String INFO_ABOUT_BOT = "Информация о возможностях бота \n- Бот может показать информацию о приюте \n" +
             "- Покажет какие документы нужны \n- Бот может принимать ежедневный отчет о питомце\n" +
             "- Может передать контактные данные волонтерам для связи";
@@ -92,8 +95,9 @@ public abstract class StringConstants {
             "Контактные данные \nsoapCAT@GMAIL.COM\n \n+7(555)555-55-55\n" +
             "Общие рекомендации \nhttps://www.сайтCat/\n" +
             "";
-    public static final String SCHEMA_2GIS = "Наш адрес: г. Воронеж, ул. Ленинский проспект 100." +
-            "\nДля построения маршрута перейдите по ссылке: \n https://https://go.2gis.com/ztvy1" +
+    public static final String SCHEMA_2GIS = "Наш адрес:   г.  Замбалия, ул.  Фантазийная улица Дом № 42½." +
+            "\nДля построения маршрута перейдите по ссылке:" +
+            " \n https://ru.wikipedia.org/wiki/%D0%9C%D1%8B%D1%81_%D0%94%D0%BE%D0%B1%D1%80%D0%BE%D0%B9_%D0%9D%D0%B0%D0%B4%D0%B5%D0%B6%D0%B4%D1%8B#/maplink/1" +
             "\nПропуск на автомобиль можно оформить в пункте охраны по предварительному звонку: т. 8 (555) 444-44-44";
 
     public static final String SAFETY = "Техника безопасности при нахождении в приюте:" +
@@ -136,5 +140,5 @@ public abstract class StringConstants {
             "(Самочувствие:)(\\s)(\\W+)\n;" +
             "(Поведение:)(\\s)(\\W+);";
 
-    public static final long telegramChatVolunteers = 544252817; // Кирилла
+    public static final long telegramChatVolunteers = 544252810;
 }

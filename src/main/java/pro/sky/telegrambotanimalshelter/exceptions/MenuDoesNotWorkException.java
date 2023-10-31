@@ -1,8 +1,8 @@
 package pro.sky.telegrambotanimalshelter.exceptions;
 
-public class MenuDoesntWorkException extends RuntimeException{
+public class MenuDoesNotWorkException extends RuntimeException{
 
-    public MenuDoesntWorkException(String message) {
+    public MenuDoesNotWorkException(String message) {
         super("Ошибка при вызове меню");
     }
 }

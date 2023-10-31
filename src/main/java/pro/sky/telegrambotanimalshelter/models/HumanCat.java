@@ -9,7 +9,6 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@Table(name = "person_cat")
 @EqualsAndHashCode
 @NoArgsConstructor
 @ToString
