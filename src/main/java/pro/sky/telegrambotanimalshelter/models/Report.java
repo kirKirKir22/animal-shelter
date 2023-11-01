@@ -43,7 +43,7 @@ public class Report {
     private Long fileSize;
 
 
-    @Lob
+    @Column(columnDefinition = "bytea")
     private byte[] data;
 
 

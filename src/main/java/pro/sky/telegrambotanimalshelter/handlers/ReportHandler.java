@@ -8,6 +8,7 @@ import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.GetFileResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 import pro.sky.telegrambotanimalshelter.listener.TelegramBotUpdateListener;
 import pro.sky.telegrambotanimalshelter.models.Report;
 import pro.sky.telegrambotanimalshelter.repository.ReportRepository;
@@ -22,7 +23,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static pro.sky.telegrambotanimalshelter.constants.Constants.*;
-
+@Service
 public class ReportHandler {
 
     private ReportRepository reportRepository;
