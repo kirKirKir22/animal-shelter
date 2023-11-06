@@ -5,8 +5,11 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pro.sky.telegrambotanimalshelter.exceptions.CatNotFoundException;
 import pro.sky.telegrambotanimalshelter.models.Cat;
 import pro.sky.telegrambotanimalshelter.service.interfaces.CatService;
 
@@ -54,8 +57,8 @@ public class CatController {
             tags = "Cat"
     )
     @PostMapping()
-    public Cat save(@RequestBody Cat cat) {
-        return this.catService.addCat(cat);
+    public Long save(@RequestBody Cat cat) {
+        return this.catService.addCat(cat).getId();
     }
 
     // Редактирование данных кота
@@ -69,9 +72,17 @@ public class CatController {
             ),
             tags = "Cat"
     )
-    @PutMapping()
-    public Cat update(@RequestBody Cat cat) {
-        return this.catService.updateCat(cat);
+    @PutMapping("/{id}")
+    public ResponseEntity<Cat> update(@PathVariable Long id, @RequestBody Cat cat) {
+        Cat existingCat = catService.getByIdCat(id);
+
+        if (existingCat == null) {
+            throw new CatNotFoundException();
+        }
+
+        Cat updatedCat = catService.updateCat(cat);
+
+        return new ResponseEntity<>(updatedCat, HttpStatus.OK);
     }
 
     // Удаление кота по ID

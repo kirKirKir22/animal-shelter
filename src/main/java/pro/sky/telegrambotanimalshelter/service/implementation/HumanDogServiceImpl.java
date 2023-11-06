@@ -10,6 +10,7 @@ import pro.sky.telegrambotanimalshelter.repository.HumanDogRepository;
 import pro.sky.telegrambotanimalshelter.service.interfaces.HumanDogService;
 
 import java.util.Collection;
+import java.util.List;
 
 
 @Service
@@ -40,11 +41,11 @@ public class HumanDogServiceImpl implements HumanDogService {
 
 
     @Override
-    public HumanDog updateHumanDog(HumanDog personDog) {
+    public HumanDog updateHumanDog(HumanDog humanDog) {
         logger.info("Was invoked method to update a personDog");
-        if (personDog.getId() != null) {
-            if (getByIdHumanDog(personDog.getId()) != null) {
-                return this.repository.save(personDog);
+        if (humanDog.getId() != null) {
+            if (getByIdHumanDog(humanDog.getId()) != null) {
+                return this.repository.save(humanDog);
             }
         }
         throw new HumanDogNotFoundException();
@@ -62,4 +63,20 @@ public class HumanDogServiceImpl implements HumanDogService {
         logger.info("Was invoked method to remove a personDog by id={}", id);
         this.repository.deleteById(id);
     }
+
+    @Override
+    public HumanDog findByChatId(long chatId) {
+        return repository.findByChatId(chatId);
+    }
+
+    @Override
+    public HumanDog saveDog(HumanDog humanDog) {
+        return repository.save(humanDog);
+    }
+
+    @Override
+    public List<HumanDog> findAll() {
+        return repository.findAll();
+    }
+
 }

@@ -29,7 +29,7 @@ public class ReportServiceImplTest {
             new Report(CHAT_ID, RATION, HEALTH, HABITS, DAYS, CAPTION)));
 
     @Mock
-    private ReportRepository reportRepositoryMock;
+    private ReportRepository reportServiceMock;
 
     @InjectMocks
     private ReportServiceImpl reportService;
@@ -39,7 +39,7 @@ public class ReportServiceImplTest {
 
     @Test
     public void getByIdReport() {
-        Mockito.when(reportRepositoryMock.findById(any(Long.class))).thenReturn(Optional.of(report));
+        Mockito.when(reportServiceMock.findById(any(Long.class))).thenReturn(Optional.of(report));
         Report report = reportService.getByIdReport(1L);
         Assertions.assertThat(report.getChatId()).isEqualTo(report.getChatId());
         Assertions.assertThat(report.getRation()).isEqualTo(report.getRation());
@@ -52,7 +52,7 @@ public class ReportServiceImplTest {
 
     @Test
     public void addReport() {
-        Mockito.when(reportRepositoryMock.save(any(Report.class))).thenReturn(report);
+        Mockito.when(reportServiceMock.save(any(Report.class))).thenReturn(report);
         Report report1 = reportService.addReport(report);
         Assertions.assertThat(report1.getChatId()).isEqualTo(report1.getChatId());
         Assertions.assertThat(report1.getRation()).isEqualTo(report1.getRation());
@@ -73,8 +73,8 @@ public class ReportServiceImplTest {
         report1.setDays(1L);
         report1.setCaption("...");
         report1.setId(1L);
-        Mockito.when(reportRepositoryMock.findById(any(Long.class))).thenReturn(Optional.of(report1));
-        Mockito.when(reportRepositoryMock.save(any(Report.class))).thenReturn(report1);
+        Mockito.when(reportServiceMock.findById(any(Long.class))).thenReturn(Optional.of(report1));
+        Mockito.when(reportServiceMock.save(any(Report.class))).thenReturn(report1);
         Report report2 = reportService.updateReport(report1);
         Assertions.assertThat(report2.getChatId()).isEqualTo(report1.getChatId());
         Assertions.assertThat(report2.getRation()).isEqualTo(report1.getRation());
@@ -86,7 +86,7 @@ public class ReportServiceImplTest {
 
     @Test
     public void getAllReport() {
-        Mockito.when(reportRepositoryMock.findAll()).thenReturn(reports);
+        Mockito.when(reportServiceMock.findAll()).thenReturn(reports);
         Collection<Report> report = reportService.getAllReport();
         Assertions.assertThat(report.size()).isEqualTo(reports.size());
         Assertions.assertThat(report).isEqualTo(reports);

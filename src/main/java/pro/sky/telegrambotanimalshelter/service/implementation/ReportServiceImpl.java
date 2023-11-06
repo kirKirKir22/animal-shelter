@@ -1,7 +1,6 @@
 package pro.sky.telegrambotanimalshelter.service.implementation;
 
 import com.pengrad.telegrambot.model.File;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -10,10 +9,9 @@ import pro.sky.telegrambotanimalshelter.models.Report;
 import pro.sky.telegrambotanimalshelter.repository.ReportRepository;
 import pro.sky.telegrambotanimalshelter.service.interfaces.ReportService;
 
-
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 
 @Service
@@ -49,7 +47,7 @@ public class ReportServiceImpl implements ReportService {
 
 
     public void uploadReport(Long personId, byte[] pictureFile, File file,
-                             String caption, String filePath, Date dateSendMessage, Long timeDate, long daysOfReports)  {
+                             String caption, String filePath, Date dateSendMessage, Long timeDate, long daysOfReports) {
         logger.info("Was invoked method to uploadReportData");
 
         Report report = new Report();//findById(personId);
@@ -102,5 +100,20 @@ public class ReportServiceImpl implements ReportService {
     public void removeByIdReport(Long id) {
         logger.info("Was invoked method to remove a report by id={}", id);
         this.repository.deleteById(id);
+    }
+
+    @Override
+    public Report findByChatId(long chatId) {
+        return repository.findByChatId(chatId);
+    }
+
+    @Override
+    public void save(Report report) {
+        repository.save(report);
+    }
+
+    @Override
+    public List<Report> findAll() {
+        return repository.findAll();
     }
 }

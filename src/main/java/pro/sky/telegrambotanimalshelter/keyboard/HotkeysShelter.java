@@ -8,8 +8,7 @@ import com.pengrad.telegrambot.response.SendResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
-import static pro.sky.telegrambotanimalshelter.constants.Constants.*;
+import pro.sky.telegrambotanimalshelter.constants.Constants;
 
 @Service
 public class HotkeysShelter {
@@ -27,15 +26,15 @@ public class HotkeysShelter {
         logger.info("Starting main menu: {}, {}", chatId, "Вызвано основное меню");
 
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup(
-                new KeyboardButton(INFO_ABOUT_BOT_BUTTON),
-                new KeyboardButton(SHELTER_INFO_MENU));
-        replyKeyboardMarkup.addRow(new KeyboardButton(HOW_GET_ANIMAL),
-                new KeyboardButton(SEND_REPORT));
-        replyKeyboardMarkup.addRow(new KeyboardButton(SEND_MESSAGE_VOLUNTEER));
+                new KeyboardButton(Constants.INFO_ABOUT_BOT_BUTTON.getValue()),
+                new KeyboardButton(Constants.SHELTER_INFO_MENU.getValue()));
+        replyKeyboardMarkup.addRow(new KeyboardButton(Constants.HOW_GET_ANIMAL.getValue()),
+                new KeyboardButton(Constants.SEND_REPORT.getValue()));
+        replyKeyboardMarkup.addRow(new KeyboardButton(Constants.SEND_MESSAGE_VOLUNTEER.getValue()));
 
         keyboardUpdate(replyKeyboardMarkup);
 
-        SendMessage request = new SendMessage(chatId, WELCOME)
+        SendMessage request = new SendMessage(chatId, Constants.WELCOME.getValue())
                 .replyMarkup(replyKeyboardMarkup)
                 .parseMode(ParseMode.HTML)
                 .disableWebPagePreview(true);
@@ -53,20 +52,20 @@ public class HotkeysShelter {
     public void sendMenuInfoShelter(long chatId) {
         logger.info("Starting menu information about animal shelter: {}, {}", chatId, "Вызвано меню: Информация о приюте");
 
-        ReplyKeyboardMarkup replyKeyboardMarkup2 = new ReplyKeyboardMarkup(new KeyboardButton(ABOUT_ANIMAL_SHELTER),
-                new KeyboardButton(GET_USER_CONTACT).requestContact(true))
-                .addRow(new KeyboardButton(DRIVER_SCHEME), new KeyboardButton(FOR_SAFETY));
+        ReplyKeyboardMarkup replyKeyboardMarkup2 = new ReplyKeyboardMarkup(new KeyboardButton(Constants.ABOUT_ANIMAL_SHELTER.getValue()),
+                new KeyboardButton(Constants.GET_USER_CONTACT.getValue()).requestContact(true))
+                .addRow(new KeyboardButton(Constants.DRIVER_SCHEME.getValue()), new KeyboardButton(Constants.FOR_SAFETY.getValue()));
         repeatableMenu(chatId, replyKeyboardMarkup2);
     }
 
     // Вспомогательный метод для создания меню
     private void repeatableMenu(long chatId, ReplyKeyboardMarkup replyKeyboardMarkup2) {
-        replyKeyboardMarkup2.addRow(new KeyboardButton(SEND_MESSAGE_VOLUNTEER),
-                new KeyboardButton(RETURN_MENU));
+        replyKeyboardMarkup2.addRow(new KeyboardButton(Constants.SEND_MESSAGE_VOLUNTEER.getValue()),
+                new KeyboardButton(Constants.RETURN_MENU.getValue()));
 
         keyboardUpdate(replyKeyboardMarkup2);
 
-        SendMessage request = new SendMessage(chatId, FIND_INFORMATION)
+        SendMessage request = new SendMessage(chatId, Constants.FIND_INFORMATION.getValue())
                 .replyMarkup(replyKeyboardMarkup2)
                 .parseMode(ParseMode.HTML)
                 .disableWebPagePreview(true);
@@ -84,9 +83,9 @@ public class HotkeysShelter {
     public void sendMenuTakeAnimal(long chatId) {
         logger.info("Starting menu about taking animal from shelter: {}, {}", chatId, "меню: Как взять питомца из приюта");
 
-        ReplyKeyboardMarkup replyKeyboardMarkup3 = new ReplyKeyboardMarkup(new KeyboardButton(TIPS_AND_RECOMMENDATIONS),
-                new KeyboardButton(GET_USER_CONTACT))
-                .addRow(new KeyboardButton(DOCUMENTS), new KeyboardButton(GET_ANIMAL_WITH_DEFECTS));
+        ReplyKeyboardMarkup replyKeyboardMarkup3 = new ReplyKeyboardMarkup(new KeyboardButton(Constants.TIPS_AND_RECOMMENDATIONS.getValue()),
+                new KeyboardButton(Constants.GET_USER_CONTACT.getValue()))
+                .addRow(new KeyboardButton(Constants.DOCUMENTS.getValue()), new KeyboardButton(Constants.GET_ANIMAL_WITH_DEFECTS.getValue()));
         repeatableMenu(chatId, replyKeyboardMarkup3);
     }
 
@@ -94,12 +93,12 @@ public class HotkeysShelter {
     public void chooseMenu(long chatId) {
         logger.info("Method sendMessage has been run: {}, {}", chatId, "Вызвано меню выбора ");
 
-        String cat = CAT;
-        String dog = DOG;
+        String cat = Constants.CAT.getValue();
+        String dog = Constants.DOG.getValue();
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup(
                 new KeyboardButton(cat));
         replyKeyboardMarkup.addRow(new KeyboardButton(dog));
-        returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, CHOOSE_PET);
+        returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, Constants.CHOOSE_PET.getValue());
     }
 
     // Вспомогательный метод для отправки сообщений с клавиатурой

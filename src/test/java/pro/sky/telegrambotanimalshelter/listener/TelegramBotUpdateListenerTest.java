@@ -42,7 +42,7 @@ class TelegramBotUpdateListenerTest {
     private HumanDogRepository humanDogRepository;
 
     @MockBean
-    private ReportRepository reportRepository;
+    private ReportRepository reportService;
 
     @MockBean
     private ReportService reportService;

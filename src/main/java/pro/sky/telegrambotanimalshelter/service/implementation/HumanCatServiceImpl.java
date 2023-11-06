@@ -10,6 +10,7 @@ import pro.sky.telegrambotanimalshelter.repository.HumanCatRepository;
 import pro.sky.telegrambotanimalshelter.service.interfaces.HumanCatService;
 
 import java.util.Collection;
+import java.util.List;
 
 
 @Service
@@ -40,11 +41,11 @@ public class HumanCatServiceImpl implements HumanCatService {
 
 
     @Override
-    public HumanCat updateHumanCat(HumanCat personCat) {
+    public HumanCat updateHumanCat(HumanCat humanCat) {
         logger.info("Was invoked method to update a personCat");
-        if (personCat.getId() != null) {
-            if (getByIdHumanCat(personCat.getId()) != null) {
-                return repository.save(personCat);
+        if (humanCat.getId() != null) {
+            if (getByIdHumanCat(humanCat.getId()) != null) {
+                return repository.save(humanCat);
             }
         }
         throw new HumanCatNotFoundException();
@@ -62,5 +63,20 @@ public class HumanCatServiceImpl implements HumanCatService {
     public void removeByIdHumanCat(Long id) {
         logger.info("Was invoked method to remove a personCat by id={}", id);
         this.repository.deleteById(id);
+    }
+
+    @Override
+    public HumanCat findByChatId(long chatId) {
+        return repository.findByChatId(chatId);
+    }
+
+    @Override
+    public HumanCat saveCat(HumanCat humanCat) {
+        return repository.save(humanCat);
+    }
+
+    @Override
+    public List<HumanCat> findAll() {
+        return repository.findAll();
     }
 }

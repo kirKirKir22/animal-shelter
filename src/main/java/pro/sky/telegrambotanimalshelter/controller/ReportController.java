@@ -2,7 +2,6 @@ package pro.sky.telegrambotanimalshelter.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -10,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pro.sky.telegrambotanimalshelter.listener.TelegramBotUpdateListener;
 import pro.sky.telegrambotanimalshelter.models.Report;
-import pro.sky.telegrambotanimalshelter.service.implementation.ReportServiceImpl;
+import pro.sky.telegrambotanimalshelter.service.interfaces.ReportService;
 
 import java.util.Collection;
 
@@ -20,7 +19,7 @@ import java.util.Collection;
 public class ReportController {
 
     // Сервис для работы с отчетами
-    private final ReportServiceImpl reportService;
+    private final ReportService reportService;
 
     // Сервис для взаимодействия с Telegram Bot
     private TelegramBotUpdateListener telegramBot;
@@ -29,13 +28,12 @@ public class ReportController {
     private final String fileType = "image/jpeg";
 
     // Конструктор контроллера для инъекции сервиса работы с отчетами
-    public ReportController(ReportServiceImpl reportService) {
+    /*public ReportController(ReportServiceImpl reportService) {
         this.reportService = reportService;
-    }
+    }*/
 
     // Конструктор контроллера для инъекции сервисов работы с отчетами и Telegram Bot
-    @Autowired
-    public ReportController(ReportServiceImpl reportService, TelegramBotUpdateListener telegramBot) {
+    public ReportController(ReportService reportService, TelegramBotUpdateListener telegramBot) {
         this.reportService = reportService;
         this.telegramBot = telegramBot;
     }
@@ -44,28 +42,28 @@ public class ReportController {
     @Operation(summary = "Просмотр отчетов по id")
     @GetMapping("/{id}/report")
     public Report downloadReport(@Parameter(description = "report id") @PathVariable Long id) {
-        return this.reportService.getByIdReport(id);
+        return reportService.getByIdReport(id);
     }
 
     // Удаление отчета по его id
     @Operation(summary = "Удаление отчетов по id")
     @DeleteMapping("/{id}")
     public void remove(@Parameter(description = "report id") @PathVariable Long id) {
-        this.reportService.removeByIdReport(id);
+        reportService.removeByIdReport(id);
     }
 
     // Просмотр всех отчетов
     @Operation(summary = "Просмотр всех отчетов")
     @GetMapping("/getAll")
     public ResponseEntity<Collection<Report>> getAll() {
-        return ResponseEntity.ok(this.reportService.getAllReport());
+        return ResponseEntity.ok(reportService.getAllReport());
     }
 
     // Просмотр фотографии из отчета по его id
     @Operation(summary = "Просмотр фото по id отчета")
     @GetMapping("/{id}/photo-from-db")
     public ResponseEntity<byte[]> downloadPhotoFromDB(@Parameter(description = "report id") @PathVariable Long id) {
-        Report reportData = this.reportService.getByIdReport(id);
+        Report reportData = reportService.getByIdReport(id);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType(fileType));

@@ -6,11 +6,8 @@ import org.springframework.stereotype.Repository;
 import pro.sky.telegrambotanimalshelter.models.Report;
 
 
-
-
 @Repository
 public interface ReportRepository extends JpaRepository<Report, Long> {
 
-    public Report findByChatId(Long chatId);
-
+    Report findByChatId(Long chatId);
 }

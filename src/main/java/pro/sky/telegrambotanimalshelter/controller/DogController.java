@@ -5,8 +5,11 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pro.sky.telegrambotanimalshelter.exceptions.DogNotFoundException;
 import pro.sky.telegrambotanimalshelter.models.Dog;
 import pro.sky.telegrambotanimalshelter.service.implementation.DogServiceImpl;
 
@@ -54,8 +57,8 @@ public class DogController {
             tags = "Dog"
     )
     @PostMapping()
-    public Dog save(@RequestBody Dog dog) {
-        return this.dogService.addDog(dog);
+    public Long save(@RequestBody Dog dog) {
+        return dogService.addDog(dog).getId();
     }
 
     // Редактирование данных собаки
@@ -69,9 +72,17 @@ public class DogController {
             ),
             tags = "Dog"
     )
-    @PutMapping()
-    public Dog update(@RequestBody Dog dog) {
-        return this.dogService.updateDog(dog);
+    @PutMapping("/{id}")
+    public ResponseEntity<Dog> update(@PathVariable Long id, @RequestBody Dog dog) {
+        Dog existingDog = dogService.getByIdDog(id);
+
+        if (existingDog == null) {
+            throw new DogNotFoundException();
+        }
+
+        Dog updatedDog = dogService.updateDog(dog);
+
+        return new ResponseEntity<>(updatedDog, HttpStatus.OK);
     }
 
     // Удаление собаки по ID
