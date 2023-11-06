@@ -1,97 +1,134 @@
 package pro.sky.telegrambotanimalshelter.service.implementation;
 
 
-import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.MockitoAnnotations;
+import pro.sky.telegrambotanimalshelter.exceptions.HumanCatNotFoundException;
 import pro.sky.telegrambotanimalshelter.models.HumanCat;
-import pro.sky.telegrambotanimalshelter.models.Status;
 import pro.sky.telegrambotanimalshelter.repository.HumanCatRepository;
 
-import java.util.*;
+import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-
-@ExtendWith(MockitoExtension.class)
 public class HumanCatServiceImplTest {
-    private static final String HUMAN_NAME = "Артём";
-    private static final int YEAR_OF_BIRTH = 2000;
-    private static final String PHONE = "+77777777777";
-    private static final String ADDRESS = "Британия";
-    private static final Long CHAT_ID = 5L;
-    private static final Status STATUS = Status.APPROVED;
 
-    private static final List<HumanCat> humanCats = new ArrayList<>(Arrays.asList(
-            new HumanCat(HUMAN_NAME, YEAR_OF_BIRTH, PHONE, ADDRESS, CHAT_ID, STATUS),
-            new HumanCat(HUMAN_NAME, YEAR_OF_BIRTH, PHONE, ADDRESS, CHAT_ID, STATUS),
-            new HumanCat(HUMAN_NAME, YEAR_OF_BIRTH, PHONE, ADDRESS, CHAT_ID, STATUS)));
-    @Mock
-    private HumanCatRepository humanCatRepositoryMock;
-
-    @InjectMocks
     private HumanCatServiceImpl humanCatService;
 
-    private final HumanCat humanCat = new HumanCat(HUMAN_NAME, YEAR_OF_BIRTH, PHONE, ADDRESS, CHAT_ID, STATUS);
+    @Mock
+    private HumanCatRepository repository;
 
-
-    @Test
-    public void getByIdHumanCat() {
-        Mockito.when(humanCatRepositoryMock.findById(any(Long.class))).thenReturn(Optional.of(humanCat));
-        HumanCat cat = humanCatService.getByIdHumanCat(1L);
-        Assertions.assertThat(cat.getId()).isEqualTo(humanCat.getId());
-        Assertions.assertThat(cat.getName()).isEqualTo(humanCat.getName());
-        Assertions.assertThat(cat.getYearOfBirth()).isEqualTo(humanCat.getYearOfBirth());
-        Assertions.assertThat(cat.getPhone()).isEqualTo(humanCat.getPhone());
-        Assertions.assertThat(cat.getAddress()).isEqualTo(humanCat.getAddress());
-        Assertions.assertThat(cat.getChatId()).isEqualTo(humanCat.getChatId());
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+        humanCatService = new HumanCatServiceImpl(repository);
     }
 
-
     @Test
-    public void addHumanCat() {
-        Mockito.when(humanCatRepositoryMock.save(any(HumanCat.class))).thenReturn(humanCat);
-        HumanCat cat = humanCatService.addHumanCat(humanCat);
-        Assertions.assertThat(cat.getId()).isEqualTo(humanCat.getId());
-        Assertions.assertThat(cat.getName()).isEqualTo(humanCat.getName());
-        Assertions.assertThat(cat.getYearOfBirth()).isEqualTo(humanCat.getYearOfBirth());
-        Assertions.assertThat(cat.getPhone()).isEqualTo(humanCat.getPhone());
-        Assertions.assertThat(cat.getAddress()).isEqualTo(humanCat.getAddress());
-        Assertions.assertThat(cat.getChatId()).isEqualTo(humanCat.getChatId());
-    }
-
-
-    @Test
-    public void updateHumanCat() {
+    public void testGetByIdHumanCat_WithValidId_ReturnsHumanCat() {
         HumanCat humanCat = new HumanCat();
-        humanCat.setName(HUMAN_NAME);
-        humanCat.setYearOfBirth(YEAR_OF_BIRTH);
-        humanCat.setPhone(PHONE);
-        humanCat.setAddress(ADDRESS);
-        humanCat.setChatId(CHAT_ID);
-        humanCat.setStatus(STATUS);
         humanCat.setId(1L);
-        Mockito.when(humanCatRepositoryMock.findById(any(Long.class))).thenReturn(Optional.of(humanCat));
-        Mockito.when(humanCatRepositoryMock.save(any(HumanCat.class))).thenReturn(humanCat);
-        HumanCat humanCat2 = humanCatService.updateHumanCat(humanCat);
-        Assertions.assertThat(humanCat.getName()).isEqualTo(humanCat.getName());
-        Assertions.assertThat(humanCat.getYearOfBirth()).isEqualTo(humanCat.getYearOfBirth());
-        Assertions.assertThat(humanCat.getPhone()).isEqualTo(humanCat.getPhone());
-        Assertions.assertThat(humanCat.getAddress()).isEqualTo(humanCat.getAddress());
-        Assertions.assertThat(humanCat.getChatId()).isEqualTo(humanCat.getChatId());
-        Assertions.assertThat(humanCat.getStatus()).isEqualTo(humanCat.getStatus());
+        when(repository.findById(1L)).thenReturn(java.util.Optional.of(humanCat));
+
+        HumanCat result = humanCatService.getByIdHumanCat(1L);
+
+        assertNotNull(result);
+        assertEquals(1L, result.getId());
     }
 
+    @Test
+    public void testGetByIdHumanCat_WithInvalidId_ThrowsException() {
+        when(repository.findById(1L)).thenReturn(java.util.Optional.empty());
+
+        assertThrows(HumanCatNotFoundException.class, () -> humanCatService.getByIdHumanCat(1L));
+    }
 
     @Test
-    public void getAllHumanCat() {
-        Mockito.when(humanCatRepositoryMock.findAll()).thenReturn(humanCats);
-        Collection<HumanCat> cat = humanCatService.getAllHumanCat();
-        Assertions.assertThat(cat.size()).isEqualTo(humanCats.size());
-        Assertions.assertThat(cat).isEqualTo(humanCats);
+    public void testAddHumanCat_AddsHumanCat() {
+        HumanCat humanCat = new HumanCat();
+        when(repository.save(any(HumanCat.class))).thenReturn(humanCat);
+
+        HumanCat result = humanCatService.addHumanCat(humanCat);
+
+        assertNotNull(result);
+        assertEquals(humanCat, result);
+    }
+
+    @Test
+    public void testUpdateHumanCat_WithValidId_UpdatesHumanCat() {
+        HumanCat humanCat = new HumanCat();
+        humanCat.setId(1L);
+        when(repository.findById(1L)).thenReturn(java.util.Optional.of(humanCat));
+        when(repository.save(any(HumanCat.class))).thenReturn(humanCat);
+
+        HumanCat result = humanCatService.updateHumanCat(humanCat);
+
+        assertNotNull(result);
+        assertEquals(1L, result.getId());
+    }
+
+    @Test
+    public void testUpdateHumanCat_WithInvalidId_ThrowsException() {
+        HumanCat humanCat = new HumanCat();
+        humanCat.setId(1L);
+
+        when(repository.findById(1L)).thenReturn(java.util.Optional.empty());
+
+        assertThrows(HumanCatNotFoundException.class, () -> humanCatService.updateHumanCat(humanCat));
+    }
+
+    @Test
+    public void testRemoveByIdHumanCat_RemovesHumanCat() {
+        humanCatService.removeByIdHumanCat(1L);
+
+        verify(repository, times(1)).deleteById(1L);
+    }
+
+    @Test
+    public void testFindByChatId_WithExistingChatId_ReturnsHumanCat() {
+        HumanCat humanCat = new HumanCat();
+        long chatId = 123L;
+        when(repository.findByChatId(chatId)).thenReturn(humanCat);
+
+        HumanCat result = humanCatService.findByChatId(chatId);
+
+        assertNotNull(result);
+        assertEquals(humanCat, result);
+    }
+
+    @Test
+    public void testFindByChatId_WithNonExistingChatId_ReturnsNull() {
+        long chatId = 123L;
+        when(repository.findByChatId(chatId)).thenReturn(null);
+
+        HumanCat result = humanCatService.findByChatId(chatId);
+
+        assertNull(result);
+    }
+
+    @Test
+    public void testSaveCat_SavesHumanCat() {
+        HumanCat humanCat = new HumanCat();
+        when(repository.save(any(HumanCat.class))).thenReturn(humanCat);
+
+        HumanCat result = humanCatService.saveCat(humanCat);
+
+        assertNotNull(result);
+        assertEquals(humanCat, result);
+    }
+
+    @Test
+    public void testFindAll_ReturnsListOfHumanCats() {
+        HumanCat humanCat1 = new HumanCat();
+        HumanCat humanCat2 = new HumanCat();
+        when(repository.findAll()).thenReturn(List.of(humanCat1, humanCat2));
+
+        List<HumanCat> result = humanCatService.findAll();
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
     }
 }

@@ -1,83 +1,103 @@
 package pro.sky.telegrambotanimalshelter.service.implementation;
 
-import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.MockitoAnnotations;
+import pro.sky.telegrambotanimalshelter.exceptions.DogNotFoundException;
 import pro.sky.telegrambotanimalshelter.models.Dog;
 import pro.sky.telegrambotanimalshelter.repository.DogRepository;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
 public class DogServiceImplTest {
-    private static final String NAME = "Jack";
-    private static final String DESCRIPTION = "DESCRIPTION";
-    private static final String BREED = "Хаски";
-    private static final int AGE = Integer.parseInt("8");
 
-    private static final List<Dog> dogs = new ArrayList<>(Arrays.asList(
-            new Dog(NAME, BREED, AGE, DESCRIPTION),
-            new Dog(NAME, BREED, AGE, DESCRIPTION),
-            new Dog(NAME, BREED, AGE, DESCRIPTION)));
-
-    private static final Dog dog = new Dog("Джексон", "Британский", 10, "Description");
-    @Mock
-    private DogRepository dogRepositoryMock;
-    @InjectMocks
     private DogServiceImpl dogService;
 
+    @Mock
+    private DogRepository repository;
 
-    @Test
-    public void getByIdDog() {
-        Mockito.when(dogRepositoryMock.findById(any(Long.class))).thenReturn(Optional.of(dog));
-        Dog dog1 = dogService.getByIdDog(1L);
-        Assertions.assertThat(dog1.getName()).isEqualTo(dog.getName());
-        Assertions.assertThat(dog1.getBreed()).isEqualTo(dog.getBreed());
-        Assertions.assertThat(dog1.getDescription()).isEqualTo(dog.getDescription());
-        Assertions.assertThat(dog1.getAge()).isEqualTo(dog.getAge());
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+        dogService = new DogServiceImpl(repository);
     }
 
-
     @Test
-    public void addDog() {
-        Mockito.when(dogRepositoryMock.save(any(Dog.class))).thenReturn(dog);
-        Dog dog1 = dogService.addDog(dog);
-        Assertions.assertThat(dog1.getName()).isEqualTo(dog.getName());
-        Assertions.assertThat(dog1.getBreed()).isEqualTo(dog.getBreed());
-        Assertions.assertThat(dog1.getDescription()).isEqualTo(dog.getDescription());
-        Assertions.assertThat(dog1.getAge()).isEqualTo(dog.getAge());
+    public void testGetByIdDog_WithValidId_ReturnsDog() {
+        Dog dog = new Dog();
+        dog.setId(1L);
+        when(repository.findById(1L)).thenReturn(java.util.Optional.of(dog));
+
+        Dog result = dogService.getByIdDog(1L);
+
+        assertNotNull(result);
+        assertEquals(1L, result.getId());
     }
 
+    @Test
+    public void testGetByIdDog_WithInvalidId_ThrowsException() {
+        when(repository.findById(1L)).thenReturn(java.util.Optional.empty());
+
+        assertThrows(DogNotFoundException.class, () -> dogService.getByIdDog(1L));
+    }
 
     @Test
-    public void updateDog() {
+    public void testAddDog_AddsDog() {
+        Dog dog = new Dog();
+        when(repository.save(any(Dog.class))).thenReturn(dog);
+
+        Dog result = dogService.addDog(dog);
+
+        assertNotNull(result);
+        assertEquals(dog, result);
+    }
+
+    @Test
+    public void testUpdateDog_WithValidId_UpdatesDog() {
+        Dog dog = new Dog();
+        dog.setId(1L);
+        when(repository.findById(1L)).thenReturn(java.util.Optional.of(dog));
+        when(repository.save(any(Dog.class))).thenReturn(dog);
+
+        Dog result = dogService.updateDog(dog);
+
+        assertNotNull(result);
+        assertEquals(1L, result.getId());
+    }
+
+    @Test
+    public void testUpdateDog_WithInvalidId_ThrowsException() {
+        Dog dog = new Dog();
+        dog.setId(1L);
+
+        when(repository.findById(1L)).thenReturn(java.util.Optional.empty());
+
+        assertThrows(DogNotFoundException.class, () -> dogService.updateDog(dog));
+    }
+
+    @Test
+    public void testRemoveByIdDog_RemovesDog() {
+        dogService.removeByIdDog(1L);
+
+        verify(repository, times(1)).deleteById(1L);
+    }
+
+    @Test
+    public void testGetAllDog_ReturnsListOfDogs() {
         Dog dog1 = new Dog();
-        dog1.setName("Мартышка");
-        dog1.setDescription("Description");
-        dog1.setBreed("Африкансий");
-        dog1.setAge(15);
-        dog1.setId(1L);
-        Mockito.when(dogRepositoryMock.findById(any(Long.class))).thenReturn(Optional.of(dog1));
-        Mockito.when(dogRepositoryMock.save(any(Dog.class))).thenReturn(dog1);
-        Dog dog2 = dogService.updateDog(dog1);
-        Assertions.assertThat(dog2.getName()).isEqualTo(dog1.getName());
-        Assertions.assertThat(dog2.getBreed()).isEqualTo(dog1.getBreed());
-        Assertions.assertThat(dog2.getDescription()).isEqualTo(dog1.getDescription());
-        Assertions.assertThat(dog2.getAge()).isEqualTo(dog1.getAge());
+        Dog dog2 = new Dog();
+        when(repository.findAll()).thenReturn(List.of(dog1, dog2));
+
+        Collection<Dog> result = dogService.getAllDog();
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
     }
 
-
-    @Test
-    public void getAllDogs() {
-        Mockito.when(dogRepositoryMock.findAll()).thenReturn(dogs);
-        Collection<Dog> dog = dogService.getAllDog();
-        Assertions.assertThat(dog.size()).isEqualTo(dogs.size());
-        Assertions.assertThat(dog).isEqualTo(dogs);
-    }
+    // Дополните тесты для других методов по аналогии
 }
