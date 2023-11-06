@@ -17,6 +17,8 @@ import pro.sky.telegrambotanimalshelter.handlers.ReportHandler;
 import pro.sky.telegrambotanimalshelter.keyboard.HotkeysShelter;
 import pro.sky.telegrambotanimalshelter.models.HumanCat;
 import pro.sky.telegrambotanimalshelter.models.HumanDog;
+import pro.sky.telegrambotanimalshelter.service.implementation.ContactSharingServiceImpl;
+import pro.sky.telegrambotanimalshelter.service.interfaces.ContactSharingService;
 import pro.sky.telegrambotanimalshelter.service.interfaces.HumanCatService;
 import pro.sky.telegrambotanimalshelter.service.interfaces.HumanDogService;
 import pro.sky.telegrambotanimalshelter.service.interfaces.ReportService;
@@ -44,17 +46,24 @@ public class TelegramBotUpdateListener implements UpdatesListener {
     private Update update;
     private long chatId;
     private Calendar calendar;
+    private final ContactSharingService contactSharingService;
 
-    public TelegramBotUpdateListener(ReportService reportService, HumanDogService humanDogService,
-                                     HumanCatService humanCatService, HotkeysShelter keyBoardShelter,
-                                      TelegramBot telegramBot, ReportHandler reportHandler) {
+    public TelegramBotUpdateListener(ReportService reportService,
+                                     HumanDogService humanDogService,
+                                     HumanCatService humanCatService,
+                                     HotkeysShelter keyBoardShelter,
+                                     TelegramBot telegramBot,
+                                     ReportHandler reportHandler,
+                                     ContactSharingService contactSharingService) {
         this.reportService = reportService;
         this.humanDogService = humanDogService;
         this.humanCatService = humanCatService;
         this.keyBoardShelter = keyBoardShelter;
         this.telegramBot = telegramBot;
         this.reportHandler = reportHandler;
+        this.contactSharingService = contactSharingService;
     }
+
 
     @PostConstruct
     public void init() {
@@ -78,8 +87,9 @@ public class TelegramBotUpdateListener implements UpdatesListener {
                         scheduledMethod();
 
                         try {
+
                             if (update.message() != null && update.message().contact() != null) {
-                                shareContact(update);
+                                contactSharingService.shareContact(update);
                             }
                             if (textUpdate != null) {
                                 Constants constants = getEnum(textUpdate);
@@ -169,7 +179,7 @@ public class TelegramBotUpdateListener implements UpdatesListener {
                                         new ReplyKeyboardMarkup(new KeyboardButton(" ")
                                                 .requestContact(true));
                                         // Действия при запросе контакта пользователя
-                                        shareContact(update);
+                                        contactSharingService.shareContact(update);
                                         break;
 
                                     case SEND_MESSAGE_VOLUNTEER:
@@ -212,50 +222,12 @@ public class TelegramBotUpdateListener implements UpdatesListener {
         telegramBot.execute(sendMessage);
     }
 
-    public void sendForwardMessage(Long chatId, Integer messageId) {
-        ForwardMessage forwardMessage = new ForwardMessage(Constants.TELEGRAM_CHAT_VOLUNTEERS.getValue(), chatId, messageId);
-        telegramBot.execute(forwardMessage);
-    }
 
     public void sendMessage(long chatId, String text) {
         SendMessage message = new SendMessage(chatId, text);
         telegramBot.execute(message);
     }
 
-    public void shareContact(Update update) {
-        if (update.message().contact() != null) {
-            String firstName = update.message().contact().firstName();
-            String lastName = update.message().contact().lastName();
-            String phone = update.message().contact().phoneNumber();
-            String username = update.message().chat().username();
-            Long finalChatId = update.message().chat().id();
-            var sortChatIdDog = humanDogService.findAll().stream()
-                    .filter(i -> Objects.equals(i.getChatId(), finalChatId)).toList();
-            var sortChatIdCat = humanCatService.findAll().stream()
-                    .filter(i -> Objects.equals(i.getChatId(), finalChatId)).toList();
-            if (!sortChatIdDog.isEmpty() || !sortChatIdCat.isEmpty()) {
-                sendMessage(finalChatId, Constants.ALREADY_IN_DB.getValue());
-                return;
-            }
-            if (lastName != null) {
-                String name = firstName + " " + lastName + " " + username;
-                if (humanCatService.findByChatId(finalChatId) == null) {
-                    humanCatService.saveCat(new HumanCat(name, phone, finalChatId));
-                } else {
-                    humanCatService.updateHumanCat(new HumanCat(name, phone, finalChatId));
-                }
-                if (humanDogService.findByChatId(finalChatId) == null) {
-                    humanDogService.saveDog(new HumanDog(name, phone, finalChatId));
-                } else {
-                    humanDogService.updateHumanDog(new HumanDog(name, phone, finalChatId));
-                }
-                sendMessage(finalChatId, Constants.ADD_TO_DB.getValue());
-                return;
-            }
-            sendMessage(Constants.TELEGRAM_CHAT_VOLUNTEERS.getLongValue(), phone + " " + firstName + USER_ADDED_PHONE_NUMBER_TO_DB);
-            sendForwardMessage(finalChatId, update.message().messageId());
-        }
-    }
     @Scheduled(cron = "0 0 0 * * ?")
     public void scheduledMethod() {
         // process updates here
