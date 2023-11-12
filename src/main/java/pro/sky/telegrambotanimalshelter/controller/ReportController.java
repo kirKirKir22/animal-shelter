@@ -77,9 +77,9 @@ public class ReportController {
     @GetMapping("/message-to-person")
     public void sendMessageToPerson(
             @Parameter(description = "id чата с пользователем", example = "3984892310")
-            @RequestParam Long chat_Id,
+            @RequestParam Long chatId,
             @Parameter(description = "Ваше сообщение")
             @RequestParam String message) {
-        telegramBot.sendMessage(chat_Id, message);
+        telegramBot.sendMessage(chatId, message);
     }
 }

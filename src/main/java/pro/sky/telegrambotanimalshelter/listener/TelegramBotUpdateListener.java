@@ -208,8 +208,11 @@ public class TelegramBotUpdateListener implements UpdatesListener {
                                         break;
                                 }
                             }
-                        } catch (MenuDoesNotWorkException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
+                            sendMessage(chatId, "Произошла ошибка. Пожалуйста, попробуйте ещё раз или обратитесь в поддержку.");
+
+
                         }
                     }
                 });
@@ -230,7 +233,9 @@ public class TelegramBotUpdateListener implements UpdatesListener {
 
     @Scheduled(cron = "0 0 0 * * ?")
     public void scheduledMethod() {
-        // process updates here
+
         reportHandler.checkReportDays(update, chatId, calendar);
     }
+
+
 }
