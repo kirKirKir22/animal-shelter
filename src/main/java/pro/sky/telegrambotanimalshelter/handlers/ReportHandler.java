@@ -28,7 +28,7 @@ import static pro.sky.telegrambotanimalshelter.constants.Constants.UPLOAD_PHOTO_
 public class ReportHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(TelegramBotUpdateListener.class);
-    private ReportService reportService;
+    private final ReportService reportService;
     private com.pengrad.telegrambot.TelegramBot telegramBot;
     private final Pattern pattern = Pattern.compile(Constants.REGEX_MESSAGE.getValue());
 
