@@ -71,7 +71,7 @@ public class HumanCatController {
     )
     @PutMapping
     public HumanCat update(@RequestBody HumanCat personCat) {
-        return this.humanCatService.addHumanCat(personCat);
+        return this.humanCatService.updateHumanCat(personCat);
     }
 
     // Удаление пользователя, усыновителя кота, по ID
