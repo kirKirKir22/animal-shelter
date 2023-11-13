@@ -17,7 +17,7 @@ public class DogServiceImpl implements DogService {
 
     private final DogRepository repository;
 
-    private static final Logger logger = LoggerFactory.getLogger(DogServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DogServiceImpl.class);
 
     public DogServiceImpl(DogRepository dogRepository) {
         this.repository = dogRepository;
@@ -26,7 +26,7 @@ public class DogServiceImpl implements DogService {
 
     @Override
     public Dog getByIdDog(Long id) {
-        logger.info("Was invoked method to get a dog by id={}", id);
+        LOGGER.info("Was invoked method to get a dog by id={}", id);
         return this.repository.findById(id)
                 .orElseThrow(DogNotFoundException::new);
     }
@@ -34,18 +34,16 @@ public class DogServiceImpl implements DogService {
 
     @Override
     public Dog addDog(Dog dog) {
-        logger.info("Was invoked method to add a dog");
+        LOGGER.info("Was invoked method to add a dog");
         return this.repository.save(dog);
     }
 
 
     @Override
     public Dog updateDog(Dog dog) {
-        logger.info("Was invoked method to update a dog");
-        if (dog.getId() != null) {
-            if (getByIdDog(dog.getId()) != null) {
-                return this.repository.save(dog);
-            }
+        LOGGER.info("Was invoked method to update a dog");
+        if (dog.getId() != null && getByIdDog(dog.getId()) != null) {
+            return this.repository.save(dog);
         }
         throw new DogNotFoundException();
     }
@@ -53,14 +51,14 @@ public class DogServiceImpl implements DogService {
 
     @Override
     public Collection<Dog> getAllDog() {
-        logger.info("Was invoked method to get all dogs");
+        LOGGER.info("Was invoked method to get all dogs");
         return this.repository.findAll();
     }
 
 
     @Override
     public void removeByIdDog(Long id) {
-        logger.info("Was invoked method to remove a cat by id={}", id);
+        LOGGER.info("Was invoked method to remove a cat by id={}", id);
         this.repository.deleteById(id);
     }
 }
