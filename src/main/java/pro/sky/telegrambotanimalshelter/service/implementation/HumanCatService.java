@@ -7,20 +7,19 @@ import org.springframework.stereotype.Service;
 import pro.sky.telegrambotanimalshelter.exceptions.HumanCatNotFoundException;
 import pro.sky.telegrambotanimalshelter.models.HumanCat;
 import pro.sky.telegrambotanimalshelter.repository.HumanCatRepository;
-import pro.sky.telegrambotanimalshelter.service.interfaces.HumanCatService;
 
 import java.util.Collection;
 import java.util.List;
 
 
 @Service
-public class HumanCatServiceImpl implements HumanCatService {
+public class HumanCatService implements pro.sky.telegrambotanimalshelter.service.interfaces.HumanCatService {
 
     private final HumanCatRepository repository;
 
-    private static final Logger logger = LoggerFactory.getLogger(HumanCatServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(HumanCatService.class);
 
-    public HumanCatServiceImpl(HumanCatRepository personCatRepository) {
+    public HumanCatService(HumanCatRepository personCatRepository) {
         this.repository = personCatRepository;
     }
 

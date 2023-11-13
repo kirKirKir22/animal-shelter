@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pro.sky.telegrambotanimalshelter.exceptions.DogNotFoundException;
 import pro.sky.telegrambotanimalshelter.models.Dog;
-import pro.sky.telegrambotanimalshelter.service.implementation.DogServiceImpl;
+import pro.sky.telegrambotanimalshelter.service.interfaces.DogService;
 
 import java.util.Collection;
 
@@ -19,10 +19,9 @@ import java.util.Collection;
 @RequestMapping("dog")
 public class DogController {
 
-    private final DogServiceImpl dogService;
+    private final DogService dogService;
 
-    // Конструктор контроллера, который принимает сервис в качестве зависимости.
-    public DogController(DogServiceImpl dogService) {
+    public DogController(DogService dogService) {
         this.dogService = dogService;
     }
 

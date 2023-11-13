@@ -16,7 +16,7 @@ import static org.mockito.Mockito.*;
 
 public class HumanCatServiceImplTest {
 
-    private HumanCatServiceImpl humanCatService;
+    private HumanCatService humanCatService;
 
     @Mock
     private HumanCatRepository repository;
@@ -24,7 +24,7 @@ public class HumanCatServiceImplTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        humanCatService = new HumanCatServiceImpl(repository);
+        humanCatService = new HumanCatService(repository);
     }
 
     @Test

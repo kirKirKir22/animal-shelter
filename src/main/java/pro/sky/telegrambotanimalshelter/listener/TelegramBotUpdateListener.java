@@ -72,28 +72,26 @@ public class TelegramBotUpdateListener implements UpdatesListener {
 
     @Override
     public int process(List<Update> updates) {
-        updates.stream()
-                .filter(Objects::nonNull)
-                .toList()
-                .forEach(update -> {
-                    logger.info("Processing update: {}", update);
-                    if (update.message() != null) {
-                        String nameUser = update.message().chat().firstName();
-                        String textUpdate = update.message().text();
-                        Integer messageId = update.message().messageId();
-                        chatId = update.message().chat().id();
-                        calendar = new GregorianCalendar();
-                        this.update = update;
-                        scheduledMethod();
+        updates.forEach(update -> {
+            logger.info("Processing update: {}", update);
 
-                        try {
+            if (update.message() != null) {
+                String nameUser = update.message().chat().firstName();
+                String textUpdate = update.message().text();
+                Integer messageId = update.message().messageId();
+                chatId = update.message().chat().id();
+                calendar = new GregorianCalendar();
+                this.update = update;
+                scheduledMethod();
 
-                            if (update.message() != null && update.message().contact() != null) {
-                                contactSharingService.shareContact(update);
-                            }
-                            if (textUpdate != null) {
-                                Constants constants = getEnum(textUpdate);
-                                switch (constants) {
+                try {
+                    if (update.message() != null && update.message().contact() != null) {
+                        contactSharingService.shareContact(update);
+                    }
+
+                    if (textUpdate != null) {
+                        Constants constants = getEnum(textUpdate);
+                        switch (constants) {
                                     case START:
                                         // Действия при получении команды START
                                         sendMessage(chatId, nameUser + HI);
