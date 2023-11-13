@@ -19,6 +19,7 @@ import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -127,7 +128,7 @@ public class ReportHandler {
 
     // Метод для проверки и отправки уведомлений
     private void checkResults() {
-        var twoDay = 172800000;
+        var twoDay = TimeUnit.DAYS.toMillis(2);
         var nowTime = new Date().getTime() - twoDay;
         var getDistinct = this.reportService.findAll().stream()
                 .sorted(Comparator
