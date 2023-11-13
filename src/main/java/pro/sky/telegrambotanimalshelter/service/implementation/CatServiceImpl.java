@@ -44,13 +44,12 @@ public class CatServiceImpl implements CatService {
     @Override
     public Cat updateCat(Cat cat) {
         LOGGER.info("Was invoked method to update a cat");
-        if (cat.getId() != null) {
-            if (getByIdCat(cat.getId()) != null) {
-                return this.repository.save(cat);
-            }
+        if (cat.getId() != null && getByIdCat(cat.getId()) != null) {
+            return this.repository.save(cat);
         }
         throw new CatNotFoundException();
     }
+
 
 
     @Override
