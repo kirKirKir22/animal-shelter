@@ -29,7 +29,7 @@ public class ReportHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(TelegramBotUpdateListener.class);
     private final ReportService reportService;
-    private com.pengrad.telegrambot.TelegramBot telegramBot;
+    private final com.pengrad.telegrambot.TelegramBot telegramBot;
     private final Pattern pattern = Pattern.compile(Constants.REGEX_MESSAGE.getValue());
 
     public ReportHandler(ReportService reportService, TelegramBot telegramBot) {
