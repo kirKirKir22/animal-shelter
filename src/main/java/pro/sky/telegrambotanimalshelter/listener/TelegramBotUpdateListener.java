@@ -5,19 +5,16 @@ import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.KeyboardButton;
 import com.pengrad.telegrambot.model.request.ReplyKeyboardMarkup;
-import com.pengrad.telegrambot.request.ForwardMessage;
 import com.pengrad.telegrambot.request.SendMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import pro.sky.telegrambotanimalshelter.constants.Constants;
-import pro.sky.telegrambotanimalshelter.exceptions.MenuDoesNotWorkException;
 import pro.sky.telegrambotanimalshelter.handlers.ReportHandler;
 import pro.sky.telegrambotanimalshelter.keyboard.HotkeysShelter;
 import pro.sky.telegrambotanimalshelter.models.HumanCat;
 import pro.sky.telegrambotanimalshelter.models.HumanDog;
-import pro.sky.telegrambotanimalshelter.service.implementation.ContactSharingServiceImpl;
 import pro.sky.telegrambotanimalshelter.service.interfaces.ContactSharingService;
 import pro.sky.telegrambotanimalshelter.service.interfaces.HumanCatService;
 import pro.sky.telegrambotanimalshelter.service.interfaces.HumanDogService;
@@ -26,12 +23,10 @@ import pro.sky.telegrambotanimalshelter.service.interfaces.ReportService;
 import javax.annotation.PostConstruct;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Objects;
 
-import static pro.sky.telegrambotanimalshelter.constants.Constants.*;
+import static pro.sky.telegrambotanimalshelter.constants.Constants.HI;
+import static pro.sky.telegrambotanimalshelter.constants.Constants.getEnum;
 
 @Component
 public class TelegramBotUpdateListener implements UpdatesListener {
@@ -45,7 +40,6 @@ public class TelegramBotUpdateListener implements UpdatesListener {
     private ReportHandler reportHandler;
     private Update update;
     private long chatId;
-    private Calendar calendar;
     private final ContactSharingService contactSharingService;
 
     public TelegramBotUpdateListener(ReportService reportService,
@@ -72,28 +66,25 @@ public class TelegramBotUpdateListener implements UpdatesListener {
 
     @Override
     public int process(List<Update> updates) {
-        updates.stream()
-                .filter(Objects::nonNull)
-                .toList()
-                .forEach(update -> {
-                    logger.info("Processing update: {}", update);
-                    if (update.message() != null) {
-                        String nameUser = update.message().chat().firstName();
-                        String textUpdate = update.message().text();
-                        Integer messageId = update.message().messageId();
-                        chatId = update.message().chat().id();
-                        calendar = new GregorianCalendar();
-                        this.update = update;
-                        scheduledMethod();
+        updates.forEach(update -> {
+            logger.info("Processing update: {}", update);
 
-                        try {
+            if (update.message() != null) {
+                String nameUser = update.message().chat().firstName();
+                String textUpdate = update.message().text();
+                Integer messageId = update.message().messageId();
+                chatId = update.message().chat().id();
+                this.update = update;
+                scheduledMethod();
 
-                            if (update.message() != null && update.message().contact() != null) {
-                                contactSharingService.shareContact(update);
-                            }
-                            if (textUpdate != null) {
-                                Constants constants = getEnum(textUpdate);
-                                switch (constants) {
+                try {
+                    if (update.message() != null && update.message().contact() != null) {
+                        contactSharingService.shareContact(update);
+                    }
+
+                    if (textUpdate != null) {
+                        Constants constants = getEnum(textUpdate);
+                        switch (constants)  {
                                     case START:
                                         // Действия при получении команды START
                                         sendMessage(chatId, nameUser + HI);
@@ -234,7 +225,7 @@ public class TelegramBotUpdateListener implements UpdatesListener {
     @Scheduled(cron = "0 0 0 * * ?")
     public void scheduledMethod() {
 
-        reportHandler.checkReportDays(update, chatId, calendar);
+        reportHandler.checkReportDays(update, chatId);
     }
 
 

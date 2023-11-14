@@ -73,7 +73,7 @@ CREATE TABLE reports
     caption       VARCHAR(255),
     lastMessage   TIMESTAMP,
     lastMessageMs BIGINT,
-    human_сat_id   BIGINT,
+    human_cat_id   BIGINT,
     human_dog_id   BIGINT,
     CONSTRAINT human_cat_id_FK FOREIGN KEY (human_cat_id) REFERENCES human_cat (id),
     CONSTRAINT human_dog_id_FK FOREIGN KEY (human_dog_id) REFERENCES human_dog (id)

@@ -7,27 +7,25 @@ import org.springframework.stereotype.Service;
 import pro.sky.telegrambotanimalshelter.exceptions.HumanDogNotFoundException;
 import pro.sky.telegrambotanimalshelter.models.HumanDog;
 import pro.sky.telegrambotanimalshelter.repository.HumanDogRepository;
-import pro.sky.telegrambotanimalshelter.service.interfaces.HumanDogService;
 
 import java.util.Collection;
-import java.util.List;
 
 
 @Service
-public class HumanDogServiceImpl implements HumanDogService {
+public class HumanDogService implements pro.sky.telegrambotanimalshelter.service.interfaces.HumanDogService {
 
     private final HumanDogRepository repository;
 
-    private static final Logger logger = LoggerFactory.getLogger(HumanDogServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(HumanDogService.class);
 
-    public HumanDogServiceImpl(HumanDogRepository repository) {
+    public HumanDogService(HumanDogRepository repository) {
         this.repository = repository;
     }
 
 
     @Override
     public HumanDog getByIdHumanDog(Long id) {
-        logger.info("Was invoked method to get a personDog by id={}", id);
+        LOGGER.info("Was invoked method to get a personDog by id={}", id);
         return this.repository.findById(id)
                 .orElseThrow(HumanDogNotFoundException::new);
     }
@@ -35,18 +33,15 @@ public class HumanDogServiceImpl implements HumanDogService {
 
     @Override
     public HumanDog addHumanDog(HumanDog personDog) {
-        logger.info("Was invoked method to add a personDog");
+        LOGGER.info("Was invoked method to add a personDog");
         return this.repository.save(personDog);
     }
 
-
     @Override
     public HumanDog updateHumanDog(HumanDog humanDog) {
-        logger.info("Was invoked method to update a personDog");
-        if (humanDog.getId() != null) {
-            if (getByIdHumanDog(humanDog.getId()) != null) {
-                return this.repository.save(humanDog);
-            }
+        LOGGER.info("Was invoked method to update a personDog");
+        if (humanDog.getId() != null && getByIdHumanDog(humanDog.getId()) != null) {
+            return this.repository.save(humanDog);
         }
         throw new HumanDogNotFoundException();
     }
@@ -54,13 +49,13 @@ public class HumanDogServiceImpl implements HumanDogService {
 
     @Override
     public Collection<HumanDog> getAllHumanDog() {
-        logger.info("Was invoked method to get all personsDod");
+        LOGGER.info("Was invoked method to get all personsDod");
         return this.repository.findAll();
     }
 
     @Override
     public void removeByIdHumanDog(Long id) {
-        logger.info("Was invoked method to remove a personDog by id={}", id);
+        LOGGER.info("Was invoked method to remove a personDog by id={}", id);
         this.repository.deleteById(id);
     }
 
@@ -73,10 +68,4 @@ public class HumanDogServiceImpl implements HumanDogService {
     public HumanDog saveDog(HumanDog humanDog) {
         return repository.save(humanDog);
     }
-
-    @Override
-    public List<HumanDog> findAll() {
-        return repository.findAll();
-    }
-
 }

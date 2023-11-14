@@ -15,10 +15,11 @@ import pro.sky.telegrambotanimalshelter.models.Report;
 import pro.sky.telegrambotanimalshelter.service.interfaces.ReportService;
 
 import java.io.IOException;
-import java.util.Calendar;
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,7 +29,7 @@ import static pro.sky.telegrambotanimalshelter.constants.Constants.UPLOAD_PHOTO_
 public class ReportHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(TelegramBotUpdateListener.class);
-    private ReportService reportService;
+    private final ReportService reportService;
     private com.pengrad.telegrambot.TelegramBot telegramBot;
     private final Pattern pattern = Pattern.compile(Constants.REGEX_MESSAGE.getValue());
 
@@ -38,22 +39,24 @@ public class ReportHandler {
     }
 
     // Метод для проверки количества дней между отправкой отчетов
-    public void checkReportDays(Update update, long chatId, Calendar calendar) {
-        long compareTime = calendar.get(Calendar.DAY_OF_MONTH);
+    public void checkReportDays(Update update, long chatId) {
+        LocalDate currentDate = LocalDate.now();
+
         if (reportService.findByChatId(chatId) == null) {
             reportService.save(new Report(chatId));
         }
-        reportService.findByChatId(chatId).setDays(reportService.findAll().stream()
+
+        Report report = reportService.findByChatId(chatId);
+        report.setDays(reportService.findAll().stream()
                 .filter(s -> Objects.equals(s.getChatId(), chatId))
                 .count() + 1);
 
-        Long lastMessageTime = reportService.findByChatId(chatId).getLastMessageMs();
+        Long lastMessageTime = report.getLastMessageMs();
         if (lastMessageTime != null) {
-            Date lastDateSendMessage = new Date(lastMessageTime * 1000);
-            long numberOfDay = lastDateSendMessage.getDate();
+            LocalDate lastDateSendMessage = LocalDate.ofEpochDay(lastMessageTime);
 
-            if (reportService.findByChatId(chatId).getDays() < 30) {
-                if (compareTime != numberOfDay) {
+            if (report.getDays() < 30) {
+                if (!currentDate.isEqual(lastDateSendMessage)) {
                     if (update.message() != null && update.message().photo() != null && update.message().caption() != null) {
                         getReport(update);
                         checkResults();
@@ -63,7 +66,7 @@ public class ReportHandler {
                         sendMessage(chatId, Constants.ALREADY_SEND_REPORT.getValue());
                     }
                 }
-                if (reportService.findByChatId(chatId).getDays() >= 30) {
+                if (report.getDays() >= 30) {
                     sendMessage(chatId, Constants.TRIAL_PERIOD_PASSED.getValue());
                 }
             }
@@ -127,7 +130,7 @@ public class ReportHandler {
 
     // Метод для проверки и отправки уведомлений
     private void checkResults() {
-        var twoDay = 172800000;
+        var twoDay = TimeUnit.DAYS.toMillis(2);
         var nowTime = new Date().getTime() - twoDay;
         var getDistinct = this.reportService.findAll().stream()
                 .sorted(Comparator
