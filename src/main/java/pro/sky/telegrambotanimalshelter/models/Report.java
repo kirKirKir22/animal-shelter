@@ -21,7 +21,7 @@ public class Report {
     @GeneratedValue
     private Long id;
 
-    @Column(name = "chatId")
+    @Column(name = "chatid")
     private Long chatId;
 
     private String ration;
@@ -32,10 +32,10 @@ public class Report {
 
     private Long days;
 
-    @Column(name = "filePath")
+    @Column(name = "filepath")
     private String filePath;
 
-    @Column(name = "fileSize")
+    @Column(name = "filesize")
     private Long fileSize;
 
     @Column(columnDefinition = "bytea")
@@ -43,18 +43,18 @@ public class Report {
 
     private String caption;
 
-    @Column(name = "lastMessage")
+    @Column(name = "lastmessage")
     private Date lastMessage;
 
-    @Column(name = "lastMessageMs")
+    @Column(name = "lastmessagems")
     private Long lastMessageMs;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "humanCat_id", referencedColumnName = "id")
+    @JoinColumn(name = "human_cat_id", referencedColumnName = "id")
     private HumanCat humanCat;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "humanDog_id", referencedColumnName = "id")
+    @JoinColumn(name = "human_dog_id", referencedColumnName = "id")
     private HumanDog humanDog;
 
 
