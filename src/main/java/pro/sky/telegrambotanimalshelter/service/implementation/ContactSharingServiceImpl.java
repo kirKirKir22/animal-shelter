@@ -38,11 +38,7 @@ public class ContactSharingServiceImpl implements ContactSharingService {
             String phone = update.message().contact().phoneNumber();
             String username = update.message().chat().username();
             Long finalChatId = update.message().chat().id();
-            var sortChatIdDog = humanDogService.getAllHumanDog().stream()
-                    .filter(i -> Objects.equals(i.getChatId(), finalChatId)).toList();
-            var sortChatIdCat = humanCatService.getAllHumanCat().stream()
-                    .filter(i -> Objects.equals(i.getChatId(), finalChatId)).toList();
-            if (!sortChatIdDog.isEmpty() || !sortChatIdCat.isEmpty()) {
+            if (humanDogService.existsByChatId(finalChatId) || humanCatService.existsByChatId(finalChatId)) {
                 sendMessage(finalChatId, Constants.ALREADY_IN_DB.getValue());
                 return;
             }

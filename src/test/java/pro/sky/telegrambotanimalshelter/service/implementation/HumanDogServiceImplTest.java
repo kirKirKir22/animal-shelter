@@ -16,7 +16,7 @@ import static org.mockito.Mockito.*;
 
 public class HumanDogServiceImplTest {
 
-    private HumanDogService humanDogService;
+    private HumanDogServiceImpl humanDogService;
 
     @Mock
     private HumanDogRepository repository;
@@ -24,7 +24,7 @@ public class HumanDogServiceImplTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        humanDogService = new HumanDogService(repository);
+        humanDogService = new HumanDogServiceImpl(repository);
     }
 
     @Test

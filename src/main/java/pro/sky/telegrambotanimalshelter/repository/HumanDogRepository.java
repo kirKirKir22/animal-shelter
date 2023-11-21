@@ -16,6 +16,8 @@ public interface HumanDogRepository extends JpaRepository<HumanDog, Long> {
 
     HumanDog findByChatId(Long chatId);
 
+    boolean existsByChatId(Long chatId);
+
     @Transactional
     @Modifying
     @Query("UPDATE HumanDog p set p.name = :name, p.phone = :phone where p.chatId = :chatId")

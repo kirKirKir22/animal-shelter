@@ -19,4 +19,5 @@ public interface HumanDogService {
     void removeByIdHumanDog(Long id);
     HumanDog findByChatId(long chatId);
     HumanDog saveDog(HumanDog humanDog);
+    boolean existsByChatId(Long chatId);
 }

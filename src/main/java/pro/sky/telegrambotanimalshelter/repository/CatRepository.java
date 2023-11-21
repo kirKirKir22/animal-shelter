@@ -9,4 +9,5 @@ import pro.sky.telegrambotanimalshelter.models.Cat;
 @Repository
 public interface CatRepository extends JpaRepository<Cat, Long> {
 
+
 }

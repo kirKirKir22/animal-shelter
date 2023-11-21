@@ -22,4 +22,6 @@ public interface HumanCatService {
     HumanCat findByChatId(long chatId);
 
     HumanCat saveCat(HumanCat humanCat);
+
+    boolean existsByChatId(Long chatId);
 }

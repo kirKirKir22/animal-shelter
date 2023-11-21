@@ -72,4 +72,9 @@ public class HumanCatServiceImpl implements HumanCatService {
     public HumanCat saveCat(HumanCat humanCat) {
         return repository.save(humanCat);
     }
+
+    @Override
+    public boolean existsByChatId(Long chatId) {
+        return repository.existsByChatId(chatId);
+    }
 }

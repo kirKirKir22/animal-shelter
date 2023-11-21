@@ -16,6 +16,8 @@ public interface HumanCatRepository extends JpaRepository<HumanCat, Long> {
 
     HumanCat findByChatId(Long chatId);
 
+    boolean existsByChatId(Long chatId);
+
     @Transactional
     @Modifying
     @Query("UPDATE HumanCat p set p.name = :name, p.phone = :phone where p.chatId = :chatId")

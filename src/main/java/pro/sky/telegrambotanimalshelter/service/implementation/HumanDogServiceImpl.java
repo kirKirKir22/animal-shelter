@@ -12,13 +12,13 @@ import java.util.Collection;
 
 
 @Service
-public class HumanDogService implements pro.sky.telegrambotanimalshelter.service.interfaces.HumanDogService {
+public class HumanDogServiceImpl implements pro.sky.telegrambotanimalshelter.service.interfaces.HumanDogService {
 
     private final HumanDogRepository repository;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(HumanDogService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(HumanDogServiceImpl.class);
 
-    public HumanDogService(HumanDogRepository repository) {
+    public HumanDogServiceImpl(HumanDogRepository repository) {
         this.repository = repository;
     }
 
@@ -68,4 +68,10 @@ public class HumanDogService implements pro.sky.telegrambotanimalshelter.service
     public HumanDog saveDog(HumanDog humanDog) {
         return repository.save(humanDog);
     }
+
+    @Override
+    public boolean existsByChatId(Long chatId) {
+        return repository.existsByChatId(chatId);
+    }
+
 }

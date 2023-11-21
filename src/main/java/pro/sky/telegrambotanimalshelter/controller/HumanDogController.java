@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import pro.sky.telegrambotanimalshelter.models.HumanDog;
-import pro.sky.telegrambotanimalshelter.service.implementation.HumanDogService;
+import pro.sky.telegrambotanimalshelter.service.implementation.HumanDogServiceImpl;
 
 import java.util.Collection;
 
@@ -18,9 +18,9 @@ import java.util.Collection;
 @RequestMapping("human-dog")
 public class HumanDogController {
 
-    private final HumanDogService humanDogService;
+    private final HumanDogServiceImpl humanDogService;
 
-    public HumanDogController(HumanDogService humanDogService) {
+    public HumanDogController(HumanDogServiceImpl humanDogService) {
         this.humanDogService = humanDogService;
     }
 
