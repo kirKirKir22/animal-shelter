@@ -20,6 +20,7 @@ import pro.sky.telegrambotanimalshelter.keyboard.HotkeysShelter;
 import pro.sky.telegrambotanimalshelter.models.*;
 import pro.sky.telegrambotanimalshelter.repository.HumanCatRepository;
 import pro.sky.telegrambotanimalshelter.repository.HumanDogRepository;
+import pro.sky.telegrambotanimalshelter.repository.ReportRepository;
 import pro.sky.telegrambotanimalshelter.service.interfaces.ReportService;
 
 import java.util.ArrayList;

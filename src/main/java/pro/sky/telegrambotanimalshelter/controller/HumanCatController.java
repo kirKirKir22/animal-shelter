@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import pro.sky.telegrambotanimalshelter.models.HumanCat;
-import pro.sky.telegrambotanimalshelter.service.implementation.HumanCatServiceImpl;
+import pro.sky.telegrambotanimalshelter.service.interfaces.HumanCatService;
 
 import java.util.Collection;
 
@@ -16,11 +16,11 @@ import java.util.Collection;
 @RequestMapping("human-cat")
 public class HumanCatController {
 
-    private final HumanCatServiceImpl personCatService;
+    private final HumanCatService humanCatService;
 
     // Конструктор контроллера, который принимает сервис в качестве зависимости.
-    public HumanCatController(HumanCatServiceImpl personCatService) {
-        this.personCatService = personCatService;
+    public HumanCatController(HumanCatService humanCatService) {
+        this.humanCatService = humanCatService;
     }
 
     // Получение пользователя, усыновителя кота, по ID
@@ -39,7 +39,7 @@ public class HumanCatController {
     )
     @GetMapping("/{id}")
     public HumanCat getById(@Parameter(description = "PersonCat ID") @PathVariable Long id) {
-        return this.personCatService.getByIdHumanCat(id);
+        return this.humanCatService.getByIdHumanCat(id);
     }
 
     // Создание пользователя, усыновителя кота
@@ -55,7 +55,7 @@ public class HumanCatController {
     )
     @PostMapping()
     public HumanCat save(@RequestBody HumanCat personCat) {
-        return this.personCatService.addHumanCat(personCat);
+        return this.humanCatService.addHumanCat(personCat);
     }
 
     // Изменение данных пользователя, усыновителя кота
@@ -71,7 +71,7 @@ public class HumanCatController {
     )
     @PutMapping
     public HumanCat update(@RequestBody HumanCat personCat) {
-        return this.personCatService.addHumanCat(personCat);
+        return this.humanCatService.updateHumanCat(personCat);
     }
 
     // Удаление пользователя, усыновителя кота, по ID
@@ -90,7 +90,7 @@ public class HumanCatController {
     )
     @DeleteMapping("/{id}")
     public void remove(@Parameter(description = "PersonCat ID")@PathVariable Long id) {
-        this.personCatService.removeByIdHumanCat(id);
+        this.humanCatService.removeByIdHumanCat(id);
     }
 
     // Просмотр всех пользователей, усыновителей кота
@@ -109,6 +109,6 @@ public class HumanCatController {
     )
     @GetMapping("/all")
     public Collection<HumanCat> getAll() {
-        return this.personCatService.getAllHumanCat();
+        return this.humanCatService.getAllHumanCat();
     }
 }

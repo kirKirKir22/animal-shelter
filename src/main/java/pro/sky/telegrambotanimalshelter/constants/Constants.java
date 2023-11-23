@@ -1,7 +1,8 @@
 package pro.sky.telegrambotanimalshelter.constants;
 
 public enum Constants {
-        START("/start"),
+
+    START("/start"),
     WELCOME("Добро пожаловать, в наш приют"),
     FIND_INFORMATION("Здесь вы сможете найти всю необходимую информацию."),
     CAT("Кошка"),
@@ -112,6 +113,7 @@ public enum Constants {
     public Long getLongValue() {
         return longValue;
     }
+
     public static Constants getEnum(String text) {
         for (Constants constants : Constants.values()) {
             if (constants.getValue().equalsIgnoreCase(text)) {

@@ -21,46 +21,40 @@ public class Report {
     @GeneratedValue
     private Long id;
 
-
+    @Column(name = "chatid")
     private Long chatId;
-
 
     private String ration;
 
-
     private String health;
-
 
     private String habits;
 
-
     private Long days;
 
-
+    @Column(name = "filepath")
     private String filePath;
 
-
+    @Column(name = "filesize")
     private Long fileSize;
 
-
-    @Lob
+    @Column(columnDefinition = "bytea")
     private byte[] data;
-
 
     private String caption;
 
-
+    @Column(name = "lastmessage")
     private Date lastMessage;
 
-
+    @Column(name = "lastmessagems")
     private Long lastMessageMs;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(referencedColumnName = "id")
+    @JoinColumn(name = "human_cat_id", referencedColumnName = "id")
     private HumanCat humanCat;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(referencedColumnName = "id")
+    @JoinColumn(name = "human_dog_id", referencedColumnName = "id")
     private HumanDog humanDog;
 
 

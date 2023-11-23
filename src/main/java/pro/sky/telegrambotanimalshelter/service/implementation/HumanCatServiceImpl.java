@@ -18,7 +18,7 @@ public class HumanCatServiceImpl implements HumanCatService {
 
     private final HumanCatRepository repository;
 
-    private static final Logger logger = LoggerFactory.getLogger(HumanCatServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(HumanCatServiceImpl.class);
 
     public HumanCatServiceImpl(HumanCatRepository personCatRepository) {
         this.repository = personCatRepository;
@@ -27,7 +27,7 @@ public class HumanCatServiceImpl implements HumanCatService {
 
     @Override
     public HumanCat getByIdHumanCat(Long id) {
-        logger.info("Was invoked method to get a personCat by id={}", id);
+        LOGGER.info("Was invoked method to get a personCat by id={}", id);
         return this.repository.findById(id)
                 .orElseThrow(HumanCatNotFoundException::new);
     }
@@ -35,33 +35,31 @@ public class HumanCatServiceImpl implements HumanCatService {
 
     @Override
     public HumanCat addHumanCat(HumanCat personCat) {
-        logger.info("Was invoked method to add a personCat");
+        LOGGER.info("Was invoked method to add a personCat");
         return this.repository.save(personCat);
     }
 
 
     @Override
     public HumanCat updateHumanCat(HumanCat humanCat) {
-        logger.info("Was invoked method to update a personCat");
-        if (humanCat.getId() != null) {
-            if (getByIdHumanCat(humanCat.getId()) != null) {
+        LOGGER.info("Was invoked method to update a personCat");
+        if (humanCat.getId() != null && getByIdHumanCat(humanCat.getId()) != null) {
                 return repository.save(humanCat);
             }
-        }
         throw new HumanCatNotFoundException();
     }
 
 
     @Override
     public Collection<HumanCat> getAllHumanCat() {
-        logger.info("Was invoked method to get all personsCat");
+        LOGGER.info("Was invoked method to get all personsCat");
         return this.repository.findAll();
     }
 
 
     @Override
     public void removeByIdHumanCat(Long id) {
-        logger.info("Was invoked method to remove a personCat by id={}", id);
+        LOGGER.info("Was invoked method to remove a personCat by id={}", id);
         this.repository.deleteById(id);
     }
 
@@ -73,10 +71,5 @@ public class HumanCatServiceImpl implements HumanCatService {
     @Override
     public HumanCat saveCat(HumanCat humanCat) {
         return repository.save(humanCat);
-    }
-
-    @Override
-    public List<HumanCat> findAll() {
-        return repository.findAll();
     }
 }

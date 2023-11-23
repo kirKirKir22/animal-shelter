@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import pro.sky.telegrambotanimalshelter.models.HumanDog;
-import pro.sky.telegrambotanimalshelter.service.implementation.HumanDogServiceImpl;
+import pro.sky.telegrambotanimalshelter.service.implementation.HumanDogService;
 
 import java.util.Collection;
 
@@ -18,10 +18,10 @@ import java.util.Collection;
 @RequestMapping("human-dog")
 public class HumanDogController {
 
-    private final HumanDogServiceImpl personDogService;
+    private final HumanDogService humanDogService;
 
-    public HumanDogController(HumanDogServiceImpl personDogService) {
-        this.personDogService = personDogService;
+    public HumanDogController(HumanDogService humanDogService) {
+        this.humanDogService = humanDogService;
     }
 
     // Получение пользователя, усыновителя собаки, по id
@@ -40,7 +40,7 @@ public class HumanDogController {
     )
     @GetMapping("/{id}")
     public HumanDog getById(@Parameter(description = "PersonDog id") @PathVariable Long id) {
-        return this.personDogService.getByIdHumanDog(id);
+        return this.humanDogService.getByIdHumanDog(id);
     }
 
     // Создание пользователя, усыновителя собаки
@@ -56,7 +56,7 @@ public class HumanDogController {
     )
     @PostMapping
     public HumanDog save(@RequestBody HumanDog personDog) {
-        return this.personDogService.addHumanDog(personDog);
+        return this.humanDogService.addHumanDog(personDog);
     }
 
     // Изменение данных пользователя, усыновителя кота
@@ -72,7 +72,7 @@ public class HumanDogController {
     )
     @PutMapping
     public HumanDog update(@RequestBody HumanDog personDog) {
-        return this.personDogService.updateHumanDog(personDog);
+        return this.humanDogService.updateHumanDog(personDog);
     }
 
     // Удаление пользователей по id
@@ -91,7 +91,7 @@ public class HumanDogController {
     )
     @DeleteMapping("/{id}")
     public void remove(@Parameter(description = "PersonDog id") @PathVariable Long id) {
-        this.personDogService.removeByIdHumanDog(id);
+        this.humanDogService.removeByIdHumanDog(id);
     }
 
     // Просмотр всех пользователей
@@ -110,6 +110,6 @@ public class HumanDogController {
     )
     @GetMapping("/all")
     public Collection<HumanDog> getAll() {
-        return this.personDogService.getAllHumanDog();
+        return this.humanDogService.getAllHumanDog();
     }
 }

@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import pro.sky.telegrambotanimalshelter.models.HumanCat;
 
 import java.util.Collection;
-import java.util.List;
 
 @Service
 public interface HumanCatService {
@@ -23,6 +22,4 @@ public interface HumanCatService {
     HumanCat findByChatId(long chatId);
 
     HumanCat saveCat(HumanCat humanCat);
-
-    List<HumanCat> findAll();
 }

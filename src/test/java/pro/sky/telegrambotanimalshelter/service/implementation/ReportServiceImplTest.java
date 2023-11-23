@@ -1,94 +1,129 @@
 package pro.sky.telegrambotanimalshelter.service.implementation;
 
-import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.MockitoAnnotations;
+import pro.sky.telegrambotanimalshelter.exceptions.ReportNotFoundException;
 import pro.sky.telegrambotanimalshelter.models.Report;
 import pro.sky.telegrambotanimalshelter.repository.ReportRepository;
 
-import java.util.*;
+import java.util.Date;
+import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
 public class ReportServiceImplTest {
-    private static final Long CHAT_ID = 1L;
-    private static final String RATION = "CORM";
-    private static final String HEALTH = "ПОЛОЖИТЕЛЬНОЕ";
-    private static final String HABITS = "ПРИНОСИТЬ ПАЛКУ";
-    private static final Long DAYS = 5L;
-    private static final String CAPTION = "....";
 
-    private static final List<Report> reports = new ArrayList<>(Arrays.asList(
-            new Report(CHAT_ID, RATION, HEALTH, HABITS, DAYS, CAPTION),
-            new Report(CHAT_ID, RATION, HEALTH, HABITS, DAYS, CAPTION),
-            new Report(CHAT_ID, RATION, HEALTH, HABITS, DAYS, CAPTION)));
-
-    @Mock
-    private ReportRepository reportServiceMock;
-
-    @InjectMocks
     private ReportServiceImpl reportService;
 
-    private final Report report = new Report(CHAT_ID, RATION, HEALTH, HABITS, DAYS, CAPTION);
+    @Mock
+    private ReportRepository repository;
 
-
-    @Test
-    public void getByIdReport() {
-        Mockito.when(reportServiceMock.findById(any(Long.class))).thenReturn(Optional.of(report));
-        Report report = reportService.getByIdReport(1L);
-        Assertions.assertThat(report.getChatId()).isEqualTo(report.getChatId());
-        Assertions.assertThat(report.getRation()).isEqualTo(report.getRation());
-        Assertions.assertThat(report.getHealth()).isEqualTo(report.getHealth());
-        Assertions.assertThat(report.getHabits()).isEqualTo(report.getHabits());
-        Assertions.assertThat(report.getDays()).isEqualTo(report.getDays());
-        Assertions.assertThat(report.getCaption()).isEqualTo(report.getCaption());
-    }
-
-
-    @Test
-    public void addReport() {
-        Mockito.when(reportServiceMock.save(any(Report.class))).thenReturn(report);
-        Report report1 = reportService.addReport(report);
-        Assertions.assertThat(report1.getChatId()).isEqualTo(report1.getChatId());
-        Assertions.assertThat(report1.getRation()).isEqualTo(report1.getRation());
-        Assertions.assertThat(report1.getHealth()).isEqualTo(report1.getHealth());
-        Assertions.assertThat(report1.getHabits()).isEqualTo(report1.getHabits());
-        Assertions.assertThat(report1.getDays()).isEqualTo(report1.getDays());
-        Assertions.assertThat(report1.getCaption()).isEqualTo(report1.getCaption());
-    }
-
-
-    @Test
-    public void updateReport() {
-        Report report1 = new Report();
-        report1.setChatId(1L);
-        report1.setRation("МЯсо");
-        report1.setHealth("...");
-        report1.setHabits("...");
-        report1.setDays(1L);
-        report1.setCaption("...");
-        report1.setId(1L);
-        Mockito.when(reportServiceMock.findById(any(Long.class))).thenReturn(Optional.of(report1));
-        Mockito.when(reportServiceMock.save(any(Report.class))).thenReturn(report1);
-        Report report2 = reportService.updateReport(report1);
-        Assertions.assertThat(report2.getChatId()).isEqualTo(report1.getChatId());
-        Assertions.assertThat(report2.getRation()).isEqualTo(report1.getRation());
-        Assertions.assertThat(report2.getHealth()).isEqualTo(report1.getHealth());
-        Assertions.assertThat(report2.getHabits()).isEqualTo(report1.getHabits());
-        Assertions.assertThat(report2.getDays()).isEqualTo(report1.getDays());
-        Assertions.assertThat(report2.getCaption()).isEqualTo(report1.getCaption());
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+        reportService = new ReportServiceImpl(repository);
     }
 
     @Test
-    public void getAllReport() {
-        Mockito.when(reportServiceMock.findAll()).thenReturn(reports);
-        Collection<Report> report = reportService.getAllReport();
-        Assertions.assertThat(report.size()).isEqualTo(reports.size());
-        Assertions.assertThat(report).isEqualTo(reports);
+    public void testUploadReport_WithValidData_SavesReport() {
+        Long personId = 1L;
+        byte[] pictureFile = new byte[]{1, 2, 3};
+        String filePath = "path/to/file";
+        Date dateSendMessage = new Date();
+        Long timeDate = System.currentTimeMillis();
+        long daysOfReports = 7;
+
+        // Создаем заглушку для объекта File
+        com.pengrad.telegrambot.model.File file = mock(com.pengrad.telegrambot.model.File.class);
+        when(file.fileSize()).thenReturn(12345L);
+
+        reportService.uploadReport(personId, pictureFile, file, null, null, null, null, daysOfReports);
+
+        verify(repository, times(1)).save(any(Report.class));
+    }
+
+    @Test
+    public void testGetByIdReport_WithValidId_ReturnsReport() {
+        Report report = new Report();
+        report.setId(1L);
+        when(repository.findById(1L)).thenReturn(Optional.of(report));
+
+        Report result = reportService.getByIdReport(1L);
+
+        assertNotNull(result);
+        assertEquals(1L, result.getId());
+    }
+
+    @Test
+    public void testGetByIdReport_WithInvalidId_ThrowsException() {
+        when(repository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThrows(ReportNotFoundException.class, () -> reportService.getByIdReport(1L));
+    }
+
+    @Test
+    public void testAddReport_AddsReport() {
+        Report report = new Report();
+        when(repository.save(any(Report.class))).thenReturn(report);
+
+        Report result = reportService.addReport(report);
+
+        assertNotNull(result);
+        assertEquals(report, result);
+    }
+
+    @Test
+    public void testUpdateReport_WithValidId_UpdatesReport() {
+        Report report = new Report();
+        report.setId(1L);
+        when(repository.findById(1L)).thenReturn(Optional.of(report));
+        when(repository.save(any(Report.class))).thenReturn(report);
+
+        Report result = reportService.updateReport(report);
+
+        assertNotNull(result);
+        assertEquals(1L, result.getId());
+    }
+
+    @Test
+    public void testUpdateReport_WithInvalidId_ThrowsException() {
+        Report report = new Report();
+        report.setId(1L);
+
+        when(repository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThrows(ReportNotFoundException.class, () -> reportService.updateReport(report));
+    }
+
+    @Test
+    public void testRemoveByIdReport_RemovesReport() {
+        reportService.removeByIdReport(1L);
+
+        verify(repository, times(1)).deleteById(1L);
+    }
+
+    @Test
+    public void testFindByChatId_WithExistingChatId_ReturnsReport() {
+        Report report = new Report();
+        long chatId = 123L;
+        when(repository.findByChatId(chatId)).thenReturn(report);
+
+        Report result = reportService.findByChatId(chatId);
+
+        assertNotNull(result);
+        assertEquals(report, result);
+    }
+
+    @Test
+    public void testFindByChatId_WithNonExistingChatId_ReturnsNull() {
+        long chatId = 123L;
+        when(repository.findByChatId(chatId)).thenReturn(null);
+
+        Report result = reportService.findByChatId(chatId);
+
+        assertNull(result);
     }
 }
