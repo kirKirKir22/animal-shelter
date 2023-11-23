@@ -8,6 +8,7 @@ import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.GetFileResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import pro.sky.telegrambotanimalshelter.constants.Constants;
 import pro.sky.telegrambotanimalshelter.listener.TelegramBotUpdateListener;
@@ -18,7 +19,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,17 +39,17 @@ public class ReportHandler {
     }
 
     // Метод для проверки количества дней между отправкой отчетов
-    public void checkReportDays(Update update, long chatId) {
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void checkReportDays() {
         LocalDate currentDate = LocalDate.now();
+        if(reportService.)
 
         if (reportService.findByChatId(chatId) == null) {
             reportService.save(new Report(chatId));
         }
 
         Report report = reportService.findByChatId(chatId);
-        report.setDays(reportService.findAll().stream()
-                .filter(s -> Objects.equals(s.getChatId(), chatId))
-                .count() + 1);
+        report.setDays(report.getDays() + 1);
 
         Long lastMessageTime = report.getLastMessageMs();
         if (lastMessageTime != null) {
