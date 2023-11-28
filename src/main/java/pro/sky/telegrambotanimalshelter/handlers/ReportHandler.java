@@ -18,7 +18,9 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,6 +33,10 @@ public class ReportHandler {
     private static final Logger logger = LoggerFactory.getLogger(TelegramBotUpdateListener.class);
     private final ReportService reportService;
     private com.pengrad.telegrambot.TelegramBot telegramBot;
+
+    // Используем мапу для хранения состояний по пользователям
+    private final Map<Long, Report> userReports = new ConcurrentHashMap<>();
+
     private final Pattern pattern = Pattern.compile(Constants.REGEX_MESSAGE.getValue());
 
     public ReportHandler(ReportService reportService, TelegramBot telegramBot) {
@@ -38,15 +44,14 @@ public class ReportHandler {
         this.telegramBot = telegramBot;
     }
 
-    // Метод для проверки количества дней между отправкой отчетов
     public void checkReportDays(Update update, long chatId) {
         LocalDate currentDate = LocalDate.now();
 
-        if (reportService.findByChatId(chatId) == null) {
-            reportService.save(new Report(chatId));
+        if (!userReports.containsKey(chatId)) {
+            userReports.put(chatId, new Report(chatId));
         }
 
-        Report report = reportService.findByChatId(chatId);
+        Report report = userReports.get(chatId);
         report.setDays(reportService.findAll().stream()
                 .filter(s -> Objects.equals(s.getChatId(), chatId))
                 .count() + 1);
@@ -80,10 +85,9 @@ public class ReportHandler {
         }
     }
 
-    // Метод для обработки и сохранения отчета
     public void getReport(Update update) {
         Matcher matcher = pattern.matcher(update.message().caption());
-        Long reportDays = reportService.findByChatId(update.message().chat().id()).getDays();
+        Long reportDays = userReports.get(update.message().chat().id()).getDays(); // Обращаемся к мапе
         if (matcher.matches()) {
             String ration = matcher.group(3);
             String health = matcher.group(7);

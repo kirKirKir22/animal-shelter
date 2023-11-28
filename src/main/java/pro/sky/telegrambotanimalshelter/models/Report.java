@@ -18,10 +18,10 @@ public class Report {
 
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "chatid")
+    @Column(name = "chat_id")
     private Long chatId;
 
     private String ration;

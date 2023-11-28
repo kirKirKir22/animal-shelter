@@ -62,7 +62,7 @@ ALTER TABLE human_dog
 CREATE TABLE reports
 (
     id            BIGSERIAL PRIMARY KEY,
-    chatId        BIGINT,
+    chat_id       BIGINT,
     ration        VARCHAR(255),
     health        VARCHAR(255),
     habits        VARCHAR(255),
