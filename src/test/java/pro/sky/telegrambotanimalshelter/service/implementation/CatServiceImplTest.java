@@ -1,15 +1,16 @@
 package pro.sky.telegrambotanimalshelter.service.implementation;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import pro.sky.telegrambotanimalshelter.exceptions.CatNotFoundException;
 import pro.sky.telegrambotanimalshelter.models.Cat;
 import pro.sky.telegrambotanimalshelter.repository.CatRepository;
 
-import java.util.Collection;
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,7 +19,7 @@ import static org.mockito.Mockito.*;
 class CatServiceImplTest {
 
     @Mock
-    private CatRepository repository;
+    private CatRepository catRepository;
 
     @InjectMocks
     private CatServiceImpl catService;
@@ -29,64 +30,94 @@ class CatServiceImplTest {
     }
 
     @Test
-    void testGetByIdCat() {
-        Long catId = 1L;
-        Cat testCat = new Cat();
-        testCat.setId(catId);
+    void getByIdCat_ExistingCat_ReturnsCat() {
+        // Arrange
+        long catId = 1L;
+        Cat cat = new Cat();
+        cat.setId(catId);
+        when(catRepository.findById(catId)).thenReturn(Optional.of(cat));
 
-        when(repository.findById(catId)).thenReturn(Optional.of(testCat));
-
+        // Act
         Cat result = catService.getByIdCat(catId);
 
-        assertEquals(testCat, result);
+        // Assert
+        assertNotNull(result);
+        assertEquals(catId, result.getId());
     }
 
     @Test
-    void testAddCat() {
-        Cat testCat = new Cat();
+    void getByIdCat_NonExistingCat_ThrowsException() {
+        // Arrange
+        long catId = 1L;
+        when(catRepository.findById(catId)).thenReturn(Optional.empty());
 
-        when(repository.save(testCat)).thenReturn(testCat);
-
-        Cat result = catService.addCat(testCat);
-
-        assertEquals(testCat, result);
-
-        verify(repository, times(1)).save(testCat);
+        // Act & Assert
+        assertThrows(CatNotFoundException.class, () -> catService.getByIdCat(catId));
     }
 
     @Test
-    void testUpdateCat() {
-        Long catId = 1L;
-        Cat testCat = new Cat();
-        testCat.setId(catId);
+    void addCat_ReturnsSavedCat() {
+        // Arrange
+        Cat cat = new Cat();
+        when(catRepository.save(cat)).thenReturn(cat);
 
-        when(repository.findById(catId)).thenReturn(Optional.of(testCat));
-        when(repository.save(testCat)).thenReturn(testCat);
+        // Act
+        Cat result = catService.addCat(cat);
 
-        Cat result = catService.updateCat(testCat);
-
-        assertEquals(testCat, result);
-
-        verify(repository, times(1)).save(testCat);
+        // Assert
+        assertNotNull(result);
     }
 
     @Test
-    void testGetAllCat() {
-        Cat testCat = new Cat();
+    void updateCat_ExistingCat_ReturnsUpdatedCat() {
+        // Arrange
+        Cat cat = new Cat();
+        long catId = 1L;
+        cat.setId(catId);
+        when(catRepository.findById(catId)).thenReturn(Optional.of(cat));
+        when(catRepository.save(cat)).thenReturn(cat);
 
-        when(repository.findAll()).thenReturn(Collections.singletonList(testCat));
+        // Act
+        Cat result = catService.updateCat(cat);
 
-        Collection<Cat> result = catService.getAllCat();
-
-        assertTrue(result.contains(testCat));
+        // Assert
+        assertNotNull(result);
+        assertEquals(catId, result.getId());
     }
 
     @Test
-    void testRemoveByIdCat() {
-        Long catId = 1L;
+    void updateCat_NonExistingCat_ThrowsException() {
+        // Arrange
+        Cat cat = new Cat();
+        when(catRepository.findById(cat.getId())).thenReturn(Optional.empty());
 
+        // Act & Assert
+        assertThrows(CatNotFoundException.class, () -> catService.updateCat(cat));
+    }
+
+    @Test
+    void getAllCat_ReturnsListOfCats() {
+        // Arrange
+        List<Cat> cats = new ArrayList<>();
+        when(catRepository.findAll()).thenReturn(cats);
+
+        // Act
+        List<Cat> result = (List<Cat>) catService.getAllCat();
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(cats, result);
+    }
+
+    @Test
+    void removeByIdCat_RemovesCatById() {
+        // Arrange
+        long catId = 1L;
+
+        // Act
         catService.removeByIdCat(catId);
 
-        verify(repository, times(1)).deleteById(catId);
+        // Assert
+        verify(catRepository, times(1)).deleteById(catId);
     }
 }

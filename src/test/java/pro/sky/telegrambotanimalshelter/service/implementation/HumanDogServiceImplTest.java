@@ -1,8 +1,7 @@
 package pro.sky.telegrambotanimalshelter.service.implementation;
 
-
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -14,7 +13,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 class HumanDogServiceImplTest {
@@ -80,6 +80,7 @@ class HumanDogServiceImplTest {
 
         Collection<HumanDog> result = humanDogService.getAllHumanDog();
 
+        assertEquals(1, result.size());
         assertTrue(result.contains(testHumanDog));
     }
 
@@ -136,6 +137,7 @@ class HumanDogServiceImplTest {
 
         List<HumanDog> result = humanDogService.findAll();
 
+        assertEquals(1, result.size());
         assertTrue(result.contains(testHumanDog));
     }
 }

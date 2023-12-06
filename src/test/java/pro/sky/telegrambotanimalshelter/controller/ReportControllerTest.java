@@ -1,115 +1,95 @@
 package pro.sky.telegrambotanimalshelter.controller;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import pro.sky.telegrambotanimalshelter.listener.TelegramBotUpdateListener;
 import pro.sky.telegrambotanimalshelter.models.Report;
 import pro.sky.telegrambotanimalshelter.service.interfaces.ReportService;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.Collection;
+import java.util.Collections;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 @SpringBootTest
 @AutoConfigureMockMvc
 @RunWith(SpringRunner.class)
-public class ReportControllerTest {
-    @Autowired
-    private MockMvc mockMvc;
+class ReportControllerTest {
 
-    @MockBean
+    @Mock
     private ReportService reportService;
 
-    @MockBean
-    private TelegramBotUpdateListener telegramBotUpdateListener;
+    @Mock
+    private TelegramBotUpdateListener telegramBot;
+
+    @InjectMocks
+    private ReportController reportController;
 
     @Test
-    public void testDownloadReport() throws Exception {
-        // Подготовка данных для теста
-        Report mockReport = new Report(); // Замените на фактический объект для тестирования
-        Long id = 1L;
+    void testDownloadReport() {
+        Long reportId = 1L;
+        Report testReport = new Report();
+        testReport.setId(reportId);
 
-        // Mocking behavior
-        given(reportService.getByIdReport(id)).willReturn(mockReport);
+        when(reportService.getByIdReport(reportId)).thenReturn(testReport);
 
-        // Выполнение запроса
-        mockMvc.perform(get("/photoReports/{id}/report", id))
-                .andExpect(status().isOk());
+        Report result = reportController.downloadReport(reportId);
+
+        assertEquals(testReport, result);
     }
 
     @Test
-    public void testRemove() throws Exception {
-        // Подготовка данных для теста
-        Long id = 1L;
+    void testRemove() {
+        Long reportId = 1L;
 
-        // Выполнение запроса
-        mockMvc.perform(delete("/photoReports/{id}", id))
-                .andExpect(status().isOk());
+        reportController.remove(reportId);
 
-        // Проверка, что сервис вызывал метод removeByIdReport с указанным id
-        verify(reportService, times(1)).removeByIdReport(id);
+        verify(reportService, times(1)).removeByIdReport(reportId);
     }
 
     @Test
-    public void testGetAll() throws Exception {
-        // Подготовка данных для теста
-        Report mockReport1 = new Report(); // Замените на фактические объекты для тестирования
-        Report mockReport2 = new Report();
-        List<Report> reports = Arrays.asList(mockReport1, mockReport2);
+    void testGetAll() {
+        Report testReport = new Report();
 
-        // Mocking behavior
-        given(reportService.getAllReport()).willReturn(reports);
+        when(reportService.getAllReport()).thenReturn(Collections.singletonList(testReport));
 
-        // Выполнение запроса
-        mockMvc.perform(get("/photoReports/getAll"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(2))); // Замените на фактическую проверку значений
+        Collection<Report> result = reportController.getAll().getBody();
+
+        assertEquals(1, result.size());
     }
 
     @Test
-    public void testDownloadPhotoFromDB() throws Exception {
-        // Подготовка данных для теста
-        Report mockReport = new Report(); // Замените на фактический объект для тестирования
-        mockReport.setData("test image data".getBytes()); // Установите данные
+    void testDownloadPhotoFromDB() {
+        Long reportId = 1L;
+        Report testReport = new Report();
+        testReport.setId(reportId);
+        byte[] testData = {1, 2, 3}; // Sample data for the report image
+        testReport.setData(testData);
 
-        Long id = 1L;
+        when(reportService.getByIdReport(reportId)).thenReturn(testReport);
 
-        // Mocking behavior
-        given(reportService.getByIdReport(id)).willReturn(mockReport);
+        ResponseEntity<byte[]> response = reportController.downloadPhotoFromDB(reportId);
+        byte[] result = response.getBody();
 
-        // Выполнение запроса
-        mockMvc.perform(get("/photoReports/{id}/photo-from-db", id))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.IMAGE_JPEG));
+        assertNotNull(result);
+        assertArrayEquals(testData, result);
     }
 
+
+
     @Test
-    public void testSendMessageToPerson() throws Exception {
-        // Подготовка данных для теста
-        Long chatId = 12345L;
+    void testSendMessageToPerson() {
+        Long chatId = 123456789L;
         String message = "Test message";
 
-        // Выполнение запроса
-        mockMvc.perform(get("/photoReports/message-to-person")
-                        .param("chatId", String.valueOf(chatId))
-                        .param("message", message))
-                .andExpect(status().isOk());
+        reportController.sendMessageToPerson(chatId, message);
 
-        // Проверка, что метод sendMessage был вызван у объекта telegramBotUpdateListener
-        verify(telegramBotUpdateListener, times(1)).sendMessage(chatId, message);
+        verify(telegramBot, times(1)).sendMessage(chatId, message);
     }
-
 }

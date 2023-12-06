@@ -1,8 +1,7 @@
 package pro.sky.telegrambotanimalshelter.service.implementation;
 
-
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -13,7 +12,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 class ReportServiceImplTest {
@@ -79,6 +79,7 @@ class ReportServiceImplTest {
 
         List<Report> result = reportService.getAllReport();
 
+        assertEquals(1, result.size());
         assertTrue(result.contains(testReport));
     }
 
@@ -107,8 +108,6 @@ class ReportServiceImplTest {
     void testSave() {
         Report testReport = new Report();
 
-        when(repository.save(testReport)).thenReturn(testReport);
-
         reportService.save(testReport);
 
         verify(repository, times(1)).save(testReport);
@@ -122,18 +121,20 @@ class ReportServiceImplTest {
 
         List<Report> result = reportService.findAll();
 
+        assertEquals(1, result.size());
         assertTrue(result.contains(testReport));
     }
 
     @Test
     void testFindAllByLastMessageMsLessThan() {
-        long time = System.currentTimeMillis();
+        long time = 100L;
         Report testReport = new Report();
 
         when(repository.findAllByLastMessageMsLessThan(time)).thenReturn(Collections.singletonList(testReport));
 
         List<Report> result = reportService.findAllByLastMessageMsLessThan(time);
 
+        assertEquals(1, result.size());
         assertTrue(result.contains(testReport));
     }
 }
