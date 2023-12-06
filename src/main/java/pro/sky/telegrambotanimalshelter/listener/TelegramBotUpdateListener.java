@@ -16,6 +16,7 @@ import pro.sky.telegrambotanimalshelter.handlers.ReportHandler;
 import pro.sky.telegrambotanimalshelter.keyboard.HotkeysShelter;
 import pro.sky.telegrambotanimalshelter.models.HumanCat;
 import pro.sky.telegrambotanimalshelter.models.HumanDog;
+import pro.sky.telegrambotanimalshelter.models.Report;
 import pro.sky.telegrambotanimalshelter.service.interfaces.ContactSharingService;
 import pro.sky.telegrambotanimalshelter.service.interfaces.HumanCatService;
 import pro.sky.telegrambotanimalshelter.service.interfaces.HumanDogService;
@@ -168,11 +169,13 @@ public class TelegramBotUpdateListener implements UpdatesListener {
                                 break;
 
                             case GET_USER_CONTACT:
-                                new ReplyKeyboardMarkup(new KeyboardButton(" ")
-                                        .requestContact(true));
-                                // Действия при запросе контакта пользователя
-                                contactSharingService.shareContact(update);
+                                SendMessage contactRequest = new SendMessage(chatId, "Please share your contact")
+                                        .replyMarkup(new ReplyKeyboardMarkup(
+                                                new KeyboardButton("Share Contact").requestContact(true)
+                                        ));
+                                telegramBot.execute(contactRequest);
                                 break;
+
 
                             case SEND_MESSAGE_VOLUNTEER:
                                 try {
@@ -225,9 +228,12 @@ public class TelegramBotUpdateListener implements UpdatesListener {
 
     @Scheduled(cron = "0 0 0 * * ?")
     public void scheduledMethod() {
-        if (lastUpdate != null && lastUpdate.message() != null) {
-            Long chatId = lastUpdate.message().chat().id();
-            sendMessage(chatId, "");
+        List<Report> chatIds = reportService.getAllReport(); // Получаем список чатов для напоминаний
+
+        // Отправляем напоминание в каждый чат из списка
+        for (Report report : chatIds) {
+            Long chatId = report.getChatId();
+            sendMessage(chatId, Constants.REPORT_NOTIFICATION.getValue());
         }
     }
 }

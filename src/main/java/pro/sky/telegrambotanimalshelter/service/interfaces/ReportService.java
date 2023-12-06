@@ -4,7 +4,6 @@ import com.pengrad.telegrambot.model.File;
 import org.springframework.stereotype.Service;
 import pro.sky.telegrambotanimalshelter.models.Report;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -19,11 +18,11 @@ public interface ReportService {
 
     Report getByIdReport(Long id);
 
-    Collection<Report> getAllReport();
-
     Report addReport(Report report);
 
     Report updateReport(Report report);
+
+    List<Report> getAllReport();
 
     void removeByIdReport(Long id);
 
@@ -33,4 +32,6 @@ public interface ReportService {
     void save(Report report);
 
     List<Report> findAll();
+    List<Report> findAllByLastMessageMsLessThan(long time);
+
 }

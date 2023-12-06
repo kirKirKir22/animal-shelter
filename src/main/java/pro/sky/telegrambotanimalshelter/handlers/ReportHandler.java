@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -130,16 +131,15 @@ public class ReportHandler {
 
     // Метод для проверки и отправки уведомлений
     private void checkResults() {
-        var twoDay = TimeUnit.DAYS.toMillis(2);
-        var nowTime = new Date().getTime() - twoDay;
-        var getDistinct = this.reportService.findAll().stream()
-                .sorted(Comparator
-                        .comparing(Report::getChatId))
-                .max(Comparator
-                        .comparing(Report::getLastMessageMs));
-        getDistinct.stream()
-                .filter(i -> i.getLastMessageMs() * 1000 < nowTime)
-                .forEach(s -> sendMessage(s.getChatId(), Constants.REPORT_NOTIFICATION.getValue()));
+        long twoDaysAgo = TimeUnit.DAYS.toMillis(2);
+        long nowTime = new Date().getTime() - twoDaysAgo;
+
+        List<Report> outdatedReports = reportService.findAllByLastMessageMsLessThan(nowTime);
+
+        outdatedReports.stream()
+                .sorted(Comparator.comparing(Report::getChatId))
+                .max(Comparator.comparing(Report::getLastMessageMs))
+                .ifPresent(report -> sendMessage(report.getChatId(), Constants.REPORT_NOTIFICATION.getValue()));
     }
 
     // Метод для отправки сообщений через Telegram бот

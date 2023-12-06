@@ -9,7 +9,6 @@ import pro.sky.telegrambotanimalshelter.models.Report;
 import pro.sky.telegrambotanimalshelter.repository.ReportRepository;
 import pro.sky.telegrambotanimalshelter.service.interfaces.ReportService;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -72,13 +71,6 @@ public class ReportServiceImpl implements ReportService {
 
 
     @Override
-    public Collection<Report> getAllReport() {
-        logger.info("Was invoked method to get all reports");
-        return this.repository.findAll();
-    }
-
-
-    @Override
     public Report addReport(Report report) {
         logger.info("Was invoked method to add a report");
         return this.repository.save(report);
@@ -93,6 +85,12 @@ public class ReportServiceImpl implements ReportService {
             }
         }
         throw new ReportNotFoundException();
+    }
+
+    @Override
+    public List<Report> getAllReport() {
+        logger.info("Was invoked method to get all reports");
+        return this.repository.findAll();
     }
 
 
@@ -115,5 +113,10 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public List<Report> findAll() {
         return repository.findAll();
+    }
+
+    @Override
+    public List<Report> findAllByLastMessageMsLessThan(long time) {
+        return repository.findAllByLastMessageMsLessThan(time);
     }
 }
