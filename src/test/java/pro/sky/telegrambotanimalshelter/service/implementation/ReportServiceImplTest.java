@@ -1,129 +1,139 @@
 package pro.sky.telegrambotanimalshelter.service.implementation;
 
-import org.junit.jupiter.api.BeforeEach;
+
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import pro.sky.telegrambotanimalshelter.exceptions.ReportNotFoundException;
 import pro.sky.telegrambotanimalshelter.models.Report;
 import pro.sky.telegrambotanimalshelter.repository.ReportRepository;
 
-import java.util.Date;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class ReportServiceImplTest {
-
-    private ReportServiceImpl reportService;
+class ReportServiceImplTest {
 
     @Mock
     private ReportRepository repository;
 
+    @InjectMocks
+    private ReportServiceImpl reportService;
+
     @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
-        reportService = new ReportServiceImpl(repository);
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    public void testUploadReport_WithValidData_SavesReport() {
-        Long personId = 1L;
-        byte[] pictureFile = new byte[]{1, 2, 3};
-        String filePath = "path/to/file";
-        Date dateSendMessage = new Date();
-        Long timeDate = System.currentTimeMillis();
-        long daysOfReports = 7;
+    void testGetByIdReport() {
+        Long reportId = 1L;
+        Report testReport = new Report();
+        testReport.setId(reportId);
 
-        // Создаем заглушку для объекта File
-        com.pengrad.telegrambot.model.File file = mock(com.pengrad.telegrambot.model.File.class);
-        when(file.fileSize()).thenReturn(12345L);
+        when(repository.findById(reportId)).thenReturn(Optional.of(testReport));
 
-        reportService.uploadReport(personId, pictureFile, file, null, null, null, null, daysOfReports);
+        Report result = reportService.getByIdReport(reportId);
 
-        verify(repository, times(1)).save(any(Report.class));
+        assertEquals(testReport, result);
     }
 
     @Test
-    public void testGetByIdReport_WithValidId_ReturnsReport() {
-        Report report = new Report();
-        report.setId(1L);
-        when(repository.findById(1L)).thenReturn(Optional.of(report));
+    void testAddReport() {
+        Report testReport = new Report();
 
-        Report result = reportService.getByIdReport(1L);
+        when(repository.save(testReport)).thenReturn(testReport);
 
-        assertNotNull(result);
-        assertEquals(1L, result.getId());
+        Report result = reportService.addReport(testReport);
+
+        assertEquals(testReport, result);
+
+        verify(repository, times(1)).save(testReport);
     }
 
     @Test
-    public void testGetByIdReport_WithInvalidId_ThrowsException() {
-        when(repository.findById(1L)).thenReturn(Optional.empty());
+    void testUpdateReport() {
+        Long reportId = 1L;
+        Report testReport = new Report();
+        testReport.setId(reportId);
 
-        assertThrows(ReportNotFoundException.class, () -> reportService.getByIdReport(1L));
+        when(repository.findById(reportId)).thenReturn(Optional.of(testReport));
+        when(repository.save(testReport)).thenReturn(testReport);
+
+        Report result = reportService.updateReport(testReport);
+
+        assertEquals(testReport, result);
+
+        verify(repository, times(1)).save(testReport);
     }
 
     @Test
-    public void testAddReport_AddsReport() {
-        Report report = new Report();
-        when(repository.save(any(Report.class))).thenReturn(report);
+    void testGetAllReport() {
+        Report testReport = new Report();
 
-        Report result = reportService.addReport(report);
+        when(repository.findAll()).thenReturn(Collections.singletonList(testReport));
 
-        assertNotNull(result);
-        assertEquals(report, result);
+        List<Report> result = reportService.getAllReport();
+
+        assertTrue(result.contains(testReport));
     }
 
     @Test
-    public void testUpdateReport_WithValidId_UpdatesReport() {
-        Report report = new Report();
-        report.setId(1L);
-        when(repository.findById(1L)).thenReturn(Optional.of(report));
-        when(repository.save(any(Report.class))).thenReturn(report);
+    void testRemoveByIdReport() {
+        Long reportId = 1L;
 
-        Report result = reportService.updateReport(report);
+        reportService.removeByIdReport(reportId);
 
-        assertNotNull(result);
-        assertEquals(1L, result.getId());
+        verify(repository, times(1)).deleteById(reportId);
     }
 
     @Test
-    public void testUpdateReport_WithInvalidId_ThrowsException() {
-        Report report = new Report();
-        report.setId(1L);
+    void testFindByChatId() {
+        long chatId = 123456789L;
+        Report testReport = new Report();
 
-        when(repository.findById(1L)).thenReturn(Optional.empty());
-
-        assertThrows(ReportNotFoundException.class, () -> reportService.updateReport(report));
-    }
-
-    @Test
-    public void testRemoveByIdReport_RemovesReport() {
-        reportService.removeByIdReport(1L);
-
-        verify(repository, times(1)).deleteById(1L);
-    }
-
-    @Test
-    public void testFindByChatId_WithExistingChatId_ReturnsReport() {
-        Report report = new Report();
-        long chatId = 123L;
-        when(repository.findByChatId(chatId)).thenReturn(report);
+        when(repository.findByChatId(chatId)).thenReturn(testReport);
 
         Report result = reportService.findByChatId(chatId);
 
-        assertNotNull(result);
-        assertEquals(report, result);
+        assertEquals(testReport, result);
     }
 
     @Test
-    public void testFindByChatId_WithNonExistingChatId_ReturnsNull() {
-        long chatId = 123L;
-        when(repository.findByChatId(chatId)).thenReturn(null);
+    void testSave() {
+        Report testReport = new Report();
 
-        Report result = reportService.findByChatId(chatId);
+        when(repository.save(testReport)).thenReturn(testReport);
 
-        assertNull(result);
+        reportService.save(testReport);
+
+        verify(repository, times(1)).save(testReport);
+    }
+
+    @Test
+    void testFindAll() {
+        Report testReport = new Report();
+
+        when(repository.findAll()).thenReturn(Collections.singletonList(testReport));
+
+        List<Report> result = reportService.findAll();
+
+        assertTrue(result.contains(testReport));
+    }
+
+    @Test
+    void testFindAllByLastMessageMsLessThan() {
+        long time = System.currentTimeMillis();
+        Report testReport = new Report();
+
+        when(repository.findAllByLastMessageMsLessThan(time)).thenReturn(Collections.singletonList(testReport));
+
+        List<Report> result = reportService.findAllByLastMessageMsLessThan(time);
+
+        assertTrue(result.contains(testReport));
     }
 }

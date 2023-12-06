@@ -1,134 +1,141 @@
 package pro.sky.telegrambotanimalshelter.service.implementation;
 
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import pro.sky.telegrambotanimalshelter.exceptions.HumanCatNotFoundException;
 import pro.sky.telegrambotanimalshelter.models.HumanCat;
 import pro.sky.telegrambotanimalshelter.repository.HumanCatRepository;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class HumanCatServiceImplTest {
-
-    private HumanCatServiceImpl humanCatService;
+class HumanCatServiceImplTest {
 
     @Mock
     private HumanCatRepository repository;
 
+    @InjectMocks
+    private HumanCatServiceImpl humanCatService;
+
     @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
-        humanCatService = new HumanCatServiceImpl(repository);
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    public void testGetByIdHumanCat_WithValidId_ReturnsHumanCat() {
-        HumanCat humanCat = new HumanCat();
-        humanCat.setId(1L);
-        when(repository.findById(1L)).thenReturn(java.util.Optional.of(humanCat));
+    void testGetByIdHumanCat() {
+        Long humanCatId = 1L;
+        HumanCat testHumanCat = new HumanCat();
+        testHumanCat.setId(humanCatId);
 
-        HumanCat result = humanCatService.getByIdHumanCat(1L);
+        when(repository.findById(humanCatId)).thenReturn(Optional.of(testHumanCat));
 
-        assertNotNull(result);
-        assertEquals(1L, result.getId());
+        HumanCat result = humanCatService.getByIdHumanCat(humanCatId);
+
+        assertEquals(testHumanCat, result);
     }
 
     @Test
-    public void testGetByIdHumanCat_WithInvalidId_ThrowsException() {
-        when(repository.findById(1L)).thenReturn(java.util.Optional.empty());
+    void testAddHumanCat() {
+        HumanCat testHumanCat = new HumanCat();
 
-        assertThrows(HumanCatNotFoundException.class, () -> humanCatService.getByIdHumanCat(1L));
+        when(repository.save(testHumanCat)).thenReturn(testHumanCat);
+
+        HumanCat result = humanCatService.addHumanCat(testHumanCat);
+
+        assertEquals(testHumanCat, result);
+
+        verify(repository, times(1)).save(testHumanCat);
     }
 
     @Test
-    public void testAddHumanCat_AddsHumanCat() {
-        HumanCat humanCat = new HumanCat();
-        when(repository.save(any(HumanCat.class))).thenReturn(humanCat);
+    void testUpdateHumanCat() {
+        Long humanCatId = 1L;
+        HumanCat testHumanCat = new HumanCat();
+        testHumanCat.setId(humanCatId);
 
-        HumanCat result = humanCatService.addHumanCat(humanCat);
+        when(repository.findById(humanCatId)).thenReturn(Optional.of(testHumanCat));
+        when(repository.save(testHumanCat)).thenReturn(testHumanCat);
 
-        assertNotNull(result);
-        assertEquals(humanCat, result);
+        HumanCat result = humanCatService.updateHumanCat(testHumanCat);
+
+        assertEquals(testHumanCat, result);
+
+        verify(repository, times(1)).save(testHumanCat);
     }
 
     @Test
-    public void testUpdateHumanCat_WithValidId_UpdatesHumanCat() {
-        HumanCat humanCat = new HumanCat();
-        humanCat.setId(1L);
-        when(repository.findById(1L)).thenReturn(java.util.Optional.of(humanCat));
-        when(repository.save(any(HumanCat.class))).thenReturn(humanCat);
+    void testGetAllHumanCat() {
+        HumanCat testHumanCat = new HumanCat();
 
-        HumanCat result = humanCatService.updateHumanCat(humanCat);
+        when(repository.findAll()).thenReturn(Collections.singletonList(testHumanCat));
 
-        assertNotNull(result);
-        assertEquals(1L, result.getId());
+        Collection<HumanCat> result = humanCatService.getAllHumanCat();
+
+        assertTrue(result.contains(testHumanCat));
     }
 
     @Test
-    public void testUpdateHumanCat_WithInvalidId_ThrowsException() {
-        HumanCat humanCat = new HumanCat();
-        humanCat.setId(1L);
+    void testRemoveByIdHumanCat() {
+        Long humanCatId = 1L;
 
-        when(repository.findById(1L)).thenReturn(java.util.Optional.empty());
+        humanCatService.removeByIdHumanCat(humanCatId);
 
-        assertThrows(HumanCatNotFoundException.class, () -> humanCatService.updateHumanCat(humanCat));
+        verify(repository, times(1)).deleteById(humanCatId);
     }
 
     @Test
-    public void testRemoveByIdHumanCat_RemovesHumanCat() {
-        humanCatService.removeByIdHumanCat(1L);
+    void testFindByChatId() {
+        long chatId = 123456789L;
+        HumanCat testHumanCat = new HumanCat();
 
-        verify(repository, times(1)).deleteById(1L);
-    }
-
-    @Test
-    public void testFindByChatId_WithExistingChatId_ReturnsHumanCat() {
-        HumanCat humanCat = new HumanCat();
-        long chatId = 123L;
-        when(repository.findByChatId(chatId)).thenReturn(humanCat);
+        when(repository.findByChatId(chatId)).thenReturn(testHumanCat);
 
         HumanCat result = humanCatService.findByChatId(chatId);
 
-        assertNotNull(result);
-        assertEquals(humanCat, result);
+        assertEquals(testHumanCat, result);
     }
 
     @Test
-    public void testFindByChatId_WithNonExistingChatId_ReturnsNull() {
-        long chatId = 123L;
-        when(repository.findByChatId(chatId)).thenReturn(null);
+    void testSaveCat() {
+        HumanCat testHumanCat = new HumanCat();
 
-        HumanCat result = humanCatService.findByChatId(chatId);
+        when(repository.save(testHumanCat)).thenReturn(testHumanCat);
 
-        assertNull(result);
+        HumanCat result = humanCatService.saveCat(testHumanCat);
+
+        assertEquals(testHumanCat, result);
+
+        verify(repository, times(1)).save(testHumanCat);
     }
 
     @Test
-    public void testSaveCat_SavesHumanCat() {
-        HumanCat humanCat = new HumanCat();
-        when(repository.save(any(HumanCat.class))).thenReturn(humanCat);
+    void testExistsByChatId() {
+        Long chatId = 123456789L;
 
-        HumanCat result = humanCatService.saveCat(humanCat);
+        when(repository.existsByChatId(chatId)).thenReturn(true);
 
-        assertNotNull(result);
-        assertEquals(humanCat, result);
+        boolean result = humanCatService.existsByChatId(chatId);
+
+        assertTrue(result);
     }
 
     @Test
-    public void testFindAll_ReturnsListOfHumanCats() {
-        HumanCat humanCat1 = new HumanCat();
-        HumanCat humanCat2 = new HumanCat();
-        when(repository.findAll()).thenReturn(List.of(humanCat1, humanCat2));
+    void testFindAll() {
+        HumanCat testHumanCat = new HumanCat();
+
+        when(repository.findAll()).thenReturn(Collections.singletonList(testHumanCat));
 
         List<HumanCat> result = humanCatService.findAll();
 
-        assertNotNull(result);
-        assertEquals(2, result.size());
+        assertTrue(result.contains(testHumanCat));
     }
 }

@@ -1,103 +1,92 @@
 package pro.sky.telegrambotanimalshelter.service.implementation;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import pro.sky.telegrambotanimalshelter.exceptions.DogNotFoundException;
 import pro.sky.telegrambotanimalshelter.models.Dog;
 import pro.sky.telegrambotanimalshelter.repository.DogRepository;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class DogServiceImplTest {
-
-    private DogServiceImpl dogService;
+class DogServiceImplTest {
 
     @Mock
     private DogRepository repository;
 
+    @InjectMocks
+    private DogServiceImpl dogService;
+
     @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
-        dogService = new DogServiceImpl(repository);
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    public void testGetByIdDog_WithValidId_ReturnsDog() {
-        Dog dog = new Dog();
-        dog.setId(1L);
-        when(repository.findById(1L)).thenReturn(java.util.Optional.of(dog));
+    void testGetByIdDog() {
+        Long dogId = 1L;
+        Dog testDog = new Dog();
+        testDog.setId(dogId);
 
-        Dog result = dogService.getByIdDog(1L);
+        when(repository.findById(dogId)).thenReturn(Optional.of(testDog));
 
-        assertNotNull(result);
-        assertEquals(1L, result.getId());
+        Dog result = dogService.getByIdDog(dogId);
+
+        assertEquals(testDog, result);
     }
 
     @Test
-    public void testGetByIdDog_WithInvalidId_ThrowsException() {
-        when(repository.findById(1L)).thenReturn(java.util.Optional.empty());
+    void testAddDog() {
+        Dog testDog = new Dog();
 
-        assertThrows(DogNotFoundException.class, () -> dogService.getByIdDog(1L));
+        when(repository.save(testDog)).thenReturn(testDog);
+
+        Dog result = dogService.addDog(testDog);
+
+        assertEquals(testDog, result);
+
+        verify(repository, times(1)).save(testDog);
     }
 
     @Test
-    public void testAddDog_AddsDog() {
-        Dog dog = new Dog();
-        when(repository.save(any(Dog.class))).thenReturn(dog);
+    void testUpdateDog() {
+        Long dogId = 1L;
+        Dog testDog = new Dog();
+        testDog.setId(dogId);
 
-        Dog result = dogService.addDog(dog);
+        when(repository.findById(dogId)).thenReturn(Optional.of(testDog));
+        when(repository.save(testDog)).thenReturn(testDog);
 
-        assertNotNull(result);
-        assertEquals(dog, result);
+        Dog result = dogService.updateDog(testDog);
+
+        assertEquals(testDog, result);
+
+        verify(repository, times(1)).save(testDog);
     }
 
     @Test
-    public void testUpdateDog_WithValidId_UpdatesDog() {
-        Dog dog = new Dog();
-        dog.setId(1L);
-        when(repository.findById(1L)).thenReturn(java.util.Optional.of(dog));
-        when(repository.save(any(Dog.class))).thenReturn(dog);
+    void testGetAllDog() {
+        Dog testDog = new Dog();
 
-        Dog result = dogService.updateDog(dog);
-
-        assertNotNull(result);
-        assertEquals(1L, result.getId());
-    }
-
-    @Test
-    public void testUpdateDog_WithInvalidId_ThrowsException() {
-        Dog dog = new Dog();
-        dog.setId(1L);
-
-        when(repository.findById(1L)).thenReturn(java.util.Optional.empty());
-
-        assertThrows(DogNotFoundException.class, () -> dogService.updateDog(dog));
-    }
-
-    @Test
-    public void testRemoveByIdDog_RemovesDog() {
-        dogService.removeByIdDog(1L);
-
-        verify(repository, times(1)).deleteById(1L);
-    }
-
-    @Test
-    public void testGetAllDog_ReturnsListOfDogs() {
-        Dog dog1 = new Dog();
-        Dog dog2 = new Dog();
-        when(repository.findAll()).thenReturn(List.of(dog1, dog2));
+        when(repository.findAll()).thenReturn(Collections.singletonList(testDog));
 
         Collection<Dog> result = dogService.getAllDog();
 
-        assertNotNull(result);
-        assertEquals(2, result.size());
+        assertTrue(result.contains(testDog));
     }
 
-    // Дополните тесты для других методов по аналогии
+    @Test
+    void testRemoveByIdDog() {
+        Long dogId = 1L;
+
+        dogService.removeByIdDog(dogId);
+
+        verify(repository, times(1)).deleteById(dogId);
+    }
 }

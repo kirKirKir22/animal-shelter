@@ -77,4 +77,9 @@ public class HumanCatServiceImpl implements HumanCatService {
     public boolean existsByChatId(Long chatId) {
         return repository.existsByChatId(chatId);
     }
+
+    @Override
+    public List<HumanCat> findAll() {
+        return repository.findAll();
+    }
 }

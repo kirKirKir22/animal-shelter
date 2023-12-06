@@ -9,6 +9,7 @@ import pro.sky.telegrambotanimalshelter.models.HumanDog;
 import pro.sky.telegrambotanimalshelter.repository.HumanDogRepository;
 
 import java.util.Collection;
+import java.util.List;
 
 
 @Service
@@ -72,6 +73,11 @@ public class HumanDogServiceImpl implements pro.sky.telegrambotanimalshelter.ser
     @Override
     public boolean existsByChatId(Long chatId) {
         return repository.existsByChatId(chatId);
+    }
+
+    @Override
+    public List<HumanDog> findAll() {
+        return repository.findAll();
     }
 
 }

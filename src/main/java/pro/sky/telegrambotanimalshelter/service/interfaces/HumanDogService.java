@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import pro.sky.telegrambotanimalshelter.models.HumanDog;
 
 import java.util.Collection;
+import java.util.List;
 
 @Service
 public interface HumanDogService {
@@ -20,4 +21,6 @@ public interface HumanDogService {
     HumanDog findByChatId(long chatId);
     HumanDog saveDog(HumanDog humanDog);
     boolean existsByChatId(Long chatId);
+
+    List<HumanDog> findAll();
 }
